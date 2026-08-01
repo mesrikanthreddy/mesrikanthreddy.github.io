@@ -36,6 +36,13 @@ const PROJECTS = [
     statusLabel: 'Pre-Production',
     desc: 'A pilot product helping SMBs, startups, and community leaders go to market — content, leads, messaging, and site publishing in one console.',
   },
+  {
+    title: 'IDP',
+    href: 'https://github.com/mesrikanthreddy/Search-AI',
+    status: 'pre',
+    statusLabel: 'MVP',
+    desc: 'A document intelligence engine with a hand-written TF-IDF and cosine-similarity ranking algorithm — no LLMs or external AI APIs in the search path, verified against scikit-learn for correctness.',
+  },
 ]
 
 export default function Projects() {
