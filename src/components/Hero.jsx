@@ -1,10 +1,38 @@
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import kalkiWebp from '../assets/mesrikanthreddy.webp'
 import kalkiJpg from '../assets/mesrikanthreddy.jpg'
+import { supportsWebGL } from '../lib/webgl'
+import SceneBoundary from './SceneBoundary'
+
+// three.js is ~300 kB gzipped — keep it out of the initial bundle so the flat
+// hero image paints immediately, then upgrade to the 3D scene once it lands.
+const HeroScene = lazy(() => import('./HeroScene'))
+
+const heroAlt =
+  'Kalki, a blue-skinned warrior astride a white horse, wielding a flaming sword amid storm clouds and embers'
+
+function FlatHeroImage() {
+  return (
+    <picture>
+      <source srcSet={kalkiWebp} type="image/webp" />
+      <img
+        src={kalkiJpg}
+        alt={heroAlt}
+        width="1024"
+        height="1024"
+        loading="eager"
+      />
+    </picture>
+  )
+}
 
 export default function Hero() {
   const wrapRef = useRef(null)
   const driftRef = useRef(null)
+  const [use3D, setUse3D] = useState(() => supportsWebGL())
+  const [reducedMotion] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
 
   // Ember particles
   useEffect(() => {
@@ -26,10 +54,7 @@ export default function Hero() {
 
   // Subtle hero parallax
   useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
-    if (prefersReduced) return
+    if (reducedMotion) return
 
     let ticking = false
     const onScroll = () => {
@@ -46,21 +71,25 @@ export default function Hero() {
     }
     document.addEventListener('scroll', onScroll, { passive: true })
     return () => document.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [reducedMotion])
 
   return (
     <section className="hero" id="top">
-      <div className="hero-img-wrap" ref={wrapRef}>
-        <picture>
-          <source srcSet={kalkiWebp} type="image/webp" />
-          <img
-            src={kalkiJpg}
-            alt="Kalki, a blue-skinned warrior astride a white horse, wielding a flaming sword amid storm clouds and embers"
-            width="1024"
-            height="1024"
-            loading="eager"
-          />
-        </picture>
+      <div className={`hero-img-wrap${use3D ? ' is-3d' : ''}`} ref={wrapRef}>
+        {use3D ? (
+          <SceneBoundary fallback={<FlatHeroImage />}>
+            <Suspense fallback={<FlatHeroImage />}>
+              <HeroScene
+                webpSrc={kalkiWebp}
+                reducedMotion={reducedMotion}
+                onContextLost={() => setUse3D(false)}
+              />
+            </Suspense>
+          </SceneBoundary>
+        ) : (
+          <FlatHeroImage />
+        )}
+        <span className="sr-only">{heroAlt}</span>
       </div>
       <div className="hero-scrim" />
       <div className="ember-drift" ref={driftRef} aria-hidden="true" />
