@@ -105,7 +105,9 @@ export default function Hero() {
         <h1>Srikanth&nbsp;Reddy</h1>
         <p className="role">
           Full-Stack Developer · Full-Stack DevOps Leader ·{' '}
-          <strong>AI/ML Specialist</strong>
+          <strong>AI/ML Specialist</strong> ·{' '}
+          <strong>Forward Deployed Engineer</strong> ·{' '}
+          <strong>Agentic AI Developer</strong>
         </p>
         <p className="lede">
           I help startups and enterprises transform ideas into intelligent
