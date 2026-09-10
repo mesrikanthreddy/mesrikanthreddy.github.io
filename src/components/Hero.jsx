@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import kalkiWebp from '../assets/mesrikanthreddy.webp'
-import kalkiJpg from '../assets/mesrikanthreddy.jpg'
+import heroWebp from '../assets/mesrikanthreddy.webp'
+import heroPng from '../assets/mesrikanthreddy.png'
 import { supportsWebGL } from '../lib/webgl'
 import SceneBoundary from './SceneBoundary'
 
@@ -9,14 +9,14 @@ import SceneBoundary from './SceneBoundary'
 const HeroScene = lazy(() => import('./HeroScene'))
 
 const heroAlt =
-  'Kalki, a blue-skinned warrior astride a white horse, wielding a flaming sword amid storm clouds and embers'
+  'A storm splitting in two: on the left, a collapsing data center tangled in dead cables and red warning glyphs beneath a dark storm; on the right, the same sky reborn as a teal-and-amber aurora forming a glowing network of light, with a bright coral spark marking the turning point'
 
 function FlatHeroImage() {
   return (
     <picture>
-      <source srcSet={kalkiWebp} type="image/webp" />
+      <source srcSet={heroWebp} type="image/webp" />
       <img
-        src={kalkiJpg}
+        src={heroPng}
         alt={heroAlt}
         width="1024"
         height="1024"
@@ -80,7 +80,7 @@ export default function Hero() {
           <SceneBoundary fallback={<FlatHeroImage />}>
             <Suspense fallback={<FlatHeroImage />}>
               <HeroScene
-                webpSrc={kalkiWebp}
+                webpSrc={heroWebp}
                 reducedMotion={reducedMotion}
                 onContextLost={() => setUse3D(false)}
               />

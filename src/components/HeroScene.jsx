@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import { TextureLoader, SRGBColorSpace } from 'three'
 
-function KalkiPlane({ src, pointer, reducedMotion }) {
+function HeroPlane({ src, pointer, reducedMotion }) {
   const meshRef = useRef(null)
   const texture = useLoader(TextureLoader, src)
   texture.colorSpace = SRGBColorSpace
@@ -73,7 +73,7 @@ export default function HeroScene({ webpSrc, reducedMotion, onContextLost }) {
       aria-hidden="true"
     >
       <Lights />
-      <KalkiPlane src={webpSrc} pointer={pointer} reducedMotion={reducedMotion} />
+      <HeroPlane src={webpSrc} pointer={pointer} reducedMotion={reducedMotion} />
     </Canvas>
   )
 }
