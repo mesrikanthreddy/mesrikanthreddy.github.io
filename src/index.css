@@ -209,7 +209,7 @@ a {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  object-position: 65% 20%;
+  object-position: 50% 42%;
   filter: saturate(1.05) contrast(1.03);
   opacity: 0.92;
   display: block;
@@ -274,22 +274,22 @@ a {
   }
 }
 
-/* ---------- KALKI MOTION (cinematic surge on the hero artwork) ----------
+/* ---------- HERO MOTION (cinematic surge on the hero artwork) ----------
    The parallax scroll transform lives on .hero-img-wrap, so the loop
    animates the <img> inside it — the two never fight over one transform. */
 .hero-img-wrap img {
-  animation: kalki-surge 16s ease-in-out infinite alternate;
-  transform-origin: 62% 32%;
+  animation: hero-surge 16s ease-in-out infinite alternate;
+  transform-origin: 50% 42%;
 }
-@keyframes kalki-surge {
+@keyframes hero-surge {
   0% {
     transform: scale(1) translateX(0) translateY(0);
   }
   50% {
-    transform: scale(1.045) translateX(-0.8%) translateY(0.5%);
+    transform: scale(1.045) translateX(0) translateY(0.5%);
   }
   100% {
-    transform: scale(1.08) translateX(-1.6%) translateY(-0.4%);
+    transform: scale(1.08) translateX(0) translateY(-0.4%);
   }
 }
 
