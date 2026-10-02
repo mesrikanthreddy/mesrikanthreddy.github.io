@@ -1,0 +1,76 @@
+export const meta = {
+  title: 'The Essential Python Stack for AI, Right Now',
+  date: '2026-10-02',
+  excerpt:
+    'Cutting through the noise: the handful of Python libraries that actually matter across data, modeling, LLMs, and serving.',
+}
+
+Python's AI ecosystem has exploded to the point where "which library should
+I use" is itself a full-time research problem. Most of what shows up in a
+search is noise — abandoned side projects, thin wrappers, or tools solving
+a problem you don't have yet. Strip that away and the stack that's actually
+load-bearing in production right now is small enough to hold in your head.
+
+Here's that stack, organized by where it sits in the pipeline.
+
+## Foundations
+
+Everything else in this list is built on top of these three.
+
+- **NumPy** — the numerical substrate. Virtually every AI/ML library either
+  wraps NumPy arrays, accepts them as input, or returns them as output. You
+  rarely reach for it directly once you're deep into a framework, but it's
+  underneath all of it.
+- **Pandas** — still the default for tabular data wrangling: loading,
+  cleaning, joining, reshaping before anything touches a model.
+- **Polars** — the faster alternative for preprocessing at scale. Same
+  mental model as Pandas, but a Rust-backed engine and lazy evaluation that
+  matters once your datasets stop fitting comfortably in memory.
+
+## Core ML & Deep Learning
+
+- **PyTorch** and **TensorFlow** — the two deep learning frameworks that
+  matter. PyTorch dominates research and most new production work; TensorFlow
+  still shows up heavily in larger, older production estates.
+- **JAX** — the choice when you need composable function transforms
+  (autodiff, vectorization, JIT compilation) for custom training loops or
+  research-adjacent work, rather than framework-provided layers.
+- **scikit-learn** — the default for classical ML. If the problem doesn't
+  need a neural net, this is still where you start.
+- **XGBoost, LightGBM, CatBoost** — gradient-boosted trees, and the thing to
+  reach for on structured/tabular data before anything deep-learning-shaped.
+  They still win most tabular benchmarks.
+
+## LLMs & Agents
+
+- **Hugging Face Transformers** — the de facto home for generative AI model
+  access: loading, fine-tuning, and running open-weight LLMs and other
+  transformer architectures.
+- **LangChain** — foundational infrastructure at this point for wiring LLMs
+  into chains, tools, and retrieval — not because it's the only option, but
+  because it's become the common vocabulary most teams build around.
+- **CrewAI** and **AutoGen** — multi-agent orchestration. CrewAI leans
+  toward role-based agent crews collaborating on a task; AutoGen (Microsoft)
+  leans toward structured multi-agent conversation patterns. Which one fits
+  depends on whether your problem decomposes into roles or into a dialogue.
+
+## Serving & Retrieval
+
+- **vLLM** — the serving layer once inference throughput actually matters.
+  Built specifically for fast, memory-efficient LLM inference at scale,
+  rather than the straightforward-but-slow path of serving a model directly
+  from a training framework.
+- **ChromaDB** — vector storage for retrieval-augmented generation: embed,
+  store, query by similarity. The right first choice when you need RAG
+  working rather than need to have evaluated every vector database on the
+  market.
+
+## The takeaway
+
+None of this is exotic. The pattern underneath it is: NumPy/Pandas/Polars
+to get data into shape, PyTorch/TensorFlow/JAX/scikit-learn/boosted-trees
+to model it, Transformers/LangChain/CrewAI/AutoGen to build on top of LLMs
+and agents, and vLLM/ChromaDB to serve and retrieve at runtime. Pick from
+this list first. Only go looking outside it once you've confirmed the
+problem genuinely isn't covered here — which, for most production AI work,
+it is.
