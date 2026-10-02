@@ -269,8 +269,14 @@ h1 .surname {
   color: var(--text);
   font-weight: 600;
 }
-.current-role {
+.status-row {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.current-role {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -287,6 +293,10 @@ h1 .surname {
 .current-role:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+.current-role.is-static:hover {
+  border-color: var(--border);
+  color: var(--text-dim);
 }
 .current-role .dot {
   width: 6px;

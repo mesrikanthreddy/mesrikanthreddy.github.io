@@ -19,15 +19,21 @@ export default function Hero() {
           pipelines into modern cloud infrastructure, and shipping machine
           learning made for production, not demos.
         </p>
-        <a
-          className="current-role"
-          href="https://ytt.global"
-          target="_blank"
-          rel="noopener"
-        >
-          <span className="dot" /> Principal Technical Consultant, YTT Global{' '}
-          <span className="arrow">↗</span>
-        </a>
+        <div className="status-row">
+          <a
+            className="current-role"
+            href="https://ytt.global"
+            target="_blank"
+            rel="noopener"
+          >
+            <span className="dot" /> Principal Technical Consultant, YTT Global{' '}
+            <span className="arrow">↗</span>
+          </a>
+          <div className="current-role is-static">
+            <span className="dot" /> Building a stealth healthcare startup, YTT
+            Global
+          </div>
+        </div>
         <div className="scroll-cue">
           <span />
           Scroll
