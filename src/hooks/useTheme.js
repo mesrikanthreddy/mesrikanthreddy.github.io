@@ -16,7 +16,7 @@ function applyTheme(theme) {
 
 export function useTheme() {
   const [theme, setThemeState] = useState(
-    () => localStorage.getItem(STORAGE_KEY) || 'system',
+    () => localStorage.getItem(STORAGE_KEY) || 'light',
   )
 
   useEffect(() => {
