@@ -1,10 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 import { getPost, formatDate } from '../content/writing'
+import { useDocumentMeta } from '../hooks/useDocumentMeta'
 import NotFound from './NotFound'
 
 export default function WritingPost() {
   const { slug } = useParams()
   const post = getPost(slug)
+
+  useDocumentMeta(
+    post ? { title: post.meta.title, description: post.meta.excerpt } : undefined,
+  )
 
   if (!post) {
     return <NotFound />

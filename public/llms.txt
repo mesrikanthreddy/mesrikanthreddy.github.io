@@ -1,0 +1,52 @@
+# Bollampally, Srikanth Reddy
+
+> Full-Stack Developer, Full-Stack DevOps Leader, AI/ML Specialist, Forward
+> Deployed Engineer, and Agentic AI Developer. Principal Technical
+> Consultant at YTT Global, with 11+ years turning legacy infrastructure
+> into modern cloud systems and shipping machine learning built for
+> production rather than demos. Currently also building a stealth
+> healthcare startup at YTT Global.
+
+## Background
+
+- 12+ years across cloud infrastructure and production ML systems for
+  enterprises including Duke Energy, USPTO, United Airlines, Cisco, CMS,
+  Qualcomm, and the Georgia Technology Authority.
+- Core capabilities: full-stack development (React, Next.js, Node.js,
+  Python, Flask, FastAPI), cloud & DevOps (AWS, Azure, GCP, Docker,
+  Kubernetes, Terraform, CI/CD, Ansible, Helm, ArgoCD), AI/ML (custom ML
+  models, NLP, computer vision, MLOps, agentic AI, MCP, RAG), monitoring &
+  SRE (Prometheus, Grafana, ELK, Datadog), and databases (PostgreSQL,
+  MongoDB, Redis, MySQL).
+- Cut deployment time by 75% and held system uptime at 99.9% in
+  production environments.
+
+## Links
+
+- Resume (PDF): https://mesrikanthreddy.github.io/mesrikanthreddy-resume.pdf
+- Writing: https://mesrikanthreddy.github.io/writing
+- GitHub: https://github.com/mesrikanthreddy
+- LinkedIn: https://www.linkedin.com/in/bsrikanth-reddy/
+- YTT Global: https://ytt.global
+
+## Personal projects
+
+- kShield (live): security-focused tooling, https://ytt-global.github.io/kshield/
+- Project-TEC: ed-tech initiative pairing students with live technical
+  work and industry mentorship, https://ytt.global/project-tec
+- HU-INT: containerized delivery platform for screened technical
+  practitioners, https://ytt.global/huint
+- QGA Cancer Therapeutics (research POC): quantum genetic algorithm
+  (NVIDIA CUDA-Q) applied to multi-drug cancer therapy selection,
+  https://ytt-global.github.io/qga-cancer-therapeutics/
+- Synapse: go-to-market console for SMBs, startups, and community
+  leaders, https://synapse.ytt.global
+- IDP: document intelligence engine using hand-written TF-IDF and
+  cosine-similarity ranking, verified against scikit-learn,
+  https://github.com/mesrikanthreddy/Search-AI
+
+## Contact
+
+Available for freelance, contract, and fixed-scope implementation work,
+and open to founding engineer roles. Book a call:
+https://calendly.com/srbollampally-ytt/30min
