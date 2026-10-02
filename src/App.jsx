@@ -1,28 +1,25 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav'
-import Hero from './components/Hero'
-import Capabilities from './components/Capabilities'
-import Clients from './components/Clients'
-import WhyMe from './components/WhyMe'
-import Projects from './components/Projects'
-import CTA from './components/CTA'
 import Footer from './components/Footer'
+import Home from './pages/Home'
+import WritingIndex from './pages/WritingIndex'
+import WritingPost from './pages/WritingPost'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
-    <>
+    <BrowserRouter>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
       <Nav />
-      <Hero />
-      <main id="main">
-        <Capabilities />
-        <Clients />
-        <WhyMe />
-        <Projects />
-        <CTA />
-      </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/writing" element={<WritingIndex />} />
+        <Route path="/writing/:slug" element={<WritingPost />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <Footer />
-    </>
+    </BrowserRouter>
   )
 }

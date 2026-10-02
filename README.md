@@ -1,4 +1,4 @@
-# Srikanth Reddy — Profile Site
+# Bollampally, Srikanth Reddy — Profile Site
 
 Vite + React rebuild of the personal profile page, ready to host on GitHub Pages.
 

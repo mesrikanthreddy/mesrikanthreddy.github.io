@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const STORAGE_KEY = 'kalki-theme'
+const STORAGE_KEY = 'theme'
 const THEMES = ['light', 'system', 'dark']
 
 function resolveSystemTheme() {

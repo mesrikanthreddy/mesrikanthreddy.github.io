@@ -1,0 +1,27 @@
+export const meta = {
+  title: 'Welcome to Writing',
+  date: '2026-10-02',
+  excerpt:
+    'How this section works, and what to expect here going forward.',
+}
+
+This is a sample post that shows how the writing section is wired up. Each
+post lives in `src/content/writing/` as a single `.mdx` file — Markdown with
+the ability to drop in React components when you need them.
+
+## Adding a new post
+
+1. Create a new file in `src/content/writing/`, e.g. `my-post.mdx`.
+2. Export a `meta` object at the top with `title`, `date`, and an optional
+   `excerpt`.
+3. Write the post in Markdown below it.
+
+The post shows up on `/writing` automatically, sorted by date — no routing
+or registry changes needed. Set `meta.draft = true` to keep a post out of
+the list while it's still being written.
+
+## What belongs here
+
+Longer-form pieces that don't fit the portfolio sections above: case study
+write-ups, technical notes, and lessons from the field — replace this post
+with the first one whenever you're ready.
