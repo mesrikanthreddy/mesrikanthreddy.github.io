@@ -15,7 +15,7 @@ export default function WritingPost() {
     return <NotFound />
   }
 
-  const { Component, meta } = post
+  const { Component, meta, readingTime } = post
 
   return (
     <main id="main" className="page-wrap">
@@ -24,9 +24,11 @@ export default function WritingPost() {
           ← All writing
         </Link>
         <h1 className="post-article-title">{meta.title}</h1>
-        <time className="post-date" dateTime={meta.date}>
-          {formatDate(meta.date)}
-        </time>
+        <div className="post-meta">
+          <time dateTime={meta.date}>{formatDate(meta.date)}</time>
+          <span className="post-meta-dot" aria-hidden="true" />
+          <span>{readingTime} min read</span>
+        </div>
         <div className="prose">
           <Component />
         </div>

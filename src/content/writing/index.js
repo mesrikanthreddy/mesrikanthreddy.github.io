@@ -1,11 +1,17 @@
+import readingTimes from './reading-times.generated.json'
+
 const modules = import.meta.glob('./*.mdx', { eager: true })
 
 export const posts = Object.entries(modules)
-  .map(([path, mod]) => ({
-    slug: path.replace('./', '').replace('.mdx', ''),
-    meta: mod.meta,
-    Component: mod.default,
-  }))
+  .map(([path, mod]) => {
+    const slug = path.replace('./', '').replace('.mdx', '')
+    return {
+      slug,
+      meta: mod.meta,
+      Component: mod.default,
+      readingTime: readingTimes[slug] || 1,
+    }
+  })
   .filter((post) => post.meta && !post.meta.draft)
   .sort((a, b) => new Date(b.meta.date) - new Date(a.meta.date))
 
