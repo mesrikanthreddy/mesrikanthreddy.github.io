@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal'
+import { useDocumentMeta } from '../hooks/useDocumentMeta'
 import { posts, formatDate } from '../content/writing'
 
 export default function WritingIndex() {
   const headRef = useReveal()
   const listRef = useReveal()
+  useDocumentMeta({
+    title: 'Writing',
+    description:
+      'Longer-form writing on engineering, AI, and building production systems, from Bollampally, Srikanth Reddy.',
+  })
 
   return (
     <main id="main" className="page-wrap">

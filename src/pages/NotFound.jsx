@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useDocumentMeta } from '../hooks/useDocumentMeta'
 
 export default function NotFound() {
+  useDocumentMeta({ title: 'Page Not Found', noindex: true })
+
   return (
     <main id="main" className="page-wrap">
       <div className="wrap">
