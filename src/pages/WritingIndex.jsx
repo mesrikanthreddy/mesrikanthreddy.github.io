@@ -34,9 +34,13 @@ export default function WritingIndex() {
                     <span className="post-title">{post.meta.title}</span>
                     <span className="proj-arrow">↗</span>
                   </div>
-                  <time className="post-date" dateTime={post.meta.date}>
-                    {formatDate(post.meta.date)}
-                  </time>
+                  <div className="post-meta">
+                    <time dateTime={post.meta.date}>
+                      {formatDate(post.meta.date)}
+                    </time>
+                    <span className="post-meta-dot" aria-hidden="true" />
+                    <span>{post.readingTime} min read</span>
+                  </div>
                   {post.meta.excerpt && (
                     <p className="post-excerpt">{post.meta.excerpt}</p>
                   )}
