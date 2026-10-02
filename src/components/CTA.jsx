@@ -31,6 +31,15 @@ export default function CTA() {
           >
             Visit YTT Global
           </a>
+          <a
+            className="btn btn-ghost"
+            href="/mesrikanthreddy-resume.pdf"
+            target="_blank"
+            rel="noopener"
+            download="Bollampally-Srikanth-Reddy-Resume.pdf"
+          >
+            Download Resume
+          </a>
         </div>
       </div>
     </section>

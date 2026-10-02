@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import mdx from '@mdx-js/rollup'
 
 // https://vite.dev/config/
 //
@@ -10,6 +11,12 @@ import react from '@vitejs/plugin-react'
 // <username>.github.io), base should stay '/'.
 // Deployed as the root user site (repo: mesrikanthreddy.github.io), so base is '/'.
 export default defineConfig({
-  plugins: [react()],
+  // mdx() must run before react()/esbuild so .mdx files are compiled to JSX
+  // first — `enforce: 'pre'` guarantees that ordering regardless of the
+  // underlying bundler's default transform order.
+  plugins: [
+    { enforce: 'pre', ...mdx() },
+    react({ include: /\.(jsx|js|mdx|md)$/ }),
+  ],
   base: '/',
 })
