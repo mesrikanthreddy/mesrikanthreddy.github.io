@@ -12,7 +12,10 @@ const readingTimeOutPath = path.join(
 const WORDS_PER_MINUTE = 200
 
 function estimateReadingTime(raw) {
-  const body = raw.replace(/export const meta[\s\S]*?\n}\n?/, '')
+  const body = raw
+    .replace(/export const meta[\s\S]*?\n}\n?/, '')
+    .replace(/<svg[\s\S]*?<\/svg>/g, '') // illustrations are markup, not reading
+    .replace(/<[^>]+>/g, ' ')
   const words = body.trim().split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE))
 }

@@ -8,7 +8,7 @@
     "dev": "vite",
     "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "vite build",
-    "postbuild": "cp dist/index.html dist/404.html",
+    "postbuild": "node scripts/generate-post-pages.mjs && cp dist/index.html dist/404.html",
     "lint": "oxlint",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -26,6 +26,7 @@
     "@vitejs/plugin-react": "^6.0.4",
     "gh-pages": "^6.3.0",
     "oxlint": "^1.75.0",
+    "remark-gfm": "^4.0.1",
     "vite": "^8.2.0"
   }
 }

@@ -1,0 +1,1034 @@
+export const meta = {
+  title: 'Syntax Is Solved. Intent Isn\'t.',
+  subtitle: 'The coding syntax problem is solved. Now the next problem is intent.',
+  type: 'Yellow Paper',
+  date: '2026-10-05',
+  excerpt:
+    'AI can write correct code in any language on demand. The bottleneck has moved upstream to knowing what to build, and downstream to proving it works.',
+  draft: false,
+}
+
+In 2025, a randomized trial found that experienced developers were **19%
+slower** with AI tools, yet believed they were **20% faster**<sup>[1](#ref-1)</sup>. A year
+later, the same lab said its follow-up data had become "an unreliable
+signal", because 30–50% of developers were withholding tasks they didn't
+want to do without AI<sup>[2](#ref-2)</sup>. Both results point at the same problem: we
+are producing code faster than we can tell whether it is right.
+
+<div className="tldr">
+
+**TL;DR**
+
+- **The shift.** Turning a clear request into working code is cheap now. The
+  errors have moved: they live in the gap between what you meant and what you
+  said.
+- **The evidence.** AI use is near-universal (84–90% of developers), trust is
+  falling (46% distrust its accuracy), and delivery stability still suffers
+  as adoption rises. In 2,731 developer comments from six Hacker News
+  threads (§5), the theme that came up most was verification (review and
+  testing), ahead of intent and ownership.
+- **The fix.** A loop, **Intent → Verify → Own**: a one-page spec before the
+  prompt, a verification ladder that runs automatically, and written-down
+  reasoning so someone can still understand the system later.
+- **Use it today.** Templates, thresholds and a 30-day plan in §6. A real
+  audit of a public project is in §7. The method's limits, and how to test it
+  on your own work, are in §9.
+
+</div>
+
+<div className="paper-note">
+
+**What is a Yellow Paper?** A white paper argues *why* something matters. A
+yellow paper goes further and specifies *how*: a working method concrete
+enough to adopt and test. This one makes the argument (§1–5, including a reading of
+what developers say in public forums), then gives the specification: a loop, a spec template, a verification ladder, and a 30-day
+adoption plan (§6). §7 applies the method to a real, public project. Claims
+are backed by cited research (see References). Because the method is a
+proposal rather than a validated result, §9 states its limits and how to
+test it.
+
+</div>
+
+## Abstract
+
+For most of software's history, the expensive part of building a system was
+turning an idea into working syntax. That cost has collapsed: modern AI
+coding agents produce idiomatic, working code in almost any language or
+framework, faster than a person can describe it.
+
+This paper argues that syntax was never the real constraint. It was the most
+*visible* one. In Fred Brooks's terms, it was accidental complexity, not
+essential complexity<sup>[3](#ref-3)</sup>. With it removed, three harder problems are now exposed:
+**specifying intent**, **verifying correctness**, and **owning systems over
+time**. Teams that only optimize for code output risk shipping more code
+without shipping more working products. Teams that reorganize around these
+three problems are better placed to benefit.
+
+The second half of the paper is practical. It proposes a working loop,
+**Intent → Verify → Own**, and turns each step into concrete artifacts: a
+one-page intent spec, a layered verification ladder, and ownership practices
+that keep a system understandable after the conversation that generated it
+is gone. Along the way it reports a reading of 2,731 developer comments from six Hacker News threads (§5) and an audit of a real public repository (§7). It is explicit about its limits: the method is a proposal, not a validated result, and §9 says how to test it.
+
+## 1. What "solved" actually means
+
+"Syntax is solved" does not mean AI writes perfect software. It means:
+
+- Translating a clearly stated behavior into code in a given language is no
+  longer a scarce skill.
+- Learning a new framework, SDK, or language is no longer a multi-week cost
+  before you can be productive.
+- Boilerplate, glue code, migrations, test scaffolding, and refactors that
+  used to eat days now take minutes.
+
+The speed is measurable. In a controlled experiment, developers with GitHub
+Copilot finished a programming task 55.8% faster than those without it<sup>[4](#ref-4)</sup>,
+and AI agents are now routinely evaluated on resolving real GitHub issues in
+real repositories, not toy problems<sup>[5](#ref-5)</sup>.
+
+The phrase that matters is *clearly stated behavior*. When the input is precise, the output tends to be right. When it is wrong, the cause is often upstream: the request was ambiguous, incomplete, or quietly contradicted something else in the system.
+
+In other words, the error has moved. It used to live in the code. Now it
+lives in the gap between what someone meant and what they said.
+
+That's why faster typing hasn't straightforwardly meant faster delivery. In
+the 2025 trial, 16 experienced open-source developers working on their own
+mature repositories took 19% *longer* when allowed to use AI, while believing
+afterwards that it had made them 20% faster<sup>[1](#ref-1)</sup>. Read that as a result
+about *perception versus measurement*, not a verdict on AI. The sample was
+small and the tools were early-2025 models. METR's February 2026 follow-up,
+using late-2025 tools, found −18% for returning developers and −4% for new
+ones, both with intervals wide enough to include a speedup. METR itself calls
+that data an unreliable signal and a likely *lower bound* on the true
+effect<sup>[2](#ref-2)</sup>. What survives both studies is a narrower, sturdier finding:
+a developer's own sense of speed is a poor instrument, and measuring this
+properly is hard.
+
+<figure className="meme diagram chart">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 560 300" role="img" aria-label="Dot plot of developer speed with AI. Developers forecast a 24 percent speedup and afterwards believed 20 percent, but measured results were 19 percent slower in 2025 and 18 and 4 percent slower in the 2026 follow-up, with 2026 intervals that include a speedup.">
+    <g className="ch-perc"><circle cx="34" cy="20" r="5" fill="currentColor" /></g>
+    <text className="m-faint" x="46" y="24" style={{ fontSize: 11 }}>Expected or believed</text>
+    <g className="ch-meas"><circle cx="214" cy="20" r="5" fill="currentColor" /></g>
+    <text className="m-faint" x="226" y="24" style={{ fontSize: 11 }}>Measured</text>
+    <text className="m-faint" x="381.3" y="48" textAnchor="end">← AI slower</text>
+    <text className="m-faint" x="397.3" y="48">AI faster →</text>
+    <path className="ch-grid" d="M240.0 62V268" /><path className="ch-grid" d="M314.7 62V268" /><path className="ch-grid" d="M464.0 62V268" /><path className="ch-zero" d="M389.3 58V272" />
+    <g className="ch-perc"><title>Expected a 24% speedup before the trial</title><text className="ch-lab" x="228" y="74" textAnchor="end">Developers' forecast, before</text><path d="M389.3 70H478.9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.55" /><circle cx="478.9" cy="70" r="7" className="ch-ring" /><circle cx="478.9" cy="70" r="5" fill="currentColor" /><text className="m-text" x="489.9" y="74" style={{ fontSize: 11, fontWeight: 700 }}>+24%</text></g>
+    <g className="ch-perc"><title>Believed AI had made them 20% faster after the trial</title><text className="ch-lab" x="228" y="119" textAnchor="end">Developers' belief, after</text><path d="M389.3 115H464.0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.55" /><circle cx="464.0" cy="115" r="7" className="ch-ring" /><circle cx="464.0" cy="115" r="5" fill="currentColor" /><text className="m-text" x="475.0" y="119" style={{ fontSize: 11, fontWeight: 700 }}>+20%</text></g>
+    <g className="ch-meas"><title>Measured: tasks took 19% longer with AI</title><text className="ch-lab" x="228" y="164" textAnchor="end">Measured, 2025 trial</text><path d="M389.3 160H318.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.55" /><circle cx="318.4" cy="160" r="7" className="ch-ring" /><circle cx="318.4" cy="160" r="5" fill="currentColor" /><text className="m-text" x="307.4" y="164" textAnchor="end" style={{ fontSize: 11, fontWeight: 700 }}>−19%</text></g>
+    <g className="ch-meas"><title>Measured: 18% slower; 95% interval from 38% slower to 9% faster</title><text className="ch-lab" x="228" y="209" textAnchor="end">Measured, 2026 · returning (n=10)</text><path d="M389.3 205H322.1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.55" /><path d="M247.5 205H422.9M247.5 200V210M422.9 200V210" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="322.1" cy="205" r="7" className="ch-ring" /><circle cx="322.1" cy="205" r="5" fill="currentColor" /><text className="m-text" x="431.9" y="209" style={{ fontSize: 11, fontWeight: 700 }}>−18%<tspan className="m-faint" dx="6">CI -38…+9</tspan></text></g>
+    <g className="ch-meas"><title>Measured: 4% slower; 95% interval from 15% slower to 9% faster</title><text className="ch-lab" x="228" y="254" textAnchor="end">Measured, 2026 · new (n=47)</text><path d="M389.3 250H374.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.55" /><path d="M333.3 250H422.9M333.3 245V255M422.9 245V255" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="374.4" cy="250" r="7" className="ch-ring" /><circle cx="374.4" cy="250" r="5" fill="currentColor" /><text className="m-text" x="431.9" y="254" style={{ fontSize: 11, fontWeight: 700 }}>−4%<tspan className="m-faint" dx="6">CI -15…+9</tspan></text></g>
+    <text className="m-faint" x="240.0" y="288" textAnchor="middle">−40%</text><text className="m-faint" x="314.7" y="288" textAnchor="middle">−20%</text><text className="m-faint" x="389.3" y="288" textAnchor="middle">0</text><text className="m-faint" x="464.0" y="288" textAnchor="middle">+20%</text>
+  </svg>
+  </div>
+  <figcaption>What developers expected and believed, versus what was measured (METR; sources in the paragraph above). The 2026 intervals include zero, and METR calls those data an unreliable, likely lower-bound signal. The 2025 interval is not shown.</figcaption>
+</figure>
+
+<details className="chart-table">
+<summary>View the chart as a table</summary>
+
+| Measure | Result | 95% interval |
+| --- | --- | --- |
+| Developers' forecast, before the trial | +24% faster | not applicable |
+| Developers' belief, after the trial | +20% faster | not applicable |
+| Measured, 2025 trial | −19% (slower) | not shown |
+| Measured, 2026 follow-up, returning developers (n=10) | −18% (slower) | −38% to +9% |
+| Measured, 2026 follow-up, new developers (n=47) | −4% (slower) | −15% to +9% |
+
+</details>
+
+The organizational data points the same way. Google's 2024 DORA report
+associated a 25% increase in AI adoption with a 7.2% drop in delivery
+stability and a 1.5% drop in throughput<sup>[6](#ref-6)</sup>. In the 2025 report, with
+90% of respondents now using AI at work, the throughput relationship turned
+positive, but the stability relationship stayed negative, because
+"acceleration can expose weaknesses downstream"<sup>[7](#ref-7)</sup>. Developers feel it:
+in Stack Overflow's 2025 survey of over 49,000 developers, 84% use or plan to
+use AI tools, yet 46% don't trust their accuracy, up from 31% a year
+earlier<sup>[8](#ref-8)</sup>. Code got cheaper. Software didn't get automatically better.
+
+## 2. The next problem: intent
+
+### 2.1 Specification is the new source code
+
+When a model can write any code you describe, the description *becomes* the
+program. A vague prompt is the new buggy function. The work that matters is
+now:
+
+- Defining the problem in terms of observable behavior, not implementation.
+- Stating constraints that were always implicit: performance budgets, data
+  residency, failure modes, who is allowed to see what.
+- Naming the edge cases before the code exists, not after the incident.
+
+Engineers who are good at this were always valuable. The gap between them and everyone else is likely to widen, because the people who can't do it are amplified in the wrong direction: AI will produce confident, plausible code that solves the wrong problem.
+
+The research bears this out. In a study of 517 Stack Overflow questions, 52%
+of ChatGPT's answers contained incorrect information, and the most common
+category was *conceptual* error (misunderstanding the question), not broken
+code. Users still preferred those answers 35% of the time and missed the
+errors 39% of the time<sup>[9](#ref-9)</sup>.
+
+### 2.2 Context is the scarce input
+
+A model writing a function sees the function. It doesn't see the decision
+made eighteen months ago about why that service retries only twice, the
+regulatory reason a field is never logged, or the client who will churn if
+an export format changes. That knowledge lives in people, tickets, and
+tribal memory.
+
+DORA's 2025 report lists connecting AI to internal context among the capabilities that make its benefits larger<sup>[7](#ref-7)</sup>. In practice that means turning context into something an agent can read: architecture decision records, project-level instruction files, documented conventions, and schemas that encode business rules instead of hiding them. Context engineering is becoming a core engineering discipline.
+
+More context isn't automatically better context. Language models make
+noticeably worse use of information placed in the middle of a long input than
+at its beginning or end<sup>[10](#ref-10)</sup>. Pasting the whole wiki into the prompt isn't a
+strategy. Deciding what the model needs to see, and putting it where the
+model will use it, is.
+
+## 3. The problem after that: verification
+
+If code is cheap to produce, the cost of software shifts to the question
+*"is this right?"* That question is harder than it sounds.
+
+- **Volume outpaces review.** An engineer with an agent can generate far more diff than anyone can review carefully, line by line, and developers say so themselves (§5.2).
+- **Plausible is not correct.** AI-written code tends to look clean and
+  idiomatic, which removes the visual cues reviewers have always relied on
+  to spot sloppy work. When researchers had GitHub Copilot complete 89
+  security-relevant scenarios, about 40% of the 1,689 generated programs
+  were vulnerable<sup>[11](#ref-11)</sup>. In a separate user study, participants with an AI
+  assistant wrote significantly less secure code *and* were more likely to
+  believe their code was secure<sup>[12](#ref-12)</sup>.
+
+<figure className="meme">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 400 240" role="img" aria-label="A huge code diff scrolls past while a stamp reading LGTM, short for Looks Good To Me, slams down on it">
+    <defs>
+      <clipPath id="meme-diff-clip"><rect x="40" y="60" width="190" height="140" /></clipPath>
+    </defs>
+    <rect className="m-paper" x="30" y="28" width="210" height="184" rx="8" />
+    <text className="m-faint" x="46" y="50">+4,102 −3,877 · 61 files</text>
+    <g clipPath="url(#meme-diff-clip)"><g className="m-rows"><rect x="46" y="62" width="150" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="72" width="110" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="82" width="170" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="92" width="90" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="102" width="150" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="112" width="110" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="122" width="170" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="132" width="90" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="142" width="150" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="152" width="110" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="162" width="170" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="172" width="90" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="182" width="150" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="192" width="110" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="202" width="170" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="212" width="90" height="5" rx="2" fill="#d94b4b" opacity="0.75" /><rect x="46" y="222" width="150" height="5" rx="2" fill="#3fa66b" opacity="0.75" /><rect x="46" y="232" width="110" height="5" rx="2" fill="#3fa66b" opacity="0.75" /></g></g>
+    <rect className="m-paper" x="262" y="178" width="118" height="34" rx="4" />
+    <text className="m-faint" x="321" y="124" textAnchor="middle">Looks Good To Me</text>
+    <text className="m-text m-approved" x="278" y="200" style={{ fontWeight: 700, fill: '#3fa66b' }}>✓ APPROVED</text>
+    <g className="m-stamp">
+      <rect className="m-paper" x="308" y="28" width="26" height="40" rx="6" />
+      <rect className="m-acc" x="272" y="68" width="98" height="40" rx="6" />
+      <text x="321" y="94" textAnchor="middle" style={{ fill: 'var(--accent-ink)', fontFamily: 'Space Mono, monospace', fontSize: 20, fontWeight: 700 }}>LGTM</text>
+    </g>
+  </svg>
+  </div>
+  <figcaption>Reviewing a 4,000-line AI-generated diff. "LGTM" (Looks Good To Me).</figcaption>
+</figure>
+
+- **Tests can be wrong in the same way.** When the same system writes the
+  code and the tests from the same misunderstanding, the suite passes and
+  the bug ships. Weak tests hide wrong code at scale: when researchers
+  expanded a widely used code-generation benchmark with 80x more test
+  cases, measured pass rates dropped by up to 28.9%<sup>[13](#ref-13)</sup>.
+
+The answer isn't more manual review. It's moving verification to places
+where it scales:
+
+1. **Executable specifications.** Acceptance criteria written as tests
+   *before* generation, by someone who understands the intent.
+2. **Boundaries enforced by the system, not the reviewer.** Type systems,
+   database-level security policies, contract tests between services, and
+   CI gates that block merges outright.
+3. **Observability as verification.** In production, the real test is
+   whether the system behaves as intended under real load and real data.
+   Monitoring, tracing, and alerting become part of the definition of
+   "done."
+4. **Human review aimed at risk.** People spend their attention on
+   security boundaries, data handling, money movement, and irreversible
+   operations, not on formatting and naming.
+
+## 4. The hardest problem: ownership
+
+Writing code is usually a small part of what a system costs over its life. Running it for years is the expensive part: upgrades, incidents, schema
+migrations, cost control, compliance audits, and the slow drift between what
+the system does and what the business now needs. Lehman observed this in
+1980: software in real use must keep changing, and its complexity grows
+unless work is done to reduce it<sup>[14](#ref-14)</sup>.
+
+AI lowers the cost of creating software, which means organizations are likely to create *more* of it. Every new service, integration, and internal tool is a
+long-term liability as well as an asset. The new failure mode isn't "we
+couldn't build it." It's "we built forty things and nobody understands
+thirty of them."
+
+<figure className="meme">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 400 240" role="img" aria-label="A cork board of unlabeled service notes connected by red string, with one note reading owner question mark">
+    <rect className="m-paper" x="14" y="14" width="372" height="212" rx="8" />
+    <path className="m-string" pathLength="1" d="M60 59 L150 49 L250 69 L340 51 L312 139 L200 117 L90 129 L140 185 L270 185 L250 69 L200 117" />
+    <rect className="m-paper" x="36" y="59" width="48" height="22" rx="3" /><text className="m-faint" x="60" y="73" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-03</text><rect className="m-paper" x="126" y="49" width="48" height="22" rx="3" /><text className="m-faint" x="150" y="63" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-11</text><rect className="m-paper" x="226" y="69" width="48" height="22" rx="3" /><text className="m-faint" x="250" y="83" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-07</text><rect className="m-paper" x="316" y="51" width="48" height="22" rx="3" /><text className="m-faint" x="340" y="65" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-22</text><rect className="m-paper" x="66" y="129" width="48" height="22" rx="3" /><text className="m-faint" x="90" y="143" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-14</text><rect className="m-paper" x="176" y="117" width="48" height="22" rx="3" /><text className="m-faint" x="200" y="131" textAnchor="middle" style={{ fill: '#d94b4b' }}>owner?</text><rect className="m-paper" x="288" y="139" width="48" height="22" rx="3" /><text className="m-faint" x="312" y="153" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-31</text><rect className="m-paper" x="116" y="185" width="48" height="22" rx="3" /><text className="m-faint" x="140" y="199" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-09</text><rect className="m-paper" x="246" y="185" width="48" height="22" rx="3" /><text className="m-faint" x="270" y="199" textAnchor="middle" style={{ fill: 'var(--text-faint)' }}>svc-18</text>
+    <circle cx="60" cy="59" r="4" fill="#d94b4b" /><circle cx="150" cy="49" r="4" fill="#d94b4b" /><circle cx="250" cy="69" r="4" fill="#d94b4b" /><circle cx="340" cy="51" r="4" fill="#d94b4b" /><circle cx="90" cy="129" r="4" fill="#d94b4b" /><circle cx="200" cy="117" r="4" fill="#d94b4b" /><circle cx="312" cy="139" r="4" fill="#d94b4b" /><circle cx="140" cy="185" r="4" fill="#d94b4b" /><circle cx="270" cy="185" r="4" fill="#d94b4b" />
+  </svg>
+  </div>
+  <figcaption>Me, trying to find the owner of the forty services we generated last quarter.</figcaption>
+</figure>
+
+
+Early data points the same way. One industry analysis (not peer-reviewed) of 153 million changed lines of code found code churn (lines reverted or rewritten within two weeks)
+rising sharply alongside AI adoption, with copy-pasted code growing faster
+than refactored or moved code<sup>[15](#ref-15)</sup>. This isn't new for AI-heavy systems:
+Google engineers warned in 2015 that in production ML systems, the code is a
+small fraction of the system and the surrounding infrastructure is where the
+long-term debt accumulates<sup>[16](#ref-16)</sup>.
+
+Ownership in this world means:
+
+- **Fewer, better-understood systems** over many disposable ones.
+- **Architecture that an agent and a new hire can both read**: clear module
+  boundaries, documented decisions, consistent conventions.
+- **Operational maturity as a first-class skill**: infrastructure as code,
+  reproducible environments, cost visibility, and incident response that
+  doesn't depend on whoever wrote the original code.
+
+Peter Naur argued in 1985 that a program's real value is the *theory* of it
+held in the heads of the people who built it, and that a program whose theory
+has been lost is effectively dead even if it still runs<sup>[17](#ref-17)</sup>. AI-generated
+systems are at risk of being born without that theory. The prompt
+conversation that produced them is gone, and nobody ever held the full model
+of the system in their head.
+
+This is where deep infrastructure and production experience arguably becomes *more* valuable, not less. Generating a service is easy. Knowing what happens when
+it meets a real network, a real compliance auditor, and a real 2 a.m. outage
+is not.
+
+## 5. What developers are saying
+
+Studies measure outcomes. They don't show how practitioners reason about the
+problem while living with it. So I read what developers wrote in six
+high-engagement Hacker News threads about AI-assisted coding: 3,049 comments,
+2,731 of them long enough to analyse (15 words or more), from 1,428 different
+people. I coded them for the themes in this paper and for some I hadn't
+planned on.
+
+This is a **qualitative reading with keyword assistance, by one coder**, of one
+website that skews toward working software engineers. It shows what
+developers argue about, not how common any view is in the industry, and it
+measures nothing about code quality or speed. The method, the keyword lists,
+and a hand-check of their accuracy are below, and the scripts are published
+in the [study folder](/research/forum-study/README.md).
+
+<details className="method-details">
+<summary>Method, threads, and accuracy check</summary>
+
+**Threads.** I searched Hacker News's public index for 2025–2026 threads on
+AI-assisted coding with more than 200 points and kept the six most on-topic.
+Raw comments were downloaded on 6 October 2026.
+
+| Thread | Date | Points | Comments analysed |
+| --- | --- | --- | --- |
+| [Measuring the impact of AI on experienced open-source developer productivity](https://news.ycombinator.com/item?id=44522772) | Jul 2025 | 775 | 436 |
+| [We are changing our developer productivity experiment design](https://news.ycombinator.com/item?id=47142078) | Feb 2026 | 88 | 58 |
+| [After two years of vibecoding, I'm back to writing by hand](https://news.ycombinator.com/item?id=46765460) | Jan 2026 | 865 | 576 |
+| [Vibe coding and agentic engineering are getting closer than I'd like](https://news.ycombinator.com/item?id=48037128) | May 2026 | 787 | 785 |
+| [Writing code is cheap now](https://news.ycombinator.com/item?id=47125374) | Feb 2026 | 384 | 434 |
+| [The cult of vibe coding is dogfooding run amok](https://news.ycombinator.com/item?id=47664912) | Apr 2026 | 616 | 442 |
+
+**Codebook.** Six themes. Three come from this paper's framework (intent,
+review and verification, ownership). Three emerged while I read a random
+sample of 22 comments *before* coding: low-quality code volume ("slop"),
+skill atrophy, and the gap between perceived and measured speed. A comment can
+match several themes. Matching used keyword patterns, which are in the
+published script.
+
+**Accuracy.** For each theme I read 12 random matches and judged whether the
+comment was really about that theme. My first keyword lists for ownership and
+skill atrophy were too loose (skill atrophy matched only 1 of 12 correctly,
+because words like "learning" and "forget" matched unrelated sentences), so I
+tightened them, re-coded, and checked a fresh sample. The numbers here use
+the revised lists. I did not measure recall: comments that paraphrase around
+the keywords are missed, so every count is a lower bound.
+
+| Theme | Comments matched | Share of 2,731 | Hand-checked precision |
+| --- | --- | --- | --- |
+| Review and verification | 395 | 14.5% | 10 of 12 |
+| Intent and specs | 210 | 7.7% | 10 of 12 |
+| Ownership and maintenance | 181 | 6.6% | 11 of 12 |
+| Low-quality code volume | 83 | 3.0% | 11 of 12 |
+| Skill atrophy | 27 | 1.0% | 10 of 12 |
+| Perceived vs measured speed | 24 | 0.9% | 9 of 12 |
+
+</details>
+
+### 5.1 What came up
+
+Most of the conversation was about something else: what "vibe coding" means,
+language and tool arguments, careers, hype, and jokes. Only 27% of the
+comments matched any of the six themes. Among the ones that did:
+
+<figure className="meme diagram chart">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 560 262" role="img" aria-label="Bar chart of how many of 2,731 developer comments touched each theme: review and verification 14.5 percent, intent and specs 7.7 percent, ownership and maintenance 6.6 percent, low-quality code volume 3.0 percent, skill atrophy 1.0 percent, perceived versus measured speed 0.9 percent.">
+    <g className="ch-meas"><rect x="22" y="9" width="10" height="10" rx="2" fill="currentColor" /></g>
+    <text className="m-faint" x="38" y="18" style={{ fontSize: 11 }}>Themes from this paper</text>
+    <g className="ch-gray"><rect x="214" y="9" width="10" height="10" rx="2" fill="currentColor" /></g>
+    <text className="m-faint" x="230" y="18" style={{ fontSize: 11 }}>Emerged from reading</text>
+    <path className="ch-grid" d="M286.0 38V232" /><path className="ch-grid" d="M376.0 38V232" /><path className="ch-grid" d="M466.0 38V232" /><path className="ch-zero" d="M196 36V234" />
+    <g className="ch-meas"><title>Review and verification: 395 of 2731 comments (14.5%)</title><text className="ch-lab" x="186" y="64" textAnchor="end">Review and verification</text><path d="M196 52h256.3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-256.3z" fill="currentColor" /><text className="m-text" x="464.3" y="64" style={{ fontSize: 11, fontWeight: 700 }}>14.5%<tspan className="m-faint" dx="6">395</tspan></text></g>
+    <g className="ch-meas"><title>Intent and specs: 210 of 2731 comments (7.7%)</title><text className="ch-lab" x="186" y="94" textAnchor="end">Intent and specs</text><path d="M196 82h134.4a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-134.4z" fill="currentColor" /><text className="m-text" x="342.4" y="94" style={{ fontSize: 11, fontWeight: 700 }}>7.7%<tspan className="m-faint" dx="6">210</tspan></text></g>
+    <g className="ch-meas"><title>Ownership and maintenance: 181 of 2731 comments (6.6%)</title><text className="ch-lab" x="186" y="124" textAnchor="end">Ownership and maintenance</text><path d="M196 112h115.3a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-115.3z" fill="currentColor" /><text className="m-text" x="323.3" y="124" style={{ fontSize: 11, fontWeight: 700 }}>6.6%<tspan className="m-faint" dx="6">181</tspan></text></g>
+    <g className="ch-gray"><title>Low-quality code volume: 83 of 2731 comments (3.0%)</title><text className="ch-lab" x="186" y="154" textAnchor="end">Low-quality code volume</text><path d="M196 142h50.7a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-50.7z" fill="currentColor" /><text className="m-text" x="258.7" y="154" style={{ fontSize: 11, fontWeight: 700 }}>3.0%<tspan className="m-faint" dx="6">83</tspan></text></g>
+    <g className="ch-gray"><title>Skill atrophy: 27 of 2731 comments (1.0%)</title><text className="ch-lab" x="186" y="184" textAnchor="end">Skill atrophy</text><path d="M196 172h13.8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-13.8z" fill="currentColor" /><text className="m-text" x="221.8" y="184" style={{ fontSize: 11, fontWeight: 700 }}>1.0%<tspan className="m-faint" dx="6">27</tspan></text></g>
+    <g className="ch-gray"><title>Perceived vs measured speed: 24 of 2731 comments (0.9%)</title><text className="ch-lab" x="186" y="214" textAnchor="end">Perceived vs measured speed</text><path d="M196 202h11.8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-11.8z" fill="currentColor" /><text className="m-text" x="219.8" y="214" style={{ fontSize: 11, fontWeight: 700 }}>0.9%<tspan className="m-faint" dx="6">24</tspan></text></g>
+    <text className="m-faint" x="196.0" y="252" textAnchor="middle">0%</text><text className="m-faint" x="286.0" y="252" textAnchor="middle">5%</text><text className="m-faint" x="376.0" y="252" textAnchor="middle">10%</text><text className="m-faint" x="466.0" y="252" textAnchor="middle">15%</text>
+  </svg>
+  </div>
+  <figcaption>Share of the 2,731 analysed comments that matched each theme (a comment can match several). Keyword-coded, so these are lower bounds.</figcaption>
+</figure>
+
+- **Review and verification was the most common theme (14.5%).**
+  Checking the output came up about twice as often as specifying it.
+- **Intent (7.7%) and ownership (6.6%) followed**, so the three
+  problems in this paper were the three most discussed. That is partly by
+  construction, because I built the codebook around them. Weigh the quotes
+  below more than the percentages.
+- **The mix changed by thread.** Ownership came up in 12.9% of comments in
+  "Writing code is cheap now" and 3.7% in the METR thread, where the talk
+  was about measurement.
+- **The themes that emerged were rarer.** Low-quality volume ("slop") was
+  3.0%, skill atrophy 1.0%, and perceived versus measured speed
+  0.9% overall (2.8% in the METR thread itself). Keyword recall is
+  limited, so read these as floors.
+
+### 5.2 In their words
+
+Quotes are verbatim, trimmed only where marked with […], and each links to
+the original comment.
+
+**On intent**
+
+<blockquote className="voice">
+  <p>Writing is the easiest part of coding. The challenge is knowing exactly what is needed.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=47670154">Hacker News comment</a> · The cult of vibe coding is dogfooding run amok</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>I think the better unit to commit and work with is the prompt itself, and I think that the prompt is the thing that should be PR'd at this point, because ultimately the spec is what's important.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=47666898">Hacker News comment</a> · The cult of vibe coding is dogfooding run amok</footer>
+</blockquote>
+
+One commenter puts the choice to founders: would you rather have a clean
+codebase built on bad specs, or a bad codebase that gets the domain right?
+Their example:
+
+<blockquote className="voice">
+  <p>Real life example, a fintech with: a) a great codebase but stuck with a single-entry ledger b) a bad codebase that perfectly implements a double-entry ledger</p>
+  <footer><a href="https://news.ycombinator.com/item?id=47667305">Hacker News comment</a> · The cult of vibe coding is dogfooding run amok</footer>
+</blockquote>
+
+**On verification**
+
+<blockquote className="voice">
+  <p>If anything, "truthy" code is more mentally taxing to review than just obviously bad code.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48037827">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>LLM will almost always go for silencing it because it prevents it from reaching the 'reward'.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48043255">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>I cannot effectively review more than 2000 lines of code a day. The LLMs can produce much more than that.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48050872">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+**On ownership**
+
+<blockquote className="voice">
+  <p>The buck stops with me and therefore I have to read the code, line-by-line, carefully.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48038758">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>reading is not enough to keep cognitive debt in check: my skills will atrophy if I do not participate in the writing</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48050872">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>With Agentic Vibecoding, I can never get confident that the resulting software will behave according to specs.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=46778824">Hacker News comment</a> · After two years of vibecoding, I'm back to writing by hand</footer>
+</blockquote>
+
+**On the perception gap**
+
+<blockquote className="voice">
+  <p>it felt like it was taking less time because they were having to do less thinking which feels like it is easier and hence faster.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=44523161">Hacker News comment</a> · Measuring the impact of AI on experienced open-source developer productivity</footer>
+</blockquote>
+
+### 5.3 The other side
+
+Not everyone agrees, and a fair reading has to say so. Some commenters report
+real gains. The sharpest disagreement is about whether a human needs to read
+the code at all: in these threads the line between "vibe coding" and
+"agentic engineering" mostly comes down to whether someone is still
+reviewing and understanding what ships. That is the ownership question from
+§4.
+
+<blockquote className="voice">
+  <p>The distinction between 'vibe coding' and 'agentic engineering' is important. In my experience, the key difference is whether you're reviewing and understanding the code the agent produces.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48043443">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>Gemini and Opus have solved questions that took me weeks to solve myself. […] it will catch a race condition I missed even with testing and line by line scrutiny.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=44525090">Hacker News comment</a> · Measuring the impact of AI on experienced open-source developer productivity</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>the chain-of-trust where you offload knowledge to an external source is identical. We do it all the time but somehow doing it with an LLM means we no longer want to learn?</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48047142">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>If agentic AI is a good idea and if it increases productivity we should expect to see some startup blowing everyone out of the water.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=47125960">Hacker News comment</a> · Writing code is cheap now</footer>
+</blockquote>
+
+<blockquote className="voice">
+  <p>now I just spend 20-30 min reviewing a pr to make sure it follows my directives and move onto other problems.</p>
+  <footer><a href="https://news.ycombinator.com/item?id=48047150">Hacker News comment</a> · Vibe coding and agentic engineering are getting closer than I'd like</footer>
+</blockquote>
+
+### 5.4 What this adds, and what it can't
+
+- **Some practitioners independently reach for the fixes this paper
+  proposes.** Individual commenters suggest committing the spec, treating
+  tests as the thing humans audit, and reading the diff before it ships.
+  That shows the direction is recognisable to people doing the work. It is not evidence that it works,
+  because nothing here measures results.
+- **The objections to verification are already visible.** Reviewing doesn't
+  scale to what agents produce, and an agent will quietly silence a guardrail
+  to reach its goal. §6.2's rule to separate the author from the judge
+  answers some of this, but not all of it.
+- **It sharpens one claim.** §1 says the errors moved from the code into the
+  intent. In these threads the talk is most often about *review*. Both can
+  be true: the cost moved downstream of the typing. That is a better
+  description of what the forum reading shows, and it is why the ladder in
+  §6.2 puts so much weight on checks that run without a person.
+- **What it can't tell us:** effect sizes, what actually works, or how any of
+  this looks outside the corner of the industry that reads Hacker News.
+
+## 6. The solution: the Intent → Verify → Own loop
+
+Each of the three problems has the same root cause: something that used to
+happen *implicitly*, as a side effect of a human typing the code, now happens far less. When you wrote every line yourself, you were forced to
+resolve ambiguity, you noticed when something looked wrong, and you
+understood the result because you built it. AI removed the typing, and with
+it the accidental quality control.
+
+The fix is to make each of those steps *explicit*: give each one an
+artifact, put it in the repository, and enforce it with tooling instead of
+good intentions.
+
+<figure className="meme diagram">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 560 230" role="img" aria-label="A loop diagram: Intent leads to Verify, which leads to Own, and what you learn flows back to rewrite the next spec">
+    <defs>
+      <marker id="loop-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0L10 5L0 10Z" fill="var(--accent)" />
+      </marker>
+    </defs>
+    <g>
+      <rect className="m-paper" x="20" y="36" width="150" height="72" rx="10" />
+      <rect className="m-acc m-hl" x="20" y="36" width="150" height="72" rx="10" />
+      <text className="m-text" x="95" y="68" textAnchor="middle" style={{ fontWeight: 700, fontSize: 15 }}>1 · INTENT</text>
+      <text className="m-faint" x="95" y="88" textAnchor="middle">one-page spec</text>
+    </g>
+    <g>
+      <rect className="m-paper" x="205" y="36" width="150" height="72" rx="10" />
+      <rect className="m-acc m-hl m-d1" x="205" y="36" width="150" height="72" rx="10" />
+      <text className="m-text" x="280" y="68" textAnchor="middle" style={{ fontWeight: 700, fontSize: 15 }}>2 · VERIFY</text>
+      <text className="m-faint" x="280" y="88" textAnchor="middle">ladder, run in CI</text>
+    </g>
+    <g>
+      <rect className="m-paper" x="390" y="36" width="150" height="72" rx="10" />
+      <rect className="m-acc m-hl m-d2" x="390" y="36" width="150" height="72" rx="10" />
+      <text className="m-text" x="465" y="68" textAnchor="middle" style={{ fontWeight: 700, fontSize: 15 }}>3 · OWN</text>
+      <text className="m-faint" x="465" y="88" textAnchor="middle">decisions + owner</text>
+    </g>
+    <path className="m-flow" d="M172 72H202" markerEnd="url(#loop-arrow)" />
+    <path className="m-flow" d="M357 72H387" markerEnd="url(#loop-arrow)" />
+    <path className="m-flow" d="M465 110C465 196 95 196 95 112" markerEnd="url(#loop-arrow)" />
+    <rect className="m-paper" x="140" y="164" width="280" height="26" rx="13" />
+    <text className="m-faint" x="280" y="181" textAnchor="middle">what you learn rewrites the next spec</text>
+  </svg>
+  </div>
+  <figcaption>The loop. Every pass leaves behind a better spec for the next one.</figcaption>
+</figure>
+
+| Problem | Solution | Artifact |
+| --- | --- | --- |
+| Intent | Write the spec before the prompt | A one-page intent spec, plus project context files |
+| Verification | Layer automatic checks; review by risk | A verification ladder enforced in CI |
+| Ownership | Keep the theory of the system alive | Decision records, a named owner, explain-back reviews |
+
+### 6.1 Solving intent: write the spec before the prompt
+
+Code is now cheap to regenerate, so iterate on the *specification* and let
+the code follow. Before any non-trivial change, write a one-page intent spec.
+It doesn't need a tool or a process. A Markdown file in the repository is
+enough:
+
+```markdown
+# Intent: <feature name>
+
+Goal        What outcome, for whom, and why now.
+Must        Observable behaviors, stated so a test could check them.
+Must never  The things that would make this a failure: data leaks,
+            double charges, silent errors.
+Edge cases  Empty, huge, duplicate, concurrent, offline, unauthorized.
+Constraints Performance budget, data residency, cost, compliance.
+Done when   The acceptance tests that must pass, written in plain language.
+```
+
+**Take it with you:**
+<a href="/templates/intent-spec.md" download>intent-spec.md</a> (the template,
+with a short worked example) and
+<a href="/templates/agent-context-example.md" download>agent-context-example.md</a>
+(a starter project instruction file for your coding agent).
+
+Three practices make this work:
+
+1. **Make the agent interrogate the spec first.** Before generating code,
+   ask the model to list every ambiguity, assumption, and missing edge case
+   it sees, and to propose a plan. Answering those questions takes minutes
+   and resolves the conceptual errors that were the most common kind of mistake in one study of ChatGPT answers<sup>[9](#ref-9)</sup>.
+2. **Treat "must never" as the most important section.** Models are good at making things work. They tend to be worse at knowing what must not happen, because that knowledge is usually unwritten. Writing it down is arguably the highest-leverage part of the spec.
+3. **Turn context into code.** Keep project instruction files (conventions,
+   architecture, forbidden patterns, the "why" behind odd decisions) in the
+   repository, versioned and reviewed like code. Keep them short and put the
+   rules that matter most first, since models tend to use the beginning and end of their context best<sup>[10](#ref-10)</sup>. Layer them: organization-wide rules, then
+   per-project rules, then per-directory rules, so each task loads only the
+   context it needs.
+
+### 6.2 Solving verification: build a verification ladder
+
+The goal isn't to review more. It's to make sure that by the time a human
+looks at a change, everything a machine *can* check has already been
+checked. Each rung of the ladder catches a different class of failure:
+
+| Rung | What it catches | Examples |
+| --- | --- | --- |
+| 1. Types and schemas | Shape errors, missing fields, wrong contracts | Strict TypeScript, typed API schemas, database constraints |
+| 2. Tests from the spec | Wrong behavior | Acceptance tests written from "Must" and "Done when", before the code |
+| 3. Policy in the system | Authorization and data-access mistakes | Row-level security, one central authz layer, contract tests |
+| 4. Security scanning | Known vulnerability patterns, leaked secrets | Static analysis and secret scanning on every diff |
+| 5. CI gate | Anything above being skipped under pressure | Nothing merges unless rungs 1–4 pass |
+| 6. Production signals | What only real traffic reveals | SLOs, tracing, alerts, feature flags, fast rollback |
+| 7. Human review by risk | Judgment calls machines can't make | Required review only for auth, money, PII, migrations, irreversible ops |
+
+Two rules hold the ladder together:
+
+- **Separate the author from the judge.** The tests that define "correct"
+  should not come from the same misunderstanding as the code. Write
+  acceptance tests from the spec first, by a human or in a separate agent
+  session that has never seen the implementation. Then generate the code to
+  pass them. Weak, self-written tests are exactly how wrong code survives
+  evaluation<sup>[13](#ref-13)</sup>.
+- **Never let confidence stand in for evidence.** In the studies above, developers using AI overestimated their speed<sup>[1](#ref-1)</sup> and the security of their code<sup>[12](#ref-12)</sup>. The
+  ladder exists so that "it looks right" is never the reason something ships.
+  Security-relevant code in particular gets scanned automatically every time,
+  because roughly 40% of generated code in security-sensitive scenarios has
+  been shown to be vulnerable<sup>[11](#ref-11)</sup>.
+
+### 6.3 Solving ownership: keep the theory alive
+
+If a program's value is the theory of it held by its builders<sup>[17](#ref-17)</sup>, the
+job is to make sure that theory is written down and owned by someone, rather
+than lost when the chat window closes.
+
+- **Commit the intent with the code.** The spec from §6.1 lives in the
+  repository next to the feature it describes. The conversation that
+  produced the code is temporary. The spec is the durable record of what was
+  meant.
+- **Write a decision record for anything surprising.** One short paragraph:
+  what was decided, what was rejected, and why. Future engineers and future
+  agents both read it, and it stops the next change from undoing a
+  deliberate choice.
+- **Pass the explain-back test before merge.** The person merging a change
+  must be able to explain what it does and why, without the AI open. If they
+  can't, it isn't ready, however green the tests are.
+- **Give every system a named owner and a runbook.** "The team" is not an
+  owner. Someone is accountable for each service's health, costs, and
+  upgrades, and the runbook means an incident doesn't depend on whoever
+  happened to prompt it into existence.
+- **Budget for deletion.** Cheap creation needs a counterweight. On a fixed
+  cadence, retire, merge, or simplify systems, because complexity grows
+  unless someone deliberately works against it<sup>[14](#ref-14)</sup>.
+- **Measure stability, not output.** Track change failure rate, time to
+  restore, and code churn alongside delivery speed<sup>[6](#ref-6)</sup><sup>,</sup><sup>[15](#ref-15)</sup>. If AI is helping, these should hold steady or improve. If only speed improves, debt may be accumulating somewhere you aren't looking.
+
+### 6.4 The loop in practice
+
+Here's the loop applied to a small, realistic change. This is a hypothetical walkthrough, not a case study (§7 has the real audit): *add partial refunds to an existing payments service.*
+
+1. **Intent.** A one-page spec. *Must:* refund any amount up to the
+   remaining captured balance. *Must never:* refund more than was captured,
+   refund twice on a retried request, or let a non-admin trigger a refund.
+   *Edge cases:* concurrent refunds, currency rounding, provider timeouts.
+2. **Interrogate.** The agent reads the spec and the project context files,
+   then asks: is the idempotency key client-supplied or server-generated?
+   What happens if the provider succeeds but our database write fails? Both
+   questions get answered in the spec, not discovered in production.
+3. **Verify first.** Acceptance tests are written from the "Must" and "Must
+   never" lines, including a concurrent double-refund test, before any
+   implementation exists.
+4. **Generate.** The agent writes the implementation to pass those tests,
+   inside the existing types, authorization layer, and database constraints.
+5. **Climb the ladder.** Type check, tests, security scan, and CI gate run
+   automatically. Because this touches money, a human review is required,
+   and it focuses on the idempotency and failure-handling paths.
+6. **Ship behind a flag.** Refund volume, failure rate, and provider errors
+   get alerts. Rollback is a flag flip.
+7. **Own.** The spec is committed with the code, the "server-generated
+   idempotency key" choice gets a decision record, and the payments
+   service's owner updates its runbook.
+
+None of these steps needs to be slow, and most should take minutes. Together they give a fast change a much better chance of also being a correct one.
+
+### 6.5 Adopting it in 30 days
+
+You don't need a reorganization to start. Pick one active repository and
+add one layer a week:
+
+- **Week 1: context.** Add a project instruction file and the intent-spec
+  template. Require a spec for any change bigger than a bug fix.
+- **Week 2: the gate.** Turn on strict types, a security scanner, and a CI
+  gate that blocks merges on failure.
+- **Week 3: tests first.** For one feature, write acceptance tests from the
+  spec before generating any code, and compare the outcome with how you
+  worked before.
+- **Week 4: measure.** Record a baseline for change failure rate, time to
+  restore, and churn. From then on, judge AI tooling by whether these move
+  in the right direction, not by how much code it produces.
+
+After a month you should have a repository that an agent and a new hire can both start from with far less guesswork. That is a better measure of success than lines of code.
+
+### 6.6 Starting thresholds
+
+"Write a good spec" and "verify automatically" are only useful if you can
+tell when you've done them. These are the checks I'd start with. They are
+defaults chosen because each one is a yes/no question or something a machine
+can enforce. They are **not derived from data**, so tune them to your context
+and your risk tier (§9.1).
+
+| Area | Check | Pass when |
+| --- | --- | --- |
+| Intent | Every "Must" is observable | A test could be written from the line alone, without asking the author |
+| Intent | Trust boundaries are covered | Each boundary the change touches (auth, money, personal data, external calls) has at least one "Must never". If it touches none, the spec says so |
+| Intent | Edge cases are resolved | Each listed edge case maps to a test or to an explicit "out of scope" note |
+| Intent | The spec stays small | It fits on one page. If it doesn't, split the work |
+| Verify | The gate is the policy | Rungs 1 to 5 are required checks on the default branch, and none can pass by being skipped or swallowed (no `\|\| true`, no `\|\| echo`) |
+| Verify | Traceability | Every "Must" and "Must never" has at least one automated test |
+| Verify | Scanner findings | No new high or critical finding stays open. A waiver needs a written reason and an expiry date |
+| Verify | Human review | Required for the high-stakes tier, enforced by code ownership on auth, payments, migrations, and personal-data paths |
+| Own | A named owner | Every deployed system has one person accountable, recorded in the repository |
+| Own | Explain-back | The person merging can say what changed, why, and how it fails, without the AI open |
+| Own | A written *why* | Anything surprising has a decision record, a changelog entry that gives the reason, or a code comment that does |
+| Own | A retirement review | Each system is reviewed for simplification or retirement at least every six months |
+
+Treat a failed check as a prompt to look, not as proof of a bad change.
+Section 7 shows what scoring a real repository against these rungs looks
+like.
+
+## 7. A real audit: the ladder applied to kshield
+
+A framework is easy to like and hard to trust until it has been pointed at
+real software. I applied the ladder from §6.2 to
+[kshield](https://github.com/YTT-Global/kshield), a public, MIT-licensed
+code-review security scanner that I maintain. It has a Rust CLI, a Python
+backend, a React dashboard, and a VS Code extension.
+
+Be clear about what this is. It is **a point-in-time audit, not an
+experiment**. kshield was not built with this loop, there is no before and
+after, and a single case says nothing about effect. What it can show is
+whether the ladder, applied to real software, finds real and checkable
+things. It did.
+
+The evidence below comes from the repository's files at its latest commit (5
+August 2026) and from GitHub's API on 5 October 2026. Each rung is scored
+Present, Partial, or Absent. Nothing is estimated. The
+[scorecard template](/templates/ladder-scorecard.md) is the same format, so
+you can score your own repository.
+
+| Rung | Status | Evidence from the repository |
+| --- | --- | --- |
+| 1. Types and schemas | Partial | Rust is compiled in CI, the dashboard runs `tsc --noEmit`, and the VS Code extension is compiled. The Python backend has no type checker or linter configured, and the Rust code has no `clippy` or `fmt` check |
+| 2. Tests from the spec | Partial | 186 backend test functions across 9 files, which matches the changelog's count, plus `cargo test` in CI. But `backend/tests/` is gitignored: none of those tests are tracked, so a fresh clone has none |
+| 3. Policy in the system | Absent, disclosed | `SECURITY.md` states that the backend API has no authentication on any endpoint. That is acceptable for the default `127.0.0.1`-only install and risky behind `docker-compose.yml` or a shared host |
+| 4. Security scanning | Present | CodeQL for Python and JS/TS on pushes to `dev` and `master`, on every PR, and weekly. Dependabot weekly across Rust, Python, and npm. kshield also scans the changed files of every PR |
+| 5. CI gate | Absent | Checks run on pull requests, but GitHub reports `master` as not protected and there are no rulesets, so nothing requires checks to pass, or a review, before a merge. The backend test step is `pytest tests/ -v \|\| echo "No tests yet"`, which succeeds whether the tests pass, fail, or don't exist |
+| 6. Production signals | Not applicable | A local-first tool with no hosted service. I found no telemetry or error reporting in the backend, CLI, or dashboard code |
+| 7. Human review by risk | Partial | A PR template and written review criteria exist, and `CONTRIBUTING.md` says every PR needs a review. Nothing enforces it, and 50 of the repository's 51 commits (across all branches) are by one author |
+
+Ownership practice is stronger than the ladder score. `SECURITY.md` names a contact and a
+response time and lists known gaps up front. The changelog records not only
+what changed but why, for example the npm package name that turned out to be
+squatted and the reasons for rewriting the remediation module. Architecture
+notes live in `docs/`. What's missing is per-feature intent specs, a
+decision-record directory, and a code-ownership file.
+
+### What the audit found
+
+- **The strongest rung is scanning and the weakest is the gate.** Every
+  check exists and none is required to merge. That is the failure rung 5 is there to
+  prevent: anything above it being skipped under pressure. A solo maintainer
+  in a hurry can merge a red build.
+- **The most valuable artifact isn't in the repository.** The 186 tests
+  exist and, per the changelog, pass, but they are local only. For a tool
+  whose pitch is catching problems before they reach the main branch, its
+  own backend tests never get there, and the CI step reports "No tests yet"
+  on every run. The changelog already says so, which is a good ownership
+  habit. It also means the gap is known and not yet closed.
+- **A red CI run that isn't about quality.** The most recent pull request
+  run (5 August 2026) is red, although every build, test, and type-check job
+  passed. Only the step that posts kshield's review comments failed. I
+  haven't diagnosed why. A gate that goes red for reasons unrelated to
+  quality teaches people to ignore red.
+
+### What would change
+
+Three small changes would close most of this: track the backend tests (or a
+sanitized subset, since the fixtures contain fake secrets) and delete the
+`|| echo`; protect `master` with required checks and a review; and add a
+Python linter and type checker to CI. Making them would turn this audit into
+the first before-and-after measurement for §9.3, and the baseline is
+recorded here so the comparison can be honest.
+
+## 8. What changes
+
+### 8.1 For engineers
+
+The role shifts from *author* to *architect, editor, and operator*:
+
+<div className="then-now">
+
+| Then | Now |
+| --- | --- |
+| Knowing the syntax | Knowing the system |
+| Writing the code | Specifying the behavior |
+| Reviewing every line | Designing what gets verified, and how |
+| Shipping features | Owning outcomes in production |
+| Learning a framework | Learning a domain |
+
+</div>
+
+Domain expertise becomes the multiplier. An engineer who understands
+energy-grid operations, patent workflows, school administration, or payment
+compliance can now build in that domain far faster than before. An engineer who only understood the framework has lost much of their advantage.
+
+### 8.2 For organizations
+
+- **Measure outcomes, not output.** Lines of code, PR counts, and velocity
+  points were weak proxies before. Now they're actively misleading, because
+  perceived productivity and measured delivery can move in opposite
+  directions<sup>[1](#ref-1)</sup><sup>,</sup><sup>[7](#ref-7)</sup>.
+- **Make the gate the policy.** If a rule matters, enforce it in CI, the
+  type system, or the database, where it can't be skipped under deadline
+  pressure (§6.2, and the gap §7 found). Documentation, decision records,
+  and agent-readable project files pay back directly in AI output quality
+  (§6.1).
+- **Hire and promote for judgment.** Problem framing, system design, risk
+  assessment, and communication with the business are now the core of the
+  job.
+
+## 9. Limits, counterarguments, and how to test this
+
+This paper proposes a method. It does not prove one. The honest status of
+each claim is below.
+
+### 9.1 When not to use the full loop
+
+Ceremony should scale with the cost of being wrong. A weekend prototype
+doesn't need a verification ladder, and a payments service shouldn't run on a
+chat transcript.
+
+| Tier | Example | What to apply |
+| --- | --- | --- |
+| Throwaway | A one-off script, a spike, a demo | Skim the output. Nothing more. |
+| Internal | A tool your team depends on | A short spec, types, a CI gate, a named owner |
+| High stakes | Money, personal data, safety, anything irreversible | The full loop: spec, the whole ladder, risk-based human review, decision records |
+
+### 9.2 Likely objections
+
+- **"Models will get better at asking what you meant."** Partly true, and
+  §6.1 already asks the agent to interrogate the spec. But a better model
+  still can't know the business priority nobody wrote down, or why a field is
+  never logged. Better models probably move the bottleneck. They are unlikely to remove it.
+- **"This is just waterfall with extra steps."** Waterfall's central problem was slow feedback. Here the spec is one page, the loop is meant to run in minutes, and the durable artifact is a set of tests, not a document nobody reads.
+  If your spec grows past a page, that's a signal to split the work.
+- **"The evidence is thin."** Fairly. The forum reading in §5 is one
+  coder's keyword-assisted reading of one website, so it shows what
+  developers argue about, not how common any view is. Several sources here are surveys that
+  show correlation, one is an industry report rather than peer-reviewed
+  research, most studies predate today's models, and the METR numbers carry
+  the caveats described in §1. This paper's claim is structural, namely
+  *where* errors moved, not a forecast of how large the effect is in any
+  team.
+
+### 9.3 How to test this on your own work
+
+Treat the loop as a hypothesis and measure it:
+
+1. **Baseline first.** For one repository, record change failure rate, time to
+   restore service, and code churn for the last quarter<sup>[6](#ref-6)</sup><sup>,</sup><sup>[15](#ref-15)</sup>.
+2. **Adopt the loop for 30 days** using the plan in §6.5, on real work.
+3. **Compare.** If failure rate and time to restore improve and churn falls,
+   the method is earning its overhead for you. If they don't move, the
+   method is the wrong fit for your context, and that is a useful result too.
+
+I'd like to see this tested properly: ideally across several teams, with a
+control group, using measured outcomes instead of self-reports. That's the
+gap between this proposal and a validated result.
+
+## Conclusion
+
+**What changed.** Turning a clear request into working code is now cheap.
+That did not make software easier to get right. It exposed where the
+difficulty always was. Brooks called the typing *accidental* complexity<sup>[3](#ref-3)</sup>.
+What remains is the *essential* part: deciding what to build, proving that it
+does that, and being able to run and change it years later.
+
+**What the evidence says.** A developer's sense of their own speed is a poor
+guide. In one controlled study, developers felt faster while the measurements
+said otherwise, and the follow-up was too distorted to settle it. Delivery
+data shows speed rising while stability suffers. And when more than a
+thousand developers argue about this in public, the theme that comes up most
+is not how to generate code but how to check it, with specifying and owning
+it close behind.
+
+**What this paper proposes.** One loop and three questions. **Intent:** can I
+state, in testable terms, what this must do and must never do? **Verify:**
+what will prove it, and is that check automatic? **Own:** who runs this in
+six months, and can they understand it without the conversation that produced
+it? In practice: a one-page spec, a ladder of checks that can block a merge,
+and a written reason for anything surprising.
+
+**What it has not shown.** This is a proposal. The audit of kshield found the
+gap the paper predicts, checks that exist but can't stop a merge, but one
+repository is an illustration, not proof. Nobody has yet measured whether
+the loop improves outcomes. §9.3 says how to find out.
+
+**What to do this week.** Three small steps. Score one repository with the
+[scorecard](/templates/ladder-scorecard.md). Write one intent spec before your
+next AI-assisted change and commit it. Make one check blocking, and delete any
+`|| true` that lets it pass. Then measure for 30 days, and if the numbers
+don't move, say so.
+
+The coding syntax problem is solved. The next problem is intent, and it
+has always been ours.
+
+<figure className="meme">
+  <div className="figure-scroll">
+  <svg viewBox="0 0 400 240" role="img" aria-label="Two astronauts in space: one asks wait, syntax was never the hard part, the other replies always has been">
+    <circle className="m-twinkle" cx="40" cy="120" r="1.6" style={{ animationDelay: '0s' }} /><circle className="m-twinkle" cx="180" cy="30" r="1.6" style={{ animationDelay: '0.7s' }} /><circle className="m-twinkle" cx="370" cy="100" r="1.6" style={{ animationDelay: '1.3s' }} /><circle className="m-twinkle" cx="30" cy="200" r="1.6" style={{ animationDelay: '2s' }} /><circle className="m-twinkle" cx="210" cy="215" r="1.6" style={{ animationDelay: '0.4s' }} /><circle className="m-twinkle" cx="150" cy="100" r="1.6" style={{ animationDelay: '1.7s' }} /><circle className="m-twinkle" cx="385" cy="40" r="1.6" style={{ animationDelay: '0.9s' }} />
+    <circle cx="335" cy="262" r="96" fill="#3b82c4" />
+    <path d="M276 190C292 176 312 182 322 170C336 176 330 192 346 196C330 208 300 210 276 190Z" fill="#4fae6c" />
+    <g>
+      <rect className="m-paper" x="66" y="172" width="14" height="30" rx="5" />
+      <rect className="m-paper" x="78" y="170" width="44" height="46" rx="12" />
+      <circle className="m-paper" cx="100" cy="150" r="26" />
+      <ellipse className="m-acc" cx="100" cy="151" rx="17" ry="13" opacity="0.85" />
+      <path className="m-ink" d="M88 146Q94 141 100 141" stroke="#fff" opacity="0.7" />
+    </g>
+    <g>
+      <rect className="m-paper" x="228" y="172" width="14" height="30" rx="5" />
+      <rect className="m-paper" x="240" y="170" width="44" height="46" rx="12" />
+      <circle className="m-paper" cx="262" cy="150" r="26" />
+      <ellipse className="m-acc" cx="262" cy="151" rx="17" ry="13" opacity="0.85" />
+      <path className="m-ink" d="M250 146Q256 141 262 141" stroke="#fff" opacity="0.7" />
+    </g>
+    <g className="m-say-a">
+      <rect className="m-paper" x="16" y="14" width="196" height="46" rx="8" />
+      <path className="m-paper" d="M70 60L84 80L96 60" />
+      <text className="m-text" x="28" y="34">Wait, syntax was never</text>
+      <text className="m-text" x="28" y="51">the hard part?</text>
+    </g>
+    <g className="m-say-b">
+      <rect className="m-paper" x="226" y="22" width="156" height="34" rx="8" />
+      <path className="m-paper" d="M256 56L268 78L282 56" />
+      <text className="m-text" x="240" y="44" style={{ fontWeight: 700 }}>Always has been.</text>
+    </g>
+  </svg>
+  </div>
+  <figcaption>Wait, syntax was never the hard part? Always has been.</figcaption>
+</figure>
+
+
+## About the author
+
+**Srikanth Reddy Bollampally** is a full-stack developer, DevOps leader, and
+AI/ML specialist with 12+ years of experience building cloud infrastructure
+and production ML systems for enterprises including Duke Energy, USPTO, and
+Cisco. He is Principal Technical Consultant at YTT Global, a technology
+consulting firm.
+
+## References
+
+Most of the empirical studies below evaluated models and tools from 2021 to
+2025. Treat the specific numbers as evidence of a pattern rather than as a
+measure of today's model capability.
+
+1. <span id="ref-1" />Becker, J., Rush, N., Barnes, E., & Rein, D. (2025).
+   "Measuring the Impact of Early-2025 AI on Experienced Open-Source
+   Developer Productivity." METR.
+   [arXiv:2507.09089](https://arxiv.org/abs/2507.09089).
+2. <span id="ref-2" />METR (2026). "We are Changing our Developer Productivity
+   Experiment Design." February 24, 2026.
+   [metr.org](https://metr.org/blog/2026-02-24-uplift-update/).
+3. <span id="ref-3" />Brooks, F. P. (1987). "No Silver Bullet: Essence and
+   Accidents of Software Engineering." *IEEE Computer*, 20(4), 10–19. First presented at IFIP 1986.
+4. <span id="ref-4" />Peng, S., Kalliamvakou, E., Cihon, P., & Demirer, M.
+   (2023). "The Impact of AI on Developer Productivity: Evidence from GitHub
+   Copilot." [arXiv:2302.06590](https://arxiv.org/abs/2302.06590).
+5. <span id="ref-5" />Jimenez, C. E., Yang, J., Wettig, A., Yao, S., Pei, K.,
+   Press, O., & Narasimhan, K. (2024). "SWE-bench: Can Language Models
+   Resolve Real-World GitHub Issues?" *ICLR 2024*.
+   [arXiv:2310.06770](https://arxiv.org/abs/2310.06770).
+6. <span id="ref-6" />DORA, Google Cloud (2024). *Accelerate State of DevOps
+   Report 2024*.
+   [cloud.google.com](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report).
+7. <span id="ref-7" />DORA, Google Cloud (2025). *State of AI-assisted Software
+   Development Report 2025*.
+   [cloud.google.com](https://cloud.google.com/blog/products/ai-machine-learning/announcing-the-2025-dora-report).
+8. <span id="ref-8" />Stack Overflow (2025). *2025 Developer Survey* (49,000+
+   responses, 177 countries).
+   [stackoverflow.co](https://stackoverflow.co/company/press/archive/stack-overflow-2025-developer-survey/).
+9. <span id="ref-9" />Kabir, S., Udo-Imeh, D. N., Kou, B., & Zhang, T.
+   (2024). "Is Stack Overflow Obsolete? An Empirical Study of the
+   Characteristics of ChatGPT Answers to Stack Overflow Questions." *CHI '24*.
+   [arXiv:2308.02312](https://arxiv.org/abs/2308.02312).
+10. <span id="ref-10" />Liu, N. F., Lin, K., Hewitt, J., Paranjape, A.,
+   Bevilacqua, M., Petroni, F., & Liang, P. (2024). "Lost in the Middle: How
+   Language Models Use Long Contexts." *TACL*.
+   [arXiv:2307.03172](https://arxiv.org/abs/2307.03172).
+11. <span id="ref-11" />Pearce, H., Ahmad, B., Tan, B., Dolan-Gavitt, B., &
+   Karri, R. (2022). "Asleep at the Keyboard? Assessing the Security of
+   GitHub Copilot's Code Contributions." *IEEE S&P 2022*.
+   [arXiv:2108.09293](https://arxiv.org/abs/2108.09293).
+12. <span id="ref-12" />Perry, N., Srivastava, M., Kumar, D., & Boneh, D.
+   (2023). "Do Users Write More Insecure Code with AI Assistants?" *ACM CCS
+   2023*. [arXiv:2211.03622](https://arxiv.org/abs/2211.03622).
+13. <span id="ref-13" />Liu, J., Xia, C. S., Wang, Y., & Zhang, L. (2023).
+   "Is Your Code Generated by ChatGPT Really Correct? Rigorous Evaluation of
+   Large Language Models for Code Generation." *NeurIPS 2023*.
+   [arXiv:2305.01210](https://arxiv.org/abs/2305.01210).
+14. <span id="ref-14" />Lehman, M. M. (1980). "Programs, Life Cycles, and
+   Laws of Software Evolution." *Proceedings of the IEEE*, 68(9),
+   1060–1076.
+15. <span id="ref-15" />GitClear (2024). "Coding on Copilot: 2023 Data
+   Suggests Downward Pressure on Code Quality." Industry report, not peer
+   reviewed.
+   [gitclear.com](https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality).
+16. <span id="ref-16" />Sculley, D., Holt, G., Golovin, D., Davydov, E.,
+   Phillips, T., Ebner, D., Chaudhary, V., Young, M., Crespo, J.-F., &
+   Dennison, D. (2015). "Hidden Technical Debt in Machine Learning Systems."
+   *NeurIPS 2015*.
+17. <span id="ref-17" />Naur, P. (1985). "Programming as Theory Building."
+   *Microprocessing and Microprogramming*, 15(5), 253–261.
