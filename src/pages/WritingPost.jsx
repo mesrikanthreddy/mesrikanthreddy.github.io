@@ -23,7 +23,13 @@ export default function WritingPost() {
         <Link className="post-back" to="/writing">
           ← All writing
         </Link>
+        {meta.type && (
+          <span className="post-type" data-type={meta.type}>
+            {meta.type}
+          </span>
+        )}
         <h1 className="post-article-title">{meta.title}</h1>
+        {meta.subtitle && <p className="post-subtitle">{meta.subtitle}</p>}
         <div className="post-meta">
           <time dateTime={meta.date}>{formatDate(meta.date)}</time>
           <span className="post-meta-dot" aria-hidden="true" />

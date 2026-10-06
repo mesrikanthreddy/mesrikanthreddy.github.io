@@ -1,0 +1,50 @@
+{
+  "fetched": "2026-10-06",
+  "source": "Hacker News via the public Algolia API (hn.algolia.com)",
+  "min_words": 15,
+  "comments_total": 3049,
+  "comments_analysed": 2731,
+  "authors_analysed": 1428,
+  "comments_matching_any_theme": 738,
+  "themes": {
+    "intent": {
+      "matched": 210,
+      "share_pct": 7.7,
+      "hand_checked_precision": "10 of 12"
+    },
+    "review": {
+      "matched": 395,
+      "share_pct": 14.5,
+      "hand_checked_precision": "10 of 12"
+    },
+    "ownership": {
+      "matched": 181,
+      "share_pct": 6.6,
+      "hand_checked_precision": "11 of 12"
+    },
+    "slop": {
+      "matched": 83,
+      "share_pct": 3.0,
+      "hand_checked_precision": "11 of 12"
+    },
+    "atrophy": {
+      "matched": 27,
+      "share_pct": 1.0,
+      "hand_checked_precision": "10 of 12"
+    },
+    "perception": {
+      "matched": 24,
+      "share_pct": 0.9,
+      "hand_checked_precision": "9 of 12"
+    }
+  },
+  "per_thread_comments_analysed": {
+    "44522772": 436,
+    "46765460": 576,
+    "47125374": 434,
+    "47142078": 58,
+    "47664912": 442,
+    "48037128": 785
+  },
+  "notes": "Counts are lower bounds: recall was not measured. Ownership and atrophy keyword lists were tightened after a first precision check and re-checked on a fresh sample."
+}
