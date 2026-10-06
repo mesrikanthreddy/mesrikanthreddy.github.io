@@ -794,13 +794,22 @@ footer {
   font-size: 18px;
   color: var(--text);
 }
-.post-date {
-  display: block;
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 6px;
   font-family: 'Space Mono', monospace;
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--text-faint);
+}
+.post-meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  flex-shrink: 0;
 }
 .post-excerpt {
   margin-top: 10px;
@@ -827,7 +836,7 @@ footer {
 .post-article-title {
   max-width: 760px;
 }
-.post-article .post-date {
+.post-article .post-meta {
   margin: 14px 0 40px;
 }
 
@@ -842,9 +851,27 @@ footer {
 .prose p {
   margin: 20px 0;
 }
+.prose > p:first-of-type {
+  font-size: 19px;
+  color: var(--text);
+  font-weight: 300;
+  line-height: 1.65;
+}
 .prose h2 {
-  margin: 48px 0 16px;
+  position: relative;
+  margin: 56px 0 20px;
+  padding-bottom: 14px;
   font-size: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.prose h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
 }
 .prose h3 {
   margin: 36px 0 12px;
@@ -853,12 +880,37 @@ footer {
   font-family: 'Sora', sans-serif;
   font-weight: 600;
 }
-.prose ul,
-.prose ol {
-  margin: 16px 0 16px 22px;
-}
 .prose li {
   margin: 8px 0;
+}
+.prose ul {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+.prose ul li {
+  position: relative;
+  padding-left: 22px;
+}
+.prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.prose ol {
+  margin: 20px 0 20px 4px;
+  padding-left: 22px;
+}
+.prose ol li::marker {
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 0.9em;
 }
 .prose a {
   color: var(--accent);
