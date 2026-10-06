@@ -25,6 +25,7 @@
 
 - Resume (PDF): https://mesrikanthreddy.github.io/mesrikanthreddy-resume.pdf
 - Writing: https://mesrikanthreddy.github.io/writing
+- Yellow Paper, "Syntax Is Solved. Intent Isn't.": https://mesrikanthreddy.github.io/writing/syntax-is-solved
 - GitHub: https://github.com/mesrikanthreddy
 - LinkedIn: https://www.linkedin.com/in/bsrikanth-reddy/
 - YTT Global: https://ytt.global

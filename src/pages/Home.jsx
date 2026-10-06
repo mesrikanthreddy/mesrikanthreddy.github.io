@@ -3,6 +3,7 @@ import Capabilities from '../components/Capabilities'
 import Clients from '../components/Clients'
 import WhyMe from '../components/WhyMe'
 import Projects from '../components/Projects'
+import LatestWriting from '../components/LatestWriting'
 import CTA from '../components/CTA'
 import { useDocumentMeta } from '../hooks/useDocumentMeta'
 
@@ -20,6 +21,7 @@ export default function Home() {
         <Clients />
         <WhyMe />
         <Projects />
+        <LatestWriting />
         <CTA />
       </main>
     </>

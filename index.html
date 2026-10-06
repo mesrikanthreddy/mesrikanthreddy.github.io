@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://mesrikanthreddy.github.io/" />
     <meta
@@ -83,15 +83,27 @@
     </script>
 
     <script>
+      // Theme bootstrap (runs before first paint). Light is the default for
+      // anyone without a saved choice. Storage key is versioned (v2) so an old
+      // saved value (e.g. "system" or "dark" from an earlier visit) can't
+      // silently override the light default. Storage can be blocked (private
+      // mode / strict privacy), so every access is guarded.
       (function () {
-        var stored = localStorage.getItem('theme') || 'light'
-        var resolved =
-          stored === 'system'
-            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        var stored = 'light'
+        try {
+          stored = localStorage.getItem('theme-v2') || 'light'
+        } catch (e) {}
+        var resolved = stored
+        if (stored === 'system') {
+          resolved =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
               ? 'dark'
               : 'light'
-            : stored
+        }
+        if (resolved !== 'dark') resolved = 'light'
         document.documentElement.setAttribute('data-theme', resolved)
+        var meta = document.querySelector('meta[name="theme-color"]')
+        if (meta) meta.setAttribute('content', resolved === 'dark' ? '#14161a' : '#ffffff')
       })()
     </script>
   </head>

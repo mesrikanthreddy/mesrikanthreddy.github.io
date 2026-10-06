@@ -1,4 +1,9 @@
+import { Link } from 'react-router-dom'
+import { posts } from '../content/writing'
+
 export default function Hero() {
+  const latest = posts.find((post) => post.meta.type)
+
   return (
     <section className="hero" id="top">
       <div className="hero-content">
@@ -33,6 +38,12 @@ export default function Hero() {
             <span className="dot" /> Building a stealth healthcare startup, YTT
             Global
           </div>
+          {latest && (
+            <Link className="current-role" to={`/writing/${latest.slug}`}>
+              <span className="dot is-new" /> New {latest.meta.type}:{' '}
+              {latest.meta.title} <span className="arrow">→</span>
+            </Link>
+          )}
         </div>
         <div className="scroll-cue">
           <span />

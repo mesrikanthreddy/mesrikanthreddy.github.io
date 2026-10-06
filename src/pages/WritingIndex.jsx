@@ -31,7 +31,14 @@ export default function WritingIndex() {
               {posts.map((post) => (
                 <Link className="post-item" to={`/writing/${post.slug}`} key={post.slug}>
                   <div className="post-item-top">
-                    <span className="post-title">{post.meta.title}</span>
+                    <span className="post-title">
+                      {post.meta.type && (
+                        <span className="post-type" data-type={post.meta.type}>
+                          {post.meta.type}
+                        </span>
+                      )}
+                      {post.meta.title}
+                    </span>
                     <span className="proj-arrow">↗</span>
                   </div>
                   <div className="post-meta">
