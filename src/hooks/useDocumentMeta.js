@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 const SITE_NAME = 'Bollampally, Srikanth Reddy'
 const DEFAULT_DESCRIPTION =
-  'Full-Stack Developer, DevOps Leader, and AI/ML Specialist with 12+ years building cloud infrastructure and production ML systems.'
+  'Full-Stack Developer, DevSecOps Leader, and AI/ML Specialist with 12+ years building cloud infrastructure and production ML systems.'
 
 export function useDocumentMeta({
   title,
@@ -10,7 +10,7 @@ export function useDocumentMeta({
   noindex = false,
 } = {}) {
   useEffect(() => {
-    const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Full-Stack · DevOps · AI/ML`
+    const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Full-Stack · DevSecOps · AI/ML`
     document.title = fullTitle
 
     const setMeta = (selector, attr, value) => {

@@ -10,7 +10,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta'
 export default function Home() {
   useDocumentMeta({
     description:
-      'Full-Stack Developer, DevOps Leader, and AI/ML Specialist with 12+ years building cloud infrastructure and production ML systems for enterprises like Duke Energy, USPTO, and Cisco.',
+      'Full-Stack Developer, DevSecOps Leader, and AI/ML Specialist with 12+ years building cloud infrastructure and production ML systems for enterprises like Duke Energy, USPTO, and Cisco.',
   })
 
   return (

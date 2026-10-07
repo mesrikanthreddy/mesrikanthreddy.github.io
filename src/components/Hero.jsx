@@ -7,12 +7,12 @@ export default function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-content">
-        <div className="eyebrow">Full-Stack · DevOps · AI/ML</div>
+        <div className="eyebrow">Full-Stack · DevSecOps · AI/ML</div>
         <h1>
           <span className="surname">Bollampally</span>, Srikanth Reddy
         </h1>
         <p className="role">
-          Full-Stack Developer · Full-Stack DevOps Leader ·{' '}
+          Full-Stack Developer · Full-Stack DevSecOps Leader ·{' '}
           <strong>AI/ML Specialist</strong> ·{' '}
           <strong>Forward Deployed Engineer</strong> ·{' '}
           <strong>Agentic AI Developer</strong>
