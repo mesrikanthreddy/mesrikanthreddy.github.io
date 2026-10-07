@@ -1,0 +1,506 @@
+import { Gif, Convo, CaseStudy, Chat, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part C: From Candidate Generation to Convolution',
+  subtitle: 'Another week at the chai stall: nine more machine learning terms and two friends who now ask for sources.',
+  type: 'Meme Feast',
+  date: '2026-10-09',
+  excerpt:
+    'Nine machine learning terms starting with C, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 3,
+}
+
+Another week, same bench. Last Saturday ended with Sundu asking for sources, so we now have a house rule: every claim needs one.
+
+Catching up? Start with [Part A](/writing/ml-glossary-a) and [Part B](/writing/ml-glossary-b). This round covers the C section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 60 entries. I picked nine that make good stories. Two of them, classification threshold and confusion matrix, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals).
+
+<Poster
+  badge="Part C · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Nine terms. Two friends. Sources on request."
+  rating="10/10 · bench reserved"
+  stats={['9 terms', '8 animations', '9 real cases', '1 crashed training run']}
+/>
+
+---
+
+## Candidate Generation: The Funnel
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a site pick what to show me out of millions of videos?' },
+    { who: 'sriku', text: 'In stages. First, a recommendation system picks a much smaller list of suitable items. That is candidate generation. Then a slower, more careful step ranks them.' },
+    { who: 'sundu', text: 'Why not rank everything?' },
+    { who: 'sriku', text: 'Too expensive. Google’s glossary uses a bookstore with 100,000 titles: candidate generation narrows it to, say, 500 for you. Even 500 is too many to show, so later steps trim it again.' },
+  ]}
+/>
+
+<Gif
+  name="candidate-generation"
+  alt="A crowd of dots labelled millions of videos falls through a funnel. After candidate generation only hundreds remain, after ranking dozens, and finally a few reach the screen."
+  caption="Fig. 24: Millions, hundreds, dozens, a few."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who really does this?' },
+    { who: 'sriku', text: 'YouTube. A 2016 Google paper describes it: the enormous corpus is winnowed down to hundreds of videos that may be relevant to the user.' },
+    { who: 'cherry', text: 'And then?' },
+    { who: 'sriku', text: 'A separate deep ranking model scores those, and only a few are shown. The paper’s own diagram calls it a funnel: millions, then hundreds, then dozens.' },
+    { who: 'sundu', text: 'Why two stages?' },
+    { who: 'sriku', text: 'The paper says it lets them recommend from a very large corpus while still being certain the small number shown is personalized and engaging.' },
+  ]}
+/>
+
+<CaseStudy
+  title="YouTube (Google, 2016): a funnel from millions of videos"
+  stats={[
+    { value: 'Millions', label: 'Videos in the corpus' },
+    { value: 'Hundreds', label: 'After candidate generation' },
+    { value: 'Dozens', label: 'After ranking' },
+  ]}
+  winner="The two-stage design lets YouTube recommend from “a very large corpus (millions) of videos” while the small number shown stays personalized."
+  takeaway="Cheap and wide first, expensive and careful second."
+  source={{
+    text: 'Covington, Adams and Sargin (Google), “Deep Neural Networks for YouTube Recommendations”, RecSys 2016. Free PDF.',
+    href: 'https://research.google.com/pubs/archive/45530.pdf',
+  }}
+/>
+
+**Real definition:** the initial, much smaller set of recommendations a recommendation system picks from the full catalog, before later steps score and re-rank them. [Google’s glossary: candidate generation ↗](https://developers.google.com/machine-learning/glossary#candidate-generation)
+
+---
+
+## Chain-of-Thought Prompting: Show Your Working
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I get a language model to do better at maths word problems?' },
+    { who: 'sriku', text: 'Ask it to explain its reasoning, step by step. That is chain-of-thought prompting.' },
+    { who: 'sundu', text: 'Like "show your working" at school.' },
+    { who: 'sriku', text: 'Same rule. You can even teach it by example: put a few worked answers in the prompt, with the reasoning written out.' },
+  ]}
+/>
+
+<Gif
+  name="chain-of-thought"
+  alt="A tennis-ball word problem. First the answer alone: the answer is 11. Then the working shown step by step: Roger started with 5 balls, 2 cans of 3 balls is 6 balls, 5 plus 6 is 11, the answer is 11."
+  caption="Fig. 25: The tennis-ball example is from the paper’s first figure."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Does it really help?' },
+    { who: 'sriku', text: 'A 2022 Google paper tried it. They prompted a 540-billion-parameter model with just eight chain-of-thought examples.' },
+    { who: 'sundu', text: 'And?' },
+    { who: 'sriku', text: 'It reached state-of-the-art accuracy on GSM8K, a benchmark of maths word problems, beating even a fine-tuned GPT-3 with a verifier.' },
+    { who: 'cherry', text: 'Does it work on any model?' },
+    { who: 'sriku', text: 'The authors say these reasoning abilities emerge naturally in sufficiently large language models.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Chain-of-thought prompting (Google, 2022)"
+  stats={[
+    { value: '540B', label: 'Parameters in the model' },
+    { value: '8', label: 'Worked examples in the prompt' },
+    { value: 'GSM8K', label: 'Maths word-problem benchmark' },
+  ]}
+  winner="Result: “state of the art accuracy on the GSM8K benchmark of math word problems, surpassing even finetuned GPT-3 with a verifier.”"
+  takeaway="Asking a model to think out loud helped it reason, with no retraining at all."
+  source={{
+    text: 'Wei et al., “Chain-of-Thought Prompting Elicits Reasoning in Large Language Models”, 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2201.11903',
+  }}
+/>
+
+**Real definition:** a prompt-engineering technique that encourages a large language model to explain its reasoning step by step. [Google’s glossary: chain-of-thought prompting ↗](https://developers.google.com/machine-learning/glossary#chain-of-thought-prompting)
+
+---
+
+## Checkpoint: Save Before You Regret
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What happens if training crashes at 3 AM?' },
+    { who: 'sriku', text: 'If you saved a checkpoint, you restart from there. A checkpoint is the saved state of a model’s parameters, during or after training.' },
+    { who: 'cherry', text: 'Like saving a video game.' },
+    { who: 'sriku', text: 'Exactly. Stop, save, reload later, even on different hardware, and carry on.' },
+  ]}
+/>
+
+<Gif
+  name="checkpoint"
+  alt="A training progress bar with four save points. At 74 percent a hardware failure turns the bar red. Training restarts from the last save at 60 percent and finishes, having lost 14 percent of progress instead of 74."
+  caption="Fig. 26: A checkpoint turns a disaster into a delay."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Does that matter outside small experiments?' },
+    { who: 'sriku', text: 'Ask Meta’s team that trained OPT-175B, a 175-billion-parameter language model, on 992 GPUs.' },
+    { who: 'sundu', text: 'Did anything break?' },
+    { who: 'sriku', text: 'Hardware failures caused at least 35 manual restarts and over 100 hosts being cycled out, across about two months.' },
+    { who: 'cherry', text: 'So they started over every time?' },
+    { who: 'sriku', text: 'No. After the bad nodes were cordoned off, training resumed from the last saved checkpoint.' },
+    { who: 'sundu', text: 'Did they hide the mess?' },
+    { who: 'sriku', text: 'They published the logbook of the model’s creation, with the code.' },
+  ]}
+/>
+
+<CaseStudy
+  title="OPT-175B (Meta AI, 2022): restarting a two-month training run"
+  stats={[
+    { value: '992', label: 'A100 GPUs' },
+    { value: '35+', label: 'Manual restarts' },
+    { value: '100+', label: 'Hosts cycled out' },
+    { value: '~2 months', label: 'Training run' },
+  ]}
+  winner="In the paper’s words, after flagged nodes were cordoned off, training “was resumed from the last saved checkpoint.”"
+  takeaway="At this scale, failure is not an if. Checkpoints decide whether it costs minutes or months."
+  source={{
+    text: 'Zhang et al. (Meta AI), “OPT: Open Pre-trained Transformer Language Models”, 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2205.01068',
+  }}
+/>
+
+**Real definition:** data that captures the state of a model’s parameters during or after training, so you can stop, reload the checkpoint later (even on different hardware) and restart training. [Google’s glossary: checkpoint ↗](https://developers.google.com/machine-learning/glossary#checkpoint)
+
+---
+
+## Classification Threshold: Where Do You Draw the Line?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A model says there is a 70% chance this scan shows disease. Is that a yes or a no?' },
+    { who: 'sriku', text: 'That depends on the classification threshold: a number between 0 and 1 that turns the model’s raw score into a yes or a no.' },
+    { who: 'sundu', text: 'Who picks it?' },
+    { who: 'sriku', text: 'A human. Google’s glossary says it is a value a person chooses, not one found by training.' },
+    { who: 'cherry', text: 'And moving it changes the mistakes.' },
+    { who: 'sriku', text: 'Lower it and you catch more real cases but raise more false alarms. Raise it and you do the opposite.' },
+  ]}
+/>
+
+<Gif
+  name="classification-threshold"
+  alt="Red dots for sick patients and green dots for healthy patients are placed by score. A yellow threshold line slides from left to right and back. The counters for cases caught, false alarms and cases missed change as it moves. The data is a toy example."
+  caption="Fig. 27: Toy data. Slide the line, trade one mistake for the other."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Real example?' },
+    { who: 'sriku', text: 'The Google eye-disease model from the first week. Sensitivity is how many sick eyes it catches. Specificity is how many healthy eyes it correctly clears.' },
+    { who: 'cherry', text: 'The one with the AUC of 0.991.' },
+    { who: 'sriku', text: 'That one. The paper reports two operating points, which is the same idea as two thresholds. The first favours specificity: 90.3% sensitivity and 98.1% specificity on EyePACS-1.' },
+    { who: 'sundu', text: 'And the second?' },
+    { who: 'sriku', text: 'A high-sensitivity point, meant for a screening tool: 97.5% sensitivity and 93.4% specificity on the same set.' },
+    { who: 'cherry', text: 'So you catch more, but get more false alarms.' },
+    { who: 'sriku', text: 'Same model, different threshold, different trade.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Same model, two thresholds (Google, JAMA 2016)"
+  stats={[
+    { value: '90.3%', label: 'Sensitivity, high-specificity point' },
+    { value: '98.1%', label: 'Specificity, same point' },
+    { value: '97.5%', label: 'Sensitivity, screening point' },
+    { value: '93.4%', label: 'Specificity, screening point' },
+  ]}
+  winner="The paper describes its second operating point as “an output that would be used for a screening tool.”"
+  takeaway="Sensitivity goes up, specificity goes down. The threshold decides which mistake you would rather make."
+  source={{
+    text: 'Gulshan et al., “Development and Validation of a Deep Learning Algorithm for Detection of Diabetic Retinopathy in Retinal Fundus Photographs”, JAMA 2016. Free PDF on Google Research.',
+    href: 'https://research.google.com/pubs/archive/45732.pdf',
+  }}
+/>
+
+**Real definition:** in binary classification, a number between 0 and 1 that converts a model’s raw output into a positive or negative prediction. A confusion matrix is the table that counts the correct and incorrect predictions it makes. [Google’s glossary (Fundamentals): classification threshold ↗](https://developers.google.com/machine-learning/glossary/fundamentals#classification-threshold) · [confusion matrix ↗](https://developers.google.com/machine-learning/glossary/fundamentals#confusion-matrix)
+
+---
+
+## Collaborative Filtering: People Like You Also Bought
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a shop know I would like a cookie with my chai?' },
+    { who: 'sriku', text: 'Collaborative filtering: predicting one person’s interests from the interests of many other people.' },
+    { who: 'sundu', text: 'So it never looks at the cookie.' },
+    { who: 'sriku', text: 'It does not need to know what a cookie is. It only sees that people who bought chai also tended to buy cookies.' },
+  ]}
+/>
+
+<Gif
+  name="collaborative-filtering"
+  alt="A shopper who bought chai sees a crowd of other shoppers' baskets. Most baskets that contain chai also contain a cookie, so the cookie is recommended."
+  caption="Fig. 28: People who bought this also bought that."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who does this at real scale?' },
+    { who: 'sriku', text: 'Amazon. A 2003 paper from Amazon describes item-to-item collaborative filtering.' },
+    { who: 'cherry', text: 'What was the hard part?' },
+    { who: 'sriku', text: 'A large retailer can have tens of millions of customers and millions of catalog items, and results are needed in real time, in no more than half a second.' },
+    { who: 'sundu', text: 'How did they manage?' },
+    { who: 'sriku', text: 'They build the expensive table of similar items offline. The online part just looks up items similar to what you bought or rated, so it scales independently of the catalog size or the number of customers.' },
+    { who: 'cherry', text: 'The slow thinking happens while you are asleep.' },
+    { who: 'sriku', text: 'That is the trick.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Amazon (2003): item-to-item collaborative filtering"
+  stats={[
+    { value: 'Tens of millions', label: 'Customers' },
+    { value: 'Millions', label: 'Catalog items' },
+    { value: '≤ 0.5 s', label: 'Time allowed for results' },
+  ]}
+  winner="The key idea, in the authors’ words: the algorithm creates “the expensive similar-items table offline”, so the online part “scales independently of the catalog size or the total number of customers.”"
+  takeaway="Do the heavy thinking ahead of time, so the answer is instant."
+  source={{
+    text: 'Linden, Smith and York (Amazon.com), “Amazon.com Recommendations: Item-to-Item Collaborative Filtering”, IEEE Internet Computing, Jan to Feb 2003. Free PDF (hosted on a University of Maryland course page).',
+    href: 'https://www.cs.umd.edu/~samir/498/Amazon-Recommendations.pdf',
+  }}
+/>
+
+**Real definition:** making predictions about the interests of one user based on the interests of many other users. It is often used in recommendation systems. [Google’s glossary: collaborative filtering ↗](https://developers.google.com/machine-learning/glossary#collaborative-filtering)
+
+---
+
+## Concept Drift: The World Moved, the Model Didn’t
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'My model was great last year. Now it is rubbish. I changed nothing!' },
+    { who: 'sriku', text: 'That is the problem. Concept drift: the relationship between your features and the label shifts, and the model’s quality drops over time.' },
+    { who: 'cherry', text: 'So the model stayed the same, but the world did not.' },
+    { who: 'sriku', text: 'Exactly.' },
+  ]}
+/>
+
+<Gif
+  name="concept-drift"
+  alt="Two lines move together: reality in white and a model's prediction in green. At the marked moment the world changes, the prediction keeps going but reality does not follow it, and a red gap opens between them. The data is a toy example."
+  caption="Fig. 29: Toy example. The model keeps predicting the old world."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Famous example?' },
+    { who: 'sriku', text: 'Google Flu Trends, which was designed to forecast the flu reports of the US CDC.' },
+    { who: 'sundu', text: 'How wrong did it get?' },
+    { who: 'sriku', text: 'In early 2013, Nature reported it was estimating more than double the percentage of flu-like doctor visits that the CDC reported for the 2012-13 season.' },
+    { who: 'cherry', text: 'One bad year?' },
+    { who: 'sriku', text: 'The researchers found the overestimation in 2011-12 as well, with errors that were persistent and seasonal.' },
+    { who: 'sundu', text: 'Why?' },
+    { who: 'sriku', text: 'They say it was likely, at least in part, due to changes in Google’s own search algorithm, and to not using earlier CDC reports or seasonality in the model. The ground had moved under the model.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Google Flu Trends: when the ground moved"
+  stats={[
+    { value: '2×+', label: 'GFT vs CDC flu-like doctor visits, 2012-13' },
+    { value: '2', label: 'Seasons with overestimates (2011-12, 2012-13)' },
+  ]}
+  winner="The researchers’ explanation: the issues were “likely, at least in part, due to modifications made by Google’s search algorithm” and to not using earlier CDC data or seasonality."
+  takeaway="Models do not stay good by themselves. Watch them after launch, and retrain when the world moves."
+  source={{
+    text: 'Lazer, Kennedy, King and Vespignani, “Google Flu Trends Still Appears Sick: An Evaluation of the 2013-2014 Flu Season”, 2014. Free PDF.',
+    href: 'https://gking.harvard.edu/files/ssrn-id2408560_2.pdf',
+  }}
+/>
+
+**Real definition:** a shift in the relationship between features and the label. Over time, concept drift reduces a model’s quality. [Google’s glossary: concept drift ↗](https://developers.google.com/machine-learning/glossary#concept-drift)
+
+---
+
+## Confabulation: The Confident Friend Who Makes Things Up
+
+<Convo
+  lines={[
+    { who: 'cherry', text: '"Confabulation" sounds like a spice.' },
+    { who: 'sriku', text: 'Google’s glossary calls it a synonym for hallucination: a model confidently producing something false. It adds that confabulation is probably the more technically accurate word, but hallucination became popular first.' },
+    { who: 'sundu', text: 'The friend who says "trust me" and then invents the directions.' },
+    { who: 'sriku', text: 'With total confidence.' },
+  ]}
+/>
+
+<Chat
+  title="Airline help chat (illustrative)"
+  messages={[
+    { me: true, text: 'If I book now, can I claim the bereavement fare after my trip?' },
+    { from: 'Chatbot', text: 'Yes, you can apply for the bereavement fare retroactively after you travel.' },
+    { me: true, text: 'Great, booking now.' },
+    { from: 'Chatbot', text: 'Is there anything else I can help you with? 😊' },
+  ]}
+  caption="Fig. 30: Illustrative, not a real transcript. The real case is described by the tribunal below."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Has a chatbot really done that to a real person?' },
+    { who: 'sriku', text: 'Air Canada’s did. In November 2022, after their grandmother died, Jake Moffatt booked a flight and used the chatbot on the airline’s website. It suggested they could apply for bereavement fares retroactively.' },
+    { who: 'cherry', text: 'And could they?' },
+    { who: 'sriku', text: 'No. Air Canada’s employees later said the airline did not allow retroactive applications.' },
+    { who: 'sundu', text: 'So Air Canada blamed the bot?' },
+    { who: 'sriku', text: 'It argued it could not be held liable for information provided by the chatbot. The tribunal member said that was, in effect, suggesting the chatbot was a separate legal entity responsible for its own actions, and called it "a remarkable submission".' },
+    { who: 'cherry', text: 'What was the verdict?' },
+    { who: 'sriku', text: 'Air Canada "did not take reasonable care to ensure its chatbot was accurate". It was ordered to pay a total of $812.02, which included $650.88 in damages plus interest and fees.' },
+    { who: 'sundu', text: 'Small money.' },
+    { who: 'sriku', text: 'Small money, big principle. The decision says it makes no difference whether the information comes from a static page or a chatbot.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Moffatt v. Air Canada (BC Civil Resolution Tribunal, February 2024)"
+  stats={[
+    { value: '$812.02', label: 'Total ordered' },
+    { value: '$650.88', label: 'Of it, damages' },
+    { value: '2024 BCCRT 149', label: 'Decision' },
+  ]}
+  winner="The tribunal: “It makes no difference whether the information comes from a static page or a chatbot.”"
+  takeaway="A confident wrong answer from your chatbot is your company’s wrong answer."
+  source={{
+    text: 'Civil Resolution Tribunal of British Columbia, Moffatt v. Air Canada, 2024 BCCRT 149, issued 14 Feb 2024. Free PDF.',
+    href: 'https://decisions.civilresolutionbc.ca/crt/crtd/en/525448/1/document.do',
+  }}
+/>
+
+**Real definition:** a synonym for hallucination, when a model produces confident but false output. [Google’s glossary: confabulation ↗](https://developers.google.com/machine-learning/glossary#confabulation)
+
+---
+
+## Context Window: How Much Can It Remember?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why does my chatbot forget what I said at the start?' },
+    { who: 'sriku', text: 'The context window: the number of tokens a model can process in a given prompt. The bigger it is, the more information the model can use to give coherent and consistent answers.' },
+    { who: 'sundu', text: 'And what is a token?' },
+    { who: 'sriku', text: 'A small chunk of text, often a word or part of one.' },
+  ]}
+/>
+
+<Gif
+  name="context-window"
+  alt="A sentence made of word tokens. A highlighted window of 6 tokens slides along it, and earlier tokens fade out as forgotten. Then the window widens until the whole story fits, with the caption more context, more coherence."
+  caption="Fig. 31: A small window forgets. A bigger window remembers more."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How big can the window get?' },
+    { who: 'sriku', text: 'Google’s Gemini 1.5 report studied the limits. It found near-perfect retrieval, above 99%, up to at least 10 million tokens.' },
+    { who: 'cherry', text: 'Compared to what?' },
+    { who: 'sriku', text: 'The report compares that with Claude 3.0 at 200,000 tokens and GPT-4 Turbo at 128,000.' },
+    { who: 'sundu', text: 'What can you do with that much?' },
+    { who: 'sriku', text: 'The report highlights real-world uses, including working with professionals and showing 26 to 75% time savings across 10 job categories.' },
+    { who: 'cherry', text: 'That is Google reporting on Google.' },
+    { who: 'sriku', text: 'Yes, it is a vendor’s own report. Read it as claims to check.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gemini 1.5 (Google, 2024): millions of tokens of context"
+  stats={[
+    { value: '>99%', label: 'Retrieval, up to at least 10M tokens' },
+    { value: '10M', label: 'Tokens tested' },
+    { value: '200k / 128k', label: 'Claude 3.0 / GPT-4 Turbo, as cited in the report' },
+  ]}
+  winner="From the report: “near-perfect retrieval (>99%) up to at least 10M tokens”."
+  takeaway="These are the vendor’s own results, so treat them as claims to check. Still, the window keeps growing."
+  source={{
+    text: 'Gemini Team (Google), “Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context”, 2024. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2403.05530',
+  }}
+/>
+
+**Real definition:** the number of tokens a model can process in a given prompt. A larger context window lets the model use more information to give coherent, consistent responses. [Google’s glossary: context window ↗](https://developers.google.com/machine-learning/glossary#context-window)
+
+---
+
+## Convolutional Neural Network: The Edge Finder
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What makes a network "convolutional"?' },
+    { who: 'sriku', text: 'At least one of its layers is a convolutional layer: a small filter slides across the input, doing the same arithmetic at every position.' },
+    { who: 'cherry', text: 'Slides across what?' },
+    { who: 'sriku', text: 'An image, say. The filter looks at a small patch, multiplies and adds, and writes one number into a feature map.' },
+    { who: 'sundu', text: 'So it finds patterns, like edges.' },
+    { who: 'sriku', text: 'In the animation, a vertical-edge filter lights up exactly where the picture jumps from dark to bright.' },
+  ]}
+/>
+
+<Gif
+  name="convolution"
+  alt="A 3 by 3 filter slides over an 8 by 8 grid that is dark on the left and bright on the right. At each position it writes a number into a 6 by 6 feature map. The numbers are 3 only along the dark-to-bright edge, so the map lights up there."
+  caption="Fig. 32: The arithmetic is real: the 3s mark where the edge is."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is this in the real world, or only on grids?' },
+    { who: 'sriku', text: 'Banks. Yann LeCun’s team built a convolutional network called LeNet-5 and used it inside a system for reading bank checks.' },
+    { who: 'sundu', text: 'Did it actually ship?' },
+    { who: 'sriku', text: 'The 1998 paper says the system was in commercial use in NCR Corporation’s check recognition systems for the banking industry, reading millions of checks per month in several banks across the United States.' },
+    { who: 'cherry', text: 'The same LeCun as last week’s zip codes.' },
+    { who: 'sriku', text: 'Same lead author, nine years later. The paper also says convolutional networks, designed to deal with the variability of 2D shapes, outperformed every other technique it compared on handwritten digits.' },
+  ]}
+/>
+
+<CaseStudy
+  title="LeNet-5 reading bank checks (LeCun et al., 1998)"
+  stats={[
+    { value: 'Millions', label: 'Checks read per month' },
+    { value: 'NCR', label: 'Check-recognition systems it ran in' },
+    { value: 'Several banks', label: 'Across the United States' },
+  ]}
+  winner="The paper: “The core of the system is the Convolutional Neural Network called LeNet-5”, in commercial use for the banking industry."
+  takeaway="A small filter, slid everywhere, turned out to be very good at reading handwriting."
+  source={{
+    text: 'LeCun, Bottou, Bengio and Haffner, “Gradient-Based Learning Applied to Document Recognition”, Proceedings of the IEEE, 1998. Free PDF.',
+    href: 'http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf',
+  }}
+/>
+
+**Real definition:** a neural network in which at least one layer is a convolutional layer. A typical one combines convolutional layers, pooling layers and dense layers, and has had great success in problems such as image recognition. [Google’s glossary: convolutional neural network ↗](https://developers.google.com/machine-learning/glossary#convolutional-neural-network)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Candidate generation | The funnel | Cut a huge catalog down to a short list |
+| Chain-of-thought prompting | Show your working | Ask the model to reason step by step |
+| Checkpoint | Save before you regret | Saved model state to resume from |
+| Classification threshold | Where you draw the line | Turns a score into yes or no |
+| Collaborative filtering | People like you also bought | Predict taste from many other users |
+| Concept drift | The world moved, the model did not | The data relationship changes over time |
+| Confabulation | The confident friend | A model confidently saying false things |
+| Context window | How much it can remember | Tokens a model can use at once |
+| Convolutional neural network | The edge finder | A sliding filter that finds patterns |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'That was only C?' },
+    { who: 'sriku', text: 'There are 23 more letters.' },
+    { who: 'sundu', text: 'Then same bench next week, and bring sources.' },
+  ]}
+/>
+
+[← Part B: Backprop to Broadcasting](/writing/ml-glossary-b)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); classification threshold and confusion matrix are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the crashed training run is a cartoon, and Cherry and Sundu are very real.*
+
+<Reactions />

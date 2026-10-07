@@ -1,0 +1,493 @@
+import { Gif, Convo, CaseStudy, Meme, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part B: From Backprop to Broadcasting',
+  subtitle: 'A week later at the chai stall: nine more machine learning terms and two friends who are now suspicious.',
+  type: 'Meme Feast',
+  date: '2026-10-08',
+  excerpt:
+    'Nine machine learning terms starting with B, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 2,
+}
+
+A week later. Same bench, same chai stall, same ₹10 cup. Cherry has spent the week telling people at work about A/B testing, and Sundu now calls every bad video "slop".
+
+If you missed last week, [Part A is here](/writing/ml-glossary-a). This time the terms are from the B section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary). Three of them, backpropagation, batch size and bias, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals), where the official basics live.
+
+<Poster
+  badge="Part B · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Nine more terms. Two friends. One week later."
+  rating="10/10 · fresh chai, new week"
+  stats={['9 terms', '7 animations', '9 real cases', '1 dog']}
+/>
+
+---
+
+## Backpropagation: The Blame Game
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Everyone says neural networks "learn". How, exactly?' },
+    { who: 'sriku', text: 'Two passes. Forward: the network makes a guess. Backward: it compares the guess to the right answer and works out how much each weight contributed to the mistake.' },
+    { who: 'sundu', text: 'So it assigns blame.' },
+    { who: 'sriku', text: 'Fairly. Each weight gets nudged a little in the direction that shrinks the error. That is backpropagation, the algorithm that implements gradient descent in a neural network.' },
+    { who: 'cherry', text: 'Just once?' },
+    { who: 'sriku', text: 'Over and over. Training is many iterations of that two-pass cycle.' },
+  ]}
+/>
+
+<Gif
+  name="backpropagation"
+  alt="A small neural network makes a guess as a blue wave moves left to right. The output is marked wrong. A red wave then moves right to left, sharing the blame, and the connections turn green as the output becomes better."
+  caption="Fig. 15: Forward pass: guess. Backward pass: share the blame."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Has this ever read anything real?' },
+    { who: 'sriku', text: 'The post office, sort of. In 1989 a team at AT&T Bell Labs trained a backpropagation network to read handwritten zip codes from US mail.' },
+    { who: 'cherry', text: 'How many digits?' },
+    { who: 'sriku', text: '9,298 handwritten digits from mail passing through the Buffalo post office. 7,291 for training, 2,007 for testing.' },
+    { who: 'sundu', text: 'Neat handwriting, I hope.' },
+    { who: 'sriku', text: 'The digits came from many different people with widely varying care. The paper says both sets had examples that were ambiguous, unclassifiable or even misclassified.' },
+    { who: 'cherry', text: 'And the network?' },
+    { who: 'sriku', text: 'One network did the whole job, from the image of the digit to the final answer.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Reading zip codes with backpropagation (AT&T Bell Labs, 1989)"
+  stats={[
+    { value: '9,298', label: 'Handwritten digits' },
+    { value: '7,291', label: 'For training' },
+    { value: '2,007', label: 'For testing' },
+  ]}
+  winner="In the abstract’s words: “A single network learns the entire recognition operation, going from the normalized image of the character to the final classification.”"
+  takeaway="Backpropagation left the textbook and went to the mail room: real handwriting, real mess."
+  source={{
+    text: 'LeCun, Boser, Denker, Henderson, Howard, Hubbard and Jackel, “Backpropagation Applied to Handwritten Zip Code Recognition”, Neural Computation, 1989. Free PDF (a scan of the original).',
+    href: 'http://yann.lecun.com/exdb/publis/pdf/lecun-89e.pdf',
+  }}
+/>
+
+**Real definition:** the algorithm that implements gradient descent in neural networks. A forward pass makes predictions, a backward pass works out how to adjust the weights, and the cycle repeats. [Google’s glossary (Fundamentals): backpropagation ↗](https://developers.google.com/machine-learning/glossary/fundamentals#backpropagation)
+
+---
+
+## Baseline: The Boring Benchmark
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Imagine I build a deep model and it scores 90%. Great, right?' },
+    { who: 'sriku', text: 'Compared to what?' },
+    { who: 'sundu', text: 'Compared to guessing?' },
+    { who: 'sriku', text: 'Compared to the baseline: a simple model or rule you measure everything else against. If a one-line rule already scores 89%, that extra 1% had better be worth a week of training.' },
+    { who: 'cherry', text: 'So the baseline is the bar to clear.' },
+    { who: 'sriku', text: 'Google’s glossary says it helps developers quantify the minimal expected performance a new model must achieve to be useful.' },
+  ]}
+/>
+
+<Meme
+  tone="grass"
+  emoji="🚲"
+  top="Me, after a week of training a deep network"
+  bottom="The baseline: “we got here in one if-statement”"
+  caption="Fig. 16: Always ask what the simple version scores."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Do big companies actually think this way?' },
+    { who: 'sriku', text: 'Google’s "Rules of Machine Learning" opens with Rule #1: do not be afraid to launch a product without machine learning.' },
+    { who: 'cherry', text: 'Seriously? From an ML team?' },
+    { who: 'sriku', text: 'The rule says: if you think machine learning will give you a 100% boost, a heuristic will get you 50% of the way there.' },
+    { who: 'sundu', text: 'So start dumb.' },
+    { who: 'sriku', text: 'Rule #4 says the first model provides the biggest boost to your product, so it does not need to be fancy.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Google’s Rules of Machine Learning: start with a baseline"
+  stats={[
+    { value: 'Rule #1', label: 'Launch without ML if you can' },
+    { value: 'Rule #4', label: 'Keep the first model simple' },
+  ]}
+  winner="“If you think that machine learning will give you a 100% boost, then a heuristic will get you 50% of the way there.”"
+  takeaway="A baseline tells you what “good” has to beat. Fancy comes second."
+  source={{
+    text: 'Martin Zinkevich, “Rules of Machine Learning: Best Practices for ML Engineering”, Google for Developers. Free to read.',
+    href: 'https://developers.google.com/machine-learning/guides/rules-of-ml',
+  }}
+/>
+
+**Real definition:** a model or rule used as a reference point for judging how well another, usually more complex, model performs. [Google’s glossary: baseline ↗](https://developers.google.com/machine-learning/glossary#baseline)
+
+---
+
+## Batch Size: How Many Cups per Round?
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What is a batch?' },
+    { who: 'sriku', text: 'The group of examples the model looks at before it updates itself. Batch size is how many. Say you have 24 cups of chai to taste: one at a time, or all 24 in one go?' },
+    { who: 'cherry', text: 'One at a time sounds slow.' },
+    { who: 'sriku', text: 'It is 24 steps, but each step is cheap. All 24 at once is a single step, but you need a very big tray. The popular choice sits somewhere in between.' },
+  ]}
+/>
+
+<Gif
+  name="batch-size"
+  alt="Twenty-four chai cups. With a batch size of 1 the highlight moves one cup at a time through 24 steps. With a batch size of 4 it takes 6 steps. With a batch size of 24 it takes 1 step."
+  caption="Fig. 17: Same 24 cups, three batch sizes."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How big can a batch get in real life?' },
+    { who: 'sriku', text: 'Facebook researchers trained an image model called ResNet-50 on ImageNet with batches of 8,192 images, spread over 256 GPUs.' },
+    { who: 'sundu', text: 'How long did that take?' },
+    { who: 'sriku', text: 'One hour. And they report no loss of accuracy compared with small batches.' },
+    { who: 'cherry', text: 'So just make the batch bigger.' },
+    { who: 'sriku', text: 'Not so fast. Their paper says large batches cause optimization difficulties on ImageNet. They needed a rule for scaling the learning rate and a warmup scheme to fix it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="ImageNet in one hour (Facebook, 2017)"
+  stats={[
+    { value: '8,192', label: 'Images per batch' },
+    { value: '256', label: 'GPUs' },
+    { value: '1 hour', label: 'To train ResNet-50' },
+    { value: '~90%', label: 'Scaling efficiency, 8 to 256 GPUs' },
+  ]}
+  winner="Result: “no loss of accuracy” with batches up to 8,192 images, once the early-training difficulties were fixed."
+  takeaway="Bigger batches let many machines work together, but you have to retune the learning rate to match."
+  source={{
+    text: 'Goyal et al., “Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.02677',
+  }}
+/>
+
+**Real definition:** the number of examples in a batch. With a batch size of 100, the model processes 100 examples per iteration. [Google’s glossary (Fundamentals): batch size ↗](https://developers.google.com/machine-learning/glossary/fundamentals#batch-size)
+
+---
+
+## Bias: Two Words, One Spelling
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why do ML people use "bias" for two totally different things?' },
+    { who: 'sriku', text: 'Because English is lazy. In maths, bias is just an offset: the b in y = b + w1x1 + w2x2. In a simple line, it is the y-intercept.' },
+    { who: 'sundu', text: 'And the other one?' },
+    { who: 'sriku', text: 'The ethics kind: stereotyping, prejudice or favoritism toward some people or groups over others. It can creep in through the data, the system’s design, or how people use it.' },
+  ]}
+/>
+
+<Gif
+  name="bias-math"
+  alt="Dots rise along a slope. A line that starts at the bottom corner misses them, then slides upward as the bias b increases until it passes through every dot. The caption reads y = b + w times x, toy example."
+  caption="Fig. 18: Bias in maths: where the line starts."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Show me the second kind in the real world.' },
+    { who: 'sriku', text: 'Gender Shades, a 2018 study by Joy Buolamwini and Timnit Gebru. They audited three commercial systems that classify gender from faces.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'First they looked at two popular benchmark datasets. 79.6% of one and 86.2% of the other were lighter-skinned faces.' },
+    { who: 'sundu', text: 'So the test itself was lopsided.' },
+    { who: 'sriku', text: 'Then they built a balanced dataset and measured each group separately. Darker-skinned women had error rates of up to 34.7%. For lighter-skinned men, the maximum was 0.8%.' },
+    { who: 'cherry', text: 'One overall accuracy number would have hidden that.' },
+    { who: 'sriku', text: 'Exactly. Check every group, not just the average.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gender Shades (2018): one task, very different error rates"
+  stats={[
+    { value: '79.6% / 86.2%', label: 'Lighter-skinned share of the two benchmarks' },
+    { value: '34.7%', label: 'Worst error rate, darker-skinned women (up to)' },
+    { value: '0.8%', label: 'Max error rate, lighter-skinned men' },
+  ]}
+  winner="In the paper’s words: “darker-skinned females are the most misclassified group”."
+  takeaway="A single overall accuracy figure can hide big gaps. Test each group on its own."
+  source={{
+    text: 'Buolamwini and Gebru, “Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification”, PMLR 81, 2018. Free PDF.',
+    href: 'https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf',
+  }}
+/>
+
+**Real definition:** in maths, an offset or y-intercept, the b in y = b + w·x. In ethics, favoritism toward some people or groups over others, which can enter through data, design or use. [Google’s glossary (Fundamentals): bias (math) ↗](https://developers.google.com/machine-learning/glossary/fundamentals#bias-math-or-bias-term) · [bias (ethics/fairness) ↗](https://developers.google.com/machine-learning/glossary/fundamentals#bias-ethicsfairness)
+
+---
+
+## BERT: The Blank-Filler
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'BERT sounds like a Sesame Street character.' },
+    { who: 'sriku', text: 'It stands for Bidirectional Encoder Representations from Transformers. It turns text into a representation that other models can use, and it is built on the Transformer from last week.' },
+    { who: 'cherry', text: 'And "bidirectional"?' },
+    { who: 'sriku', text: 'It looks at the words on both sides of a blank. "I poured hot blank into the cup": it uses "poured hot" and "into the cup" together.' },
+  ]}
+/>
+
+<Gif
+  name="bert"
+  alt="The sentence 'I poured hot [MASK] into the cup'. Arcs grow from the words on the left and from the words on the right toward the blank, which is then filled with the word chai. The caption notes this is an illustrative example."
+  caption="Fig. 19: Look left and right of the blank. (Illustrative example.)"
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is it used for anything real?' },
+    { who: 'sriku', text: 'Google Search. In October 2019 Google said BERT would help Search better understand one in 10 searches in the US in English.' },
+    { who: 'sundu', text: 'What changed?' },
+    { who: 'sriku', text: 'Take the search "2019 brazil traveler to usa need a visa". Before, Search missed what the word "to" meant and showed results about US citizens travelling to Brazil.' },
+    { who: 'cherry', text: 'The wrong direction entirely.' },
+    { who: 'sriku', text: 'With BERT, it understood a Brazilian was travelling to the USA. One tiny word, finally taken seriously.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Google Search and BERT (October 2019)"
+  stats={[
+    { value: '1 in 10', label: 'US English searches affected' },
+    { value: '“to”', label: 'The small word that flipped the results' },
+  ]}
+  winner="Result: a Brazilian asking about a US visa now gets pages for Brazilians travelling to the USA, not the reverse."
+  takeaway="Small words need context from both sides to make sense."
+  source={{
+    text: 'Pandu Nayak (Google), Google blog, 25 Oct 2019. Free to read.',
+    href: 'https://blog.google/products/search/search-language-understanding-bert/',
+  }}
+/>
+
+**Real definition:** a model architecture for text representation. A trained BERT model can act as part of a larger model for text classification or other ML tasks. [Google’s glossary: BERT ↗](https://developers.google.com/machine-learning/glossary#bert-bidirectional-encoder-representations-from-transformers)
+
+---
+
+## BLEU: The Instant Translation Judge
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do you score a translation automatically?' },
+    { who: 'sriku', text: 'BLEU. It compares the machine’s translation to a human expert’s and checks how well the sequences of words, called n-grams, match. The score runs from 0.0 to 1.0.' },
+    { who: 'sundu', text: 'Last week’s Transformer scored 28.4 BLEU.' },
+    { who: 'sriku', text: 'Same BLEU. Papers usually write it on a 0 to 100 scale, so that is 0.284 on Google’s.' },
+  ]}
+/>
+
+<Meme
+  tone="night"
+  emoji="⏳"
+  top="Human judges: “give us a few months”"
+  bottom="BLEU: quick, cheap, same verdict (mostly)"
+  caption="Fig. 20: Why BLEU exists."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who came up with it?' },
+    { who: 'sriku', text: 'A team at IBM, in 2002. Their paper says human evaluation of translations is extensive but expensive, and can take months to finish.' },
+    { who: 'cherry', text: 'And BLEU fixes that?' },
+    { who: 'sriku', text: 'They proposed a method that is quick, inexpensive and language-independent, correlates highly with human evaluation, and has little marginal cost per run.' },
+    { who: 'sundu', text: 'A stand-in judge.' },
+    { who: 'sriku', text: 'Their words: "an automated understudy to skilled human judges".' },
+  ]}
+/>
+
+<CaseStudy
+  title="BLEU (IBM, 2002): an understudy for human judges"
+  stats={[
+    { value: 'Months', label: 'What human evaluation can take' },
+    { value: '0.0 to 1.0', label: 'BLEU score range' },
+  ]}
+  winner="“quick, inexpensive, and language-independent, … correlates highly with human evaluation, and … has little marginal cost per run.”"
+  takeaway="Not a perfect judge, but cheap enough to run on every experiment."
+  source={{
+    text: 'Papineni, Roukos, Ward and Zhu (IBM T. J. Watson Research Center), “BLEU: a Method for Automatic Evaluation of Machine Translation”, ACL 2002. Free PDF.',
+    href: 'https://aclanthology.org/P02-1040.pdf',
+  }}
+/>
+
+**Real definition:** a metric between 0.0 and 1.0 for evaluating machine translations, based on how well the n-grams in the machine’s text match a human expert’s translation. [Google’s glossary: BLEU ↗](https://developers.google.com/machine-learning/glossary#bleu-bilingual-evaluation-understudy)
+
+---
+
+## Boosting: Fix Last Round’s Mistakes
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Can a pile of bad models make one good model?' },
+    { who: 'sriku', text: 'That is boosting. Combine lots of simple, not very accurate models, called weak classifiers, into one accurate model.' },
+    { who: 'sundu', text: 'How?' },
+    { who: 'sriku', text: 'Each round, upweight the examples the model is currently getting wrong, so the next weak model concentrates on those.' },
+    { who: 'cherry', text: 'Like revising only the questions you keep failing.' },
+    { who: 'sriku', text: 'Again, yes. That is a very good study technique and a very good algorithm.' },
+  ]}
+/>
+
+<Gif
+  name="boosting"
+  alt="Three rounds of dots. In each round a weak classifier marks some dots as mistakes in red. Those dots grow bigger so the next round pays more attention to them. By round 3 few mistakes are left, and the caption reads many weak classifiers equal one strong one."
+  caption="Fig. 21: Upweight the mistakes. Repeat."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does anyone actually win with this?' },
+    { who: 'sriku', text: 'XGBoost is a popular boosting system. Its paper looked at the 29 winning solutions Kaggle published on its blog in 2015 and counted 17 that used XGBoost.' },
+    { who: 'cherry', text: 'Only XGBoost?' },
+    { who: 'sriku', text: 'Eight used it alone. Most of the others combined it with neural nets. The second most popular method, deep neural networks, appeared in 11.' },
+    { who: 'sundu', text: 'So the unglamorous one showed up the most.' },
+    { who: 'sriku', text: 'In that count, yes.' },
+  ]}
+/>
+
+<CaseStudy
+  title="XGBoost on Kaggle (2015): 17 of 29 winning solutions"
+  stats={[
+    { value: '17 of 29', label: 'Kaggle winners that used XGBoost' },
+    { value: '8', label: 'Used XGBoost alone' },
+    { value: '11', label: 'Used deep neural networks' },
+  ]}
+  winner="The paper’s own summary: XGBoost “is used widely by data scientists to achieve state-of-the-art results on many machine learning challenges.”"
+  takeaway="Many small corrections can beat one big guess."
+  source={{
+    text: 'Chen and Guestrin, “XGBoost: A Scalable Tree Boosting System”, 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1603.02754',
+  }}
+/>
+
+**Real definition:** a technique that combines many simple, not very accurate classifiers into one accurate classifier by upweighting the examples the model is currently getting wrong. [Google’s glossary: boosting ↗](https://developers.google.com/machine-learning/glossary#boosting)
+
+---
+
+## Bounding Box: Draw a Box Around It
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What is a bounding box?' },
+    { who: 'sriku', text: 'The coordinates of a rectangle drawn around something interesting in an image: the dog, the chai, the samosa.' },
+    { who: 'cherry', text: 'Why a rectangle?' },
+    { who: 'sriku', text: 'It is cheap to describe, just the corners. An object detector predicts the box and the label together.' },
+  ]}
+/>
+
+<Gif
+  name="bounding-box"
+  alt="Green rectangles are drawn one at a time around a cup of chai, a samosa and a dog, each with a label. The first box shows its corner coordinates."
+  caption="Fig. 22: Where, and what, in one look."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How fast can a detector do that?' },
+    { who: 'sriku', text: 'YOLO, short for "You Only Look Once", processes images in real time at 45 frames per second. A smaller version, Fast YOLO, does 155.' },
+    { who: 'sundu', text: 'How does it find the boxes?' },
+    { who: 'sriku', text: 'A single neural network predicts the bounding boxes and class probabilities directly from the full image, in one evaluation.' },
+    { who: 'cherry', text: 'Is it perfect, then?' },
+    { who: 'sriku', text: 'No. The paper says YOLO makes more localization errors than the best systems of the time, but is far less likely to predict false detections where nothing exists.' },
+  ]}
+/>
+
+<CaseStudy
+  title="YOLO (2015): bounding boxes in real time"
+  stats={[
+    { value: '45 fps', label: 'Base YOLO' },
+    { value: '155 fps', label: 'Fast YOLO' },
+    { value: '1', label: 'Network evaluation per image' },
+  ]}
+  winner="The trade-off, in the authors’ words: more localization errors, but “far less likely to predict false detections where nothing exists.”"
+  takeaway="Speed has a price. Here it is a few mislocated boxes, in exchange for fewer phantom ones."
+  source={{
+    text: 'Redmon, Divvala, Girshick and Farhadi, “You Only Look Once: Unified, Real-Time Object Detection”, 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1506.02640',
+  }}
+/>
+
+**Real definition:** the (x, y) coordinates of a rectangle around an area of interest in an image. [Google’s glossary: bounding box ↗](https://developers.google.com/machine-learning/glossary#bounding-box)
+
+---
+
+## Broadcasting: One Pour, Many Cups
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I want to add 10 to every number in a list. Do I need a loop?' },
+    { who: 'sriku', text: 'No. Broadcasting. The smaller operand is virtually stretched to a compatible shape, so the operation just works.' },
+    { who: 'sundu', text: 'Like pouring one pot of chai into every cup.' },
+    { who: 'sriku', text: 'Same pot, many cups. Google’s glossary puts it this way: you cannot add a matrix of shape (m, n) to a vector of length n, and broadcasting makes it work by virtually expanding the vector.' },
+  ]}
+/>
+
+<Gif
+  name="broadcasting"
+  alt="The array 1, 2, 3 sits above the single number 10. Dashed outlines show 10 stretching across all three positions without real copies, and the result row reads 11, 12, 13."
+  caption="Fig. 23: The small one stretches to fit."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is that a real thing, or a trick in a book?' },
+    { who: 'sriku', text: 'It is in the NumPy docs, the Python library behind most data science. They say broadcasting vectorizes array operations so the looping happens in C instead of Python.' },
+    { who: 'cherry', text: 'Does it copy the data?' },
+    { who: 'sriku', text: 'Not needlessly. NumPy uses the original scalar value without making copies, to be as memory and computationally efficient as possible.' },
+    { who: 'sundu', text: 'So the dashed boxes in your animation are ghosts.' },
+    { who: 'sriku', text: 'Ghosts. Nothing actually gets copied.' },
+  ]}
+/>
+
+<CaseStudy
+  title="NumPy: broadcasting in everyday code"
+  stats={[
+    { value: 'In C', label: 'Where the looping happens' },
+    { value: 'No needless copies', label: 'Of your data' },
+  ]}
+  winner="The docs’ own example: multiplying the array [1.0, 2.0, 3.0] by the scalar 2.0 gives [2., 4., 6.]."
+  takeaway="Write the maths once and let the library do the stretching."
+  source={{
+    text: 'NumPy documentation, “Broadcasting”. Free to read.',
+    href: 'https://numpy.org/doc/stable/user/basics.broadcasting.html',
+  }}
+/>
+
+**Real definition:** expanding the shape of an operand in a matrix operation to dimensions that are compatible for that operation. [Google’s glossary: broadcasting ↗](https://developers.google.com/machine-learning/glossary#broadcasting)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Backpropagation | The blame game | Forward guess, backward weight updates |
+| Baseline | The boring benchmark | A simple reference to beat |
+| Batch size | Cups per round | Examples processed per update |
+| Bias | Two words, one spelling | An offset in maths, favoritism in ethics |
+| BERT | The blank-filler | Text representations using context on both sides |
+| BLEU | The instant translation judge | Scores a translation against a human one |
+| Boosting | Fix last round's mistakes | Many weak models become one strong one |
+| Bounding box | Draw a box around it | Rectangle coordinates around an object |
+| Broadcasting | One pour, many cups | Stretch the small operand to fit |
+
+---
+
+## See You Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'That was only the B section?' },
+    { who: 'sriku', text: 'There are 24 more letters.' },
+    { who: 'sundu', text: 'Then same bench next week. And bring sources this time.' },
+  ]}
+/>
+
+[← Part A: From A/B Testing to AI Slop](/writing/ml-glossary-a) · [Part C: From Candidate Generation to Convolution →](/writing/ml-glossary-c)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); backpropagation, batch size and both meanings of bias are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the dog is imaginary, and Cherry and Sundu are very real.*
+
+<Reactions />
