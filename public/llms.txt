@@ -1,6 +1,6 @@
 # Bollampally, Srikanth Reddy
 
-> Full-Stack Developer, Full-Stack DevOps Leader, AI/ML Specialist, Forward
+> Full-Stack Developer, Full-Stack DevSecOps Leader, AI/ML Specialist, Forward
 > Deployed Engineer, and Agentic AI Developer. Principal Technical
 > Consultant at YTT Global, with 11+ years turning legacy infrastructure
 > into modern cloud systems and shipping machine learning built for
