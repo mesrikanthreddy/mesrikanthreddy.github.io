@@ -1,0 +1,755 @@
+import { Gif, Convo, CaseStudy, Meme, Approve, Poster, Chat, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part A: From A/B Testing to AI Slop',
+  subtitle: 'Explained to Cherry and Sundu over chai: fourteen machine learning terms and two friends who refuse to nod along.',
+  type: 'Meme Feast',
+  date: '2026-10-07',
+  excerpt:
+    'Fourteen machine learning terms starting with A, explained to two friends over chai, with animated memes.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 1,
+}
+
+I tried reading [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) from the top, and I kept losing the thread. A glossary is made for looking things up, not for reading in order, and one term after another is a lot to take in.
+
+So I did what I do with anything that is hard to read in one go: I took it to the chai stall. It is a Saturday evening, and Cherry, Sundu and I are on our usual bench. We have one rule: if I can't explain it before the chai gets cold, I don't understand it.
+
+Cherry asks the blunt questions. Sundu heckles. I survive. Chai is ₹10 a cup. Every term below gets a chat, a meme or an animation, and a real case you can check for yourself. Then I link Google's own entry, so you can compare my chai-stall version with the official one.
+
+If you want the official wording first, Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals) covers the basics (accuracy, activation functions, AUC, backpropagation, batch size and more), and the full glossary has the rest.
+
+<Poster
+  badge="Part A · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Google’s ML glossary, told over chai."
+  rating="10/10 · would spill chai again"
+  stats={['14 terms', '3 friends', '3 cups of chai', '1 rubber duck']}
+/>
+
+---
+
+## A/B Testing: The Blue Button Wars
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My boss says the blue button will get more clicks.' },
+    { who: 'sundu', text: 'Your boss has said that about every button since 2019.' },
+    { who: 'cherry', text: 'So how do I prove the boss wrong?' },
+    { who: 'sriku', text: 'Show blue to half your users and green to the other half. Count the clicks. Let the numbers argue, not the boss.' },
+    { who: 'sundu', text: 'And if green wins?' },
+    { who: 'sriku', text: 'Then the boss learned something. Everybody wins.' },
+  ]}
+/>
+
+<Gif
+  name="ab-test"
+  alt="Two bars race. The blue button ends at 41 clicks and the green button at 58. Caption: Data says green, next."
+  caption="Fig. 1: The blue button wars."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fine, but does anyone real do this? Or only people with opinionated bosses?' },
+    { who: 'sriku', text: 'Bing did, back in 2012. Someone suggested making ad titles longer by merging the title with the first line of text below it. Nobody thought much of it. It was rated low priority and sat in the backlog for over six months.' },
+    { who: 'sundu', text: 'Then what?' },
+    { who: 'sriku', text: 'A developer tried it because it was easy to code. Some users saw the new layout, the rest saw the old one. That is an A/B test.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'A few hours in, an alert fired: revenue too high. Those alerts usually mean a bug, like counting the money twice.' },
+    { who: 'sundu', text: 'So was it a bug?' },
+    { who: 'sriku', text: 'No. Bing\'s revenue was really up 12%. At the time that was over $100 million a year in the US alone, without hurting the user experience.' },
+    { who: 'cherry', text: 'From merging two lines of text.' },
+    { who: 'sriku', text: 'From an idea nobody thought was important.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Bing, 2012: a low-priority idea worth $100M+ a year"
+  stats={[
+    { value: '6+ months', label: 'Stuck in the backlog' },
+    { value: 'A few hours', label: 'Until the alert fired' },
+    { value: '+12%', label: 'Bing revenue' },
+    { value: '$100M+', label: 'Per year, US, at the time' },
+  ]}
+  winner="Result: “the best revenue-generating idea in Bing’s history”, from a few days of one engineer’s work."
+  takeaway="“One accurate measurement is worth more than a thousand expert opinions.” Admiral Grace Hopper, quoted at the start of the chapter below."
+  source={{
+    text: 'Kohavi, Tang and Xu, Trustworthy Online Controlled Experiments (Cambridge University Press, 2020), Chapter 1. Free PDF from the authors’ site, no login.',
+    href: 'https://experimentguide.com/wp-content/uploads/TrustworthyOnlineControlledExperiments_PracticalGuideToABTesting_Chapter1.pdf',
+  }}
+/>
+
+**Real definition:** compare two versions on real users and use statistics to see which one actually performs better. [Google’s glossary: A/B testing ↗](https://developers.google.com/machine-learning/glossary#ab-testing)
+
+---
+
+## Ablation: Who Is Actually Carrying This Team?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A model has 12 features. How do you know which ones actually help?' },
+    { who: 'sriku', text: 'Delete them one by one and watch the score.' },
+    { who: 'sundu', text: 'Like benching players?' },
+    { who: 'sriku', text: 'Exactly. Bench the guy who brought the snacks, nothing changes. Bench the star batter, the score falls off a cliff.' },
+    { who: 'cherry', text: 'So some features are just there for the team photo.' },
+    { who: 'sriku', text: 'Most of them, honestly.' },
+  ]}
+/>
+
+<Gif
+  name="ablation"
+  alt="Six items are removed one at a time. Removing a cap, gloves, shoes, a drink and a camera changes nothing. Removing the star drops the score from 280 to 60."
+  caption="Fig. 2: Found the match winner."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Do real researchers bench players too, or is that just your cricket brain?' },
+    { who: 'sriku', text: 'DeepMind did, in a paper called Rainbow. They took six improvements to an AI that learns to play Atari games and bolted them all together into one agent.' },
+    { who: 'sundu', text: 'Sounds like it would just work.' },
+    { who: 'sriku', text: 'It did work. But which of the six actually helped? So they ran it six more times, each time removing one component, across 57 Atari games.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'Two were the stars: prioritized replay and multi-step learning. Remove either one and the median score dropped a lot. The full agent beat both stripped-down versions in 53 of the 57 games.' },
+    { who: 'sundu', text: 'And the rest?' },
+    { who: 'sriku', text: 'Two mattered somewhat: distributional learning and noisy nets. The last two, double Q-learning and the dueling network, barely moved the median score. They helped in some games and hurt in others.' },
+    { who: 'cherry', text: 'So some of the six were in the team photo.' },
+    { who: 'sriku', text: 'And you only find out by benching them.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Rainbow (DeepMind, 2017): six ideas, one agent, remove each in turn"
+  stats={[
+    { value: '6', label: 'Components tested' },
+    { value: '57', label: 'Atari games' },
+    { value: '2', label: 'Most crucial' },
+    { value: '2', label: 'Little median impact' },
+  ]}
+  winner="Result: prioritized replay and multi-step learning were “the two most crucial components”. Double Q-learning and dueling networks made little difference to the median score."
+  takeaway="Ablation answers “what is each part really doing?” The authors note this holds for this specific combination of ideas, not for every setup."
+  source={{
+    text: 'Hessel et al., “Rainbow: Combining Improvements in Deep Reinforcement Learning”, 2017. Free to read on arXiv.',
+    href: 'https://arxiv.org/abs/1710.02298',
+  }}
+/>
+
+**Real definition:** remove one part of a model, retrain it, and measure how much performance drops. That tells you how much the part was really contributing. [Google’s glossary: ablation ↗](https://developers.google.com/machine-learning/glossary#ablation)
+
+---
+
+## Accuracy: The World's Most Confident Security Guard
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Imagine I build a fraud detector that is 99% accurate. Impressed?' },
+    { who: 'sriku', text: 'How many fraudsters did it catch?' },
+    { who: 'cherry', text: '...none.' },
+    { who: 'sriku', text: '99 out of 100 transactions are honest. Say "all clear" every single time and you are right 99% of the time.' },
+    { who: 'sundu', text: 'So it is a guard who waves everyone in.' },
+    { who: 'sriku', text: 'With a very proud smile.' },
+  ]}
+/>
+
+<Gif
+  name="accuracy"
+  alt="A guard says all clear to every person walking past, including a thief carrying a bag of money. The scoreboard reads 99 percent accuracy and zero thieves caught."
+  caption="Fig. 3: 99% accurate, 0 thieves caught."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is that fraud thing real, or did you make it up?' },
+    { who: 'sriku', text: 'There is a famous public dataset: credit card transactions from two days in September 2013. 284,807 transactions, and only 492 of them are fraud.' },
+    { who: 'sundu', text: 'That is tiny.' },
+    { who: 'sriku', text: 'It is 0.172%. A model that says “not fraud” every time scores about 99.83% accuracy and catches nobody.' },
+    { who: 'cherry', text: 'So accuracy is useless.' },
+    { who: 'sriku', text: 'Not useless, just not enough. You also check how many frauds you caught (recall) and how many alarms were real (precision).' },
+  ]}
+/>
+
+<CaseStudy
+  title="Credit card fraud: why accuracy alone fails"
+  stats={[
+    { value: '284,807', label: 'Transactions' },
+    { value: '492', label: 'Frauds' },
+    { value: '0.172%', label: 'Fraud share' },
+    { value: '≈99.83%', label: 'Accuracy of “never fraud”' },
+  ]}
+  winner="A model that never flags anything is about 99.83% accurate and catches zero fraud."
+  takeaway="Google’s own ML course makes the same point: a model that predicts negative 100% of the time would score 99% on accuracy “despite being useless”."
+  source={[
+    { text: 'Dal Pozzolo et al., credit card fraud dataset (European cardholders, Sept 2013), described on OpenML. The 99.83% is simple arithmetic: 1 − 492/284,807.', href: 'https://www.openml.org/d/1597' },
+    { text: 'Google for Developers, ML Crash Course: Accuracy, recall, precision and related metrics.', href: 'https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall' },
+  ]}
+/>
+
+**Real definition:** correct predictions divided by all predictions. When one class is rare, accuracy misleads you. Check precision and recall too. [Google’s glossary (Fundamentals): accuracy ↗](https://developers.google.com/machine-learning/glossary/fundamentals#accuracy)
+
+---
+
+## Activation Function: The Bend in the Road
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why do neural networks need an "activation function"? Sounds like a gym membership.' },
+    { who: 'sriku', text: 'Stack 100 plain linear layers and you still get one straight line. A hundred layers of effort, one layer of result.' },
+    { who: 'sundu', text: 'So, every New Year resolution.' },
+    { who: 'sriku', text: 'The activation function adds the bends, so the network can draw curves. And curves are where the interesting stuff lives.' },
+  ]}
+/>
+
+<Gif
+  name="activation"
+  alt="A flat straight line labelled 100 linear layers bends into a curve that passes through every dot after adding one activation."
+  caption="Fig. 4: Add one activation, and now it can bend."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does the activation function really matter, or is it a footnote?' },
+    { who: 'sriku', text: 'Ask AlexNet, the network that won the 2012 ImageNet contest. Its authors used ReLU instead of the older tanh.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'In their test, a network with ReLU reached 25% training error on CIFAR-10 six times faster than the same network with tanh.' },
+    { who: 'sundu', text: 'Just from changing the bend?' },
+    { who: 'sriku', text: 'Faster training let them train a big network on a big dataset. It won ImageNet with a 15.3% top-5 error. The runner-up got 26.2%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="AlexNet (2012): ReLU trains six times faster"
+  stats={[
+    { value: '6×', label: 'Faster than tanh (CIFAR-10 test)' },
+    { value: '15.3%', label: 'Top-5 error, ImageNet 2012' },
+    { value: '26.2%', label: 'Runner-up' },
+  ]}
+  winner="Their reasoning, in the paper’s words: “Faster learning has a great influence on the performance of large models trained on large datasets.”"
+  takeaway="A cheap, simple bend made big networks practical to train."
+  source={{
+    text: 'Krizhevsky, Sutskever and Hinton, “ImageNet Classification with Deep Convolutional Neural Networks”, NeurIPS 2012. Free PDF.',
+    href: 'https://papers.nips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf',
+  }}
+/>
+
+**Real definition:** a function between layers that lets a network learn non-linear patterns. ReLU keeps positive values and zeroes the rest. Sigmoid squeezes everything between 0 and 1. [Google’s glossary (Fundamentals): activation function ↗](https://developers.google.com/machine-learning/glossary/fundamentals#activation-function)
+
+---
+
+## Active Learning: Label Only What Confuses You
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Ten thousand images to label? I would rather quit.' },
+    { who: 'sriku', text: 'Then do not label all of them. Let the model point at the ones it is most unsure about, and label only those.' },
+    { who: 'cherry', text: 'Like asking the topper only the three questions everyone keeps failing?' },
+    { who: 'sriku', text: 'Legal cheating.' },
+  ]}
+/>
+
+<Approve
+  no="Label all 10,000 images by hand"
+  yes="Label the 50 the model keeps getting wrong"
+  caption="Fig. 5: Work smarter, not harder."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Who actually uses active learning? Sounds academic.' },
+    { who: 'sriku', text: 'Galaxy Zoo. Volunteers look at telescope photos and say whether a galaxy is a spiral, has a bar, and so on.' },
+    { who: 'sundu', text: 'There must be millions of galaxies.' },
+    { who: 'sriku', text: 'Far too many. So researchers had the model pick the galaxies it would learn the most from, and asked volunteers about only those.' },
+    { who: 'cherry', text: 'Did it help?' },
+    { who: 'sriku', text: 'Training needed up to 35 to 60% fewer labelled galaxies, depending on the feature.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Galaxy Zoo (2019): let the model choose which galaxies to ask about"
+  stats={[
+    { value: '35–60%', label: 'Fewer labelled galaxies needed (up to)' },
+    { value: 'BALD', label: 'Active-learning strategy used' },
+  ]}
+  winner="The authors’ aim: classify surveys “of any conceivable scale on a timescale of weeks” by combining human and machine intelligence."
+  takeaway="Humans label the hard cases. The model handles the rest."
+  source={{
+    text: 'Walmsley et al., “Galaxy Zoo: Probabilistic Morphology through Bayesian CNNs and Active Learning”, 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1905.07424',
+  }}
+/>
+
+**Real definition:** a training approach where the model chooses which examples to learn from, usually the ones it is least certain about. [Google’s glossary: active learning ↗](https://developers.google.com/machine-learning/glossary#active-learning)
+
+---
+
+## AdaGrad: Everybody Gets Their Own Pace
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why does training take so long?' },
+    { who: 'sriku', text: 'One learning rate for everyone. Some parameters need a sprint, some need a stroll.' },
+    { who: 'sundu', text: 'So what is the fix?' },
+    { who: 'sriku', text: 'AdaGrad gives each parameter its own pace. The ones that barely move get bigger steps.' },
+  ]}
+/>
+
+<Meme
+  tone="gold"
+  emoji="🐢"
+  top="One learning rate for everyone"
+  bottom="The slow parameters: “we're still here”"
+  caption="Fig. 6: Per-parameter learning rates."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is AdaGrad actually used, or only in textbooks?' },
+    { who: 'sriku', text: 'Stanford’s GloVe word vectors, a popular way to turn words into numbers, were trained with it.' },
+    { who: 'sundu', text: 'Why would it suit words?' },
+    { who: 'sriku', text: 'I cannot say that is why they picked it. But here is how AdaGrad’s own authors describe the idea: finding needles in haystacks, meaning very predictive but rarely seen features.' },
+    { who: 'cherry', text: 'So rare things get bigger steps.' },
+    { who: 'sriku', text: 'That is the idea.' },
+  ]}
+/>
+
+<CaseStudy
+  title="AdaGrad in the wild: Stanford’s GloVe word vectors (2014)"
+  stats={[
+    { value: 'AdaGrad', label: 'Optimizer used to train GloVe' },
+    { value: '0.05', label: 'Initial learning rate' },
+    { value: '42B', label: 'Tokens in the largest corpus' },
+  ]}
+  winner="AdaGrad’s authors on why per-parameter steps help: they let you “find needles in haystacks in the form of very predictive but rarely seen features.”"
+  takeaway="Parameters that rarely get updated take bigger steps. Busy ones settle down."
+  source={[
+    { text: 'Pennington, Socher and Manning, “GloVe: Global Vectors for Word Representation”, EMNLP 2014. Free PDF.', href: 'https://nlp.stanford.edu/pubs/glove.pdf' },
+    { text: 'Duchi, Hazan and Singer, “Adaptive Subgradient Methods for Online Learning and Stochastic Optimization”, JMLR 2011. Free.', href: 'https://www.jmlr.org/papers/v12/duchi11a.html' },
+  ]}
+/>
+
+**Real definition:** a gradient descent variant that adjusts the learning rate separately for each parameter. [Google’s glossary: AdaGrad ↗](https://developers.google.com/machine-learning/glossary#adagrad)
+
+---
+
+## Agent and Agentic Loop: The Intern Who Never Sleeps
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'So an AI agent is just a chatbot?' },
+    { who: 'sriku', text: 'A chatbot talks. An agent does things: looks at the situation, decides, acts, checks the result, and tries again.' },
+    { who: 'cherry', text: 'Show me.' },
+  ]}
+/>
+
+<Chat
+  title="The Travel Bot"
+  messages={[
+    { me: true, text: 'Book me a flight to Goa on Friday.' },
+    { from: 'Bot', text: 'Searching flights… found one for ₹4,200.' },
+    { from: 'Bot', text: 'Payment failed. Trying another card…' },
+    { from: 'Bot', text: 'Booked ✅ Also noticed you have no leave left. Drafting a leave email…' },
+    { me: true, text: 'I did not ask for that.' },
+    { from: 'Bot', text: 'Observed. Reasoned. Acted. Sent. ✉️' },
+  ]}
+  caption="Fig. 7: The agentic loop, minus the off switch."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is that a real thing, or a movie plot?' },
+    { who: 'sriku', text: 'Real. Anthropic’s engineers write that agents are “typically just LLMs using tools based on environmental feedback in a loop”.' },
+    { who: 'sundu', text: 'Where do they work today?' },
+    { who: 'sriku', text: 'Two places they highlight: customer support, because it is conversation plus actions, and coding, because automated tests tell the agent whether it worked.' },
+    { who: 'cherry', text: 'And coding agents really fix things?' },
+    { who: 'sriku', text: 'They report agents solving real GitHub issues in a benchmark called SWE-bench Verified, from the pull request description alone.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Agents at work: customer support and coding"
+  winner="Why coding works: “code solutions are verifiable through automated tests”, so the agent can iterate “using test results as feedback.”"
+  takeaway="The loop needs a way to check its own work: tests, resolutions, feedback. No check, no loop."
+  source={{
+    text: 'Anthropic engineering, “Building Effective AI Agents”, 19 Dec 2024. Free to read.',
+    href: 'https://www.anthropic.com/engineering/building-effective-agents',
+  }}
+/>
+
+**Real definition:** an agent is software that reasons about what it sees and takes actions on a user's behalf. The agentic loop is the cycle it repeats: observe, reason, act, get feedback. [Google’s glossary: agent ↗](https://developers.google.com/machine-learning/glossary#agent)
+
+---
+
+## Anomaly Detection: Find the Duck
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Give me one real use for anomaly detection.' },
+    { who: 'sriku', text: 'Office tiffins. 99 boxes of dal rice, one with a rubber duck. Anomaly detection is whatever points at the duck.' },
+    { who: 'sundu', text: 'And outside the office?' },
+    { who: 'sriku', text: 'A card used in Hyderabad and Helsinki within the same hour. Or your cloud bill on a Sunday.' },
+  ]}
+/>
+
+<Gif
+  name="anomaly"
+  alt="A detector box scans a grid of tiffin boxes one by one and locks onto the single rubber duck, flashing an alarm. Caption: anomaly, one duck."
+  caption="Fig. 8: One of these is not like the others."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Fun, but who needs this at real scale?' },
+    { who: 'sriku', text: 'NASA’s Jet Propulsion Laboratory. A satellite and a Mars rover send back mountains of telemetry, and engineers cannot stare at every graph.' },
+    { who: 'cherry', text: 'Which spacecraft?' },
+    { who: 'sriku', text: 'SMAP, a satellite that measures soil moisture, and Curiosity on Mars. The team used LSTM neural networks to flag the readings that look wrong.' },
+    { who: 'sundu', text: 'So the duck in the tiffin is a sensor reading.' },
+    { who: 'sriku', text: 'A very expensive duck.' },
+  ]}
+/>
+
+<CaseStudy
+  title="NASA JPL (2018): spotting odd telemetry from SMAP and Curiosity"
+  stats={[
+    { value: '2', label: 'Spacecraft: SMAP and Curiosity' },
+    { value: 'LSTM', label: 'Type of neural network' },
+    { value: 'KDD 2018', label: 'Where it was published' },
+  ]}
+  winner="The goal, in the authors’ words: “lessen the monitoring burden placed on operations engineers and reduce operational risk.”"
+  takeaway="Same duck, different tiffin: find the reading that does not fit the normal pattern."
+  source={{
+    text: 'Hundman et al. (NASA JPL), “Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding”, KDD 2018. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1802.04431',
+  }}
+/>
+
+**Real definition:** finding data points that do not fit the normal pattern. [Google’s glossary: anomaly detection ↗](https://developers.google.com/machine-learning/glossary#anomaly-detection)
+
+---
+
+## Attention: What Does “It” Mean?
+
+<Convo
+  lines={[
+    { who: 'sundu', text: '"The samosa did not fit in the box because it was huge." What is "it"?' },
+    { who: 'cherry', text: 'The samosa. Obviously.' },
+    { who: 'sriku', text: 'Right, you knew instantly. A computer has to work it out.' },
+    { who: 'cherry', text: 'How?' },
+    { who: 'sriku', text: 'Attention. For every word, the model scores how much each other word matters. "It" looks hard at "samosa", glances at "box", and ignores "because".' },
+  ]}
+/>
+
+<Gif
+  name="attention"
+  alt="The sentence 'The samosa didn't fit the box because it was huge'. Arcs grow from the word 'it' to the other words, thickest to 'samosa' at 0.62, thinner to 'box' at 0.22."
+  caption="Fig. 9: Attention weights for the word “it”."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fine, but where does attention actually matter?' },
+    { who: 'sriku', text: 'Everywhere in modern language models. It came from a 2017 paper called “Attention Is All You Need”, which introduced the Transformer.' },
+    { who: 'sundu', text: 'What did it do first?' },
+    { who: 'sriku', text: 'Machine translation. English to German scored 28.4 BLEU, over 2 BLEU better than the best earlier results, ensembles included. BLEU is a translation quality score, and higher is better.' },
+    { who: 'cherry', text: 'Was it expensive to train?' },
+    { who: 'sriku', text: 'English to French set a new best of 41.8 BLEU after 3.5 days on eight GPUs. The authors call that a small fraction of the training cost of the best earlier models.' },
+  ]}
+/>
+
+<CaseStudy
+  title="“Attention Is All You Need” (2017): the Transformer"
+  stats={[
+    { value: '28.4', label: 'BLEU, English to German' },
+    { value: '41.8', label: 'BLEU, English to French' },
+    { value: '3.5 days', label: 'Training time' },
+    { value: '8 GPUs', label: 'Hardware' },
+  ]}
+  winner="Result: better translations than the best earlier models, trained for “a small fraction of the training costs”."
+  takeaway="Let the model decide which words to look at, and it translates better and trains faster."
+  source={{
+    text: 'Vaswani et al., “Attention Is All You Need”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.03762',
+  }}
+/>
+
+**Real definition:** a mechanism that learns how much weight to give each part of the input. It is the core idea inside the transformers behind modern language models. [Google’s glossary: attention ↗](https://developers.google.com/machine-learning/glossary#attention)
+
+---
+
+## AUC: Can You Tell a Hit from a Flop?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I know if my classifier is any good?' },
+    { who: 'sriku', text: 'AUC. It measures how well the model ranks real positives above negatives. 1.0 is perfect.' },
+    { who: 'sundu', text: 'And 0.5?' },
+    { who: 'sriku', text: 'Flipping a coin. A film critic with an AUC of 0.5 should switch to astrology.' },
+  ]}
+/>
+
+<Meme
+  tone="night"
+  emoji="🪙"
+  top="AUC = 0.5"
+  bottom="A coin flip with a payslip"
+  caption="Fig. 10: Expensive coin flipping."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where would a doctor care about AUC?' },
+    { who: 'sriku', text: 'Google researchers trained a network to spot diabetic eye disease in retina photos. They reported an AUC of 0.991 on one test set and 0.990 on another.' },
+    { who: 'cherry', text: 'So basically perfect.' },
+    { who: 'sriku', text: 'Near perfect at ranking sick eyes above healthy ones, on those datasets. The paper’s own conclusion says more research is needed before using it in a clinic.' },
+    { who: 'sundu', text: 'Good that they said it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Spotting diabetic eye disease from retina photos (Google, JAMA 2016)"
+  stats={[
+    { value: '0.991', label: 'AUC on EyePACS-1' },
+    { value: '0.990', label: 'AUC on Messidor-2' },
+    { value: '128,175', label: 'Training images' },
+    { value: '0.5', label: 'A coin flip, for comparison' },
+  ]}
+  winner="On EyePACS-1, at the first operating point: 90.3% sensitivity and 98.1% specificity."
+  takeaway="The authors say further research is needed before clinical use. A high AUC is a start, not a licence."
+  source={{
+    text: 'Gulshan et al., “Development and Validation of a Deep Learning Algorithm for Detection of Diabetic Retinopathy in Retinal Fundus Photographs”, JAMA 2016. Free PDF on Google Research.',
+    href: 'https://research.google.com/pubs/archive/45732.pdf',
+  }}
+/>
+
+**Real definition:** a number from 0 to 1 showing how well a binary classifier separates the two classes. 0.5 is guessing, 1.0 is perfect. [Google’s glossary (Fundamentals): AUC ↗](https://developers.google.com/machine-learning/glossary/fundamentals#auc-area-under-the-roc-curve)
+
+---
+
+## Autoencoder: Explain the Movie in One Message
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What is an autoencoder?' },
+    { who: 'sriku', text: 'Squeeze the input into a tiny code, then rebuild it. Like explaining a three-hour film in one WhatsApp message and asking a friend to retell it.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'If the rebuild is bad, either my summary was bad or the film was unusual. That second case is how you spot strange data.' },
+  ]}
+/>
+
+<Chat
+  title="Film Club 🎬"
+  messages={[
+    { me: true, text: 'Hero loses everything, wins it back, sings about it.' },
+    { from: 'Cherry', text: 'So the plot of every film?' },
+    { me: true, text: 'That is the compressed version. Now rebuild the movie.' },
+    { from: 'Sundu', text: 'Hero loses everything, wins it back, there is a song. Was there a villain?' },
+    { me: true, text: 'Yes! That detail got lost in compression.' },
+  ]}
+  caption="Fig. 11: Reconstruction loss, measured in friendships."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Who uses autoencoders for real?' },
+    { who: 'sriku', text: 'CERN’s Large Hadron Collider. Collisions happen 40 million times a second, and almost all of them are ordinary.' },
+    { who: 'sundu', text: 'And they want the strange ones.' },
+    { who: 'sriku', text: 'Right. An autoencoder learns what ordinary looks like, so an event it rebuilds badly stands out as a candidate for new physics.' },
+    { who: 'cherry', text: 'How fast does that have to be?' },
+    { who: 'sriku', text: 'The team showed it can run in as little as 80 nanoseconds on a chip called an FPGA.' },
+  ]}
+/>
+
+<CaseStudy
+  title="CERN LHC (2021): autoencoders that filter collisions in real time"
+  stats={[
+    { value: '40 MHz', label: 'Collision rate' },
+    { value: '80 ns', label: 'Anomaly detection time' },
+    { value: '< 3%', label: 'Of the FPGA’s logic resources' },
+    { value: '1,000×', label: 'New-physics signal enhancement' },
+  ]}
+  winner="Result: new physics signatures “can be enhanced by three orders of magnitude” within the strict latency limits of an LHC filter."
+  takeaway="Same as the film club: if the rebuild is bad, the data is unusual."
+  source={{
+    text: 'Govorkova et al., “Autoencoders on FPGAs for real-time, unsupervised new physics detection at 40 MHz at the Large Hadron Collider”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2108.03986',
+  }}
+/>
+
+**Real definition:** a neural network that compresses its input into a compact code and learns to rebuild the original from it. A large rebuild error is a clue that something is unusual. [Google’s glossary: autoencoder ↗](https://developers.google.com/machine-learning/glossary#autoencoder)
+
+---
+
+## Automation Bias: “But the GPS Said…”
+
+<Convo
+  lines={[
+    { who: 'sriku', text: 'Picture this: the dashboard is green, so everyone assumes the system is fine.' },
+    { who: 'cherry', text: 'Is it?' },
+    { who: 'sriku', text: 'Customers are screaming on social media.' },
+    { who: 'sundu', text: 'So that is automation bias?' },
+    { who: 'sriku', text: 'Trusting the confident machine over your own eyes.' },
+  ]}
+/>
+
+<Gif
+  name="automation-bias"
+  alt="A car follows a GPS that says continue straight, drives off the end of the road into a lake and sinks. Caption: it sounded so confident."
+  caption="Fig. 12: Recalculating."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is automation bias a real, measured thing?' },
+    { who: 'sriku', text: 'Yes. One review looked at 74 studies of doctors using computer decision-support software.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'In one study, clinicians overrode their own correct decisions in 6% of cases because of wrong advice from the system. Across four studies, wrong advice made a wrong decision 26% more likely.' },
+    { who: 'sundu', text: 'So it is bad?' },
+    { who: 'sriku', text: 'Mostly the tools helped. The warning is about the new errors people do not notice.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Doctors and decision-support software (JAMIA review, 2012)"
+  stats={[
+    { value: '74', label: 'Studies reviewed' },
+    { value: '+26%', label: 'Wrong decisions after wrong advice' },
+    { value: '6%', label: 'Correct decisions overridden' },
+  ]}
+  winner="The review’s warning: most research shows better performance with decision support, but “there is often a failure to recognize the new errors that CDSS can introduce.”"
+  takeaway="Use the tool, and keep your own eyes open."
+  source={{
+    text: 'Goddard, Roudsari and Wyatt, “Automation bias: a systematic review of frequency, effect mediators, and mitigators”, JAMIA 2012. Free on PubMed Central.',
+    href: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3240751',
+  }}
+/>
+
+**Real definition:** the human tendency to favor suggestions from an automated system over other evidence, even when the system is wrong. [Google’s glossary: automation bias ↗](https://developers.google.com/machine-learning/glossary#automation-bias)
+
+---
+
+## Auto-regressive Model: One Word at a Time
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a language model write a whole paragraph?' },
+    { who: 'sriku', text: 'One word at a time. Every new word depends on all the words before it.' },
+    { who: 'sundu', text: 'So if it makes a mistake early on…' },
+    { who: 'sriku', text: '…the mistake becomes the plot. One banana in sentence one, and by the end the banana is the hero.' },
+  ]}
+/>
+
+<Gif
+  name="auto-regressive"
+  alt="A sentence is typed word by word. The hero 'drew a banana' by mistake, and every following word builds on the banana until the banana wins."
+  caption="Fig. 13: Mistakes carry forward."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Where is auto-regressive used besides chat?' },
+    { who: 'sriku', text: 'Audio. DeepMind’s WaveNet generates speech one audio sample at a time, and there are 16,000 samples per second.' },
+    { who: 'sundu', text: 'And each sample depends on the earlier ones?' },
+    { who: 'sriku', text: 'Yes. A value is drawn, fed back into the input, and the next prediction is made.' },
+    { who: 'cherry', text: 'And the big text models?' },
+    { who: 'sriku', text: 'GPT-3’s paper calls it “an autoregressive language model with 175 billion parameters”.' },
+  ]}
+/>
+
+<CaseStudy
+  title="WaveNet (DeepMind, 2016) and GPT-3 (2020): one step at a time"
+  stats={[
+    { value: '16,000', label: 'Audio samples per second (WaveNet)' },
+    { value: '1', label: 'Sample generated at a time' },
+    { value: '175B', label: 'Parameters in GPT-3' },
+  ]}
+  winner="In DeepMind’s words: “At each step during sampling a value is drawn from the probability distribution computed by the network. This value is then fed back into the input and a new prediction for the next step is made.”"
+  takeaway="Same loop as the banana: each output becomes the next input, for audio or for words."
+  source={[
+    { text: 'DeepMind, “WaveNet: A generative model for raw audio”, 8 Sept 2016. Free to read.', href: 'https://deepmind.google/discover/blog/wavenet-a-generative-model-for-raw-audio/' },
+    { text: 'Brown et al., “Language Models are Few-Shot Learners” (GPT-3), 2020. Free on arXiv.', href: 'https://arxiv.org/abs/2005.14165' },
+  ]}
+/>
+
+**Real definition:** a model that predicts each next output from its own earlier outputs, like generating text one token at a time. [Google’s glossary: auto-regressive model ↗](https://developers.google.com/machine-learning/glossary#auto-regressive-model)
+
+---
+
+## AI Slop: The Reel You Have Seen 847 Times
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Why is every feed full of videos with the same voice, the same sunset, and a "secret they do not want you to know"?' },
+    { who: 'sriku', text: 'That is AI slop. Cheap, mass-produced AI content where quantity beats quality.' },
+    { who: 'cherry', text: 'So all AI content is slop?' },
+    { who: 'sriku', text: 'No. Slop is what happens when nobody cared. Same tools, different effort.' },
+  ]}
+/>
+
+<Gif
+  name="ai-slop"
+  alt="A phone scrolls through identical orange sunset videos, all captioned the secret they don't want you to know, while a reel counter climbs past 800."
+  caption="Fig. 14: Same sunset. Same “secret”."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is slop really a thing, or are we all just complaining?' },
+    { who: 'sriku', text: 'Merriam-Webster picked “slop” as its 2025 Word of the Year.' },
+    { who: 'cherry', text: 'A dictionary did that?' },
+    { who: 'sriku', text: 'They define it as “digital content of low quality that is produced usually in quantity by means of artificial intelligence”.' },
+    { who: 'sundu', text: 'What did they say about it?' },
+    { who: 'sriku', text: 'Their president said people want things that are real and genuine, and called it “almost a defiant word when it comes to AI”.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Merriam-Webster’s 2025 Word of the Year: “slop”"
+  stats={[
+    { value: '15 Dec 2025', label: 'Announced' },
+  ]}
+  winner="The definition: “digital content of low quality that is produced usually in quantity by means of artificial intelligence.”"
+  takeaway="When a dictionary names it, the problem is common enough to need a word."
+  source={{
+    text: 'ABC7 News, “Merriam-Webster’s 2025 word of the year is ‘slop’”, 15 Dec 2025.',
+    href: 'https://abc7news.com/post/merriam-websters-2025-word-year-is-slop/18288780/',
+  }}
+/>
+
+**Real definition:** low-quality content mass-produced by AI systems that favors volume over value. [Google’s glossary: AI slop ↗](https://developers.google.com/machine-learning/glossary#ai-slop)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| A/B testing | Blue button vs green button | Compare two options with statistics |
+| Ablation | Bench the snack guy, then the star | Remove a part, measure the impact |
+| Accuracy | The guard who waves everyone in | Correct predictions over total |
+| Activation function | The bend in the road | Lets networks learn curves |
+| Active learning | Ask the topper the 3 hard questions | The model picks its own training data |
+| AdaGrad | Each parameter's own pace | Per-parameter learning rates |
+| Agent | The intern who never sleeps | Observe, reason, act, feedback |
+| Anomaly detection | Find the duck | Spot what does not fit |
+| Attention | What does "it" mean? | Weigh the parts of the input |
+| AUC | Hit or flop critic | How well two classes are separated |
+| Autoencoder | Explain the film in one message | Compress and rebuild |
+| Automation bias | "But the GPS said…" | Over-trusting automated advice |
+| Auto-regressive | One banana, then the sequel | Predict from your own earlier output |
+| AI slop | The reel seen 847 times | Cheap, low-quality AI content |
+
+---
+
+## The Chai Is Cold
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'That was only the A section?' },
+    { who: 'sriku', text: 'There are 25 more letters.' },
+    { who: 'sundu', text: 'Then you are paying for the next chai.' },
+  ]}
+/>
+
+Next Saturday: **[Part B](/writing/ml-glossary-b)**, where Backpropagation, Batch Size and Bias walk into the chai stall.
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); accuracy, activation function and AUC are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the duck is imaginary, and Cherry and Sundu are very real.*
+
+<Reactions />
