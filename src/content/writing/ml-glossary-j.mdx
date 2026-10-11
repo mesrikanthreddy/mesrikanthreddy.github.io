@@ -1,0 +1,152 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part J: JAX',
+  subtitle: 'Week ten at the chai stall: one term, because Google’s glossary has only one J, and a robot that learns to run before the tea is poured.',
+  type: 'Meme Feast',
+  date: '2026-10-16',
+  excerpt:
+    'The J section of Google’s machine learning glossary has one entry, JAX, explained to two friends over chai with two animated memes and real-world cases.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 10,
+}
+
+Tenth Saturday, and the shortest one yet. Cherry checked twice, because it felt like a trick.
+
+Part of a series? Start at [Part A](/writing/ml-glossary-a); the previous round was [Part I](/writing/ml-glossary-i). The J section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) has exactly one entry, JAX. None of the J terms are on Google's Fundamentals page, so this part is short, with one term and two animations.
+
+<Poster
+  badge="Part J · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="One term. Two friends. Zero time for a second cup."
+  rating="10/10 · bench reserved"
+  stats={['1 term', '2 animations', '2 real cases', '1 short week']}
+/>
+
+---
+
+## JAX: Functions That Transform Functions
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is JAX a deep learning framework like PyTorch?' },
+    { who: 'sriku', text: 'Google’s glossary calls it an array computing library, bringing together XLA, the Accelerated Linear Algebra compiler, and automatic differentiation for high-performance numerical computing.' },
+    { who: 'sundu', text: 'So NumPy, but faster?' },
+    { who: 'sriku', text: 'NumPy-style code, plus a set of composable transformations. The glossary lists four: grad for automatic differentiation, jit for just-in-time compilation, vmap for automatic vectorization or batching, and pmap for parallelization.' },
+    { who: 'cherry', text: 'Composable?' },
+    { who: 'sriku', text: 'Each one takes a function and returns a new function, so you can stack them in any order.' },
+  ]}
+/>
+
+<Gif
+  name="jax"
+  alt="A stack of five labelled bars builds up from the bottom: a plain NumPy-style function f of x, then grad of f for automatic differentiation, then jit of grad of f compiled with XLA, then vmap of that to batch automatically, then pmap to spread across devices. A caption says each wrapper takes a function and returns a new function."
+  caption="Fig. 84: Stack the transformations. The glossary’s four are grad, jit, vmap and pmap."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who says it does all that?' },
+    { who: 'sriku', text: 'The project’s own README. JAX is a Python library for accelerator-oriented array computation and program transformation, built for high-performance numerical computing and large-scale machine learning.' },
+    { who: 'cherry', text: 'The automatic differentiation part?' },
+    { who: 'sriku', text: 'It can differentiate native Python and NumPy functions, through loops, branches, recursion and closures. It can take derivatives of derivatives of derivatives, in reverse mode, which is backpropagation from Part B, as well as forward mode.' },
+    { who: 'sundu', text: 'And the speed?' },
+    { who: 'sriku', text: 'It uses XLA to compile your NumPy programs and run them on TPUs, GPUs and other accelerators. You compile your own pure functions with jit.' },
+    { who: 'cherry', text: 'Any warnings?' },
+    { who: 'sriku', text: 'The README is honest. It calls JAX a research project and not an official Google product, and tells you to expect sharp edges.' },
+  ]}
+/>
+
+<CaseStudy
+  title="JAX in the README: transformable numerical computing at scale"
+  stats={[
+    { value: '4', label: 'Glossary transformations: grad, jit, vmap, pmap' },
+    { value: 'TPU / GPU', label: 'Accelerators targeted through XLA' },
+    { value: 'Any order', label: 'Compilation and differentiation compose arbitrarily' },
+  ]}
+  winner="The README: “JAX is a Python library for accelerator-oriented array computation and program transformation, designed for high-performance numerical computing and large-scale machine learning.”"
+  takeaway="Write plain array code once. Add grad, jit, vmap and pmap as you need them."
+  source={{
+    text: 'JAX project README, “Transformable numerical computing at scale”, on GitHub.',
+    href: 'https://github.com/jax-ml/jax',
+  }}
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Show me something that only works because of those transformations.' },
+    { who: 'sriku', text: 'Brax, from Google researchers: a rigid-body physics engine written in JAX. Because the simulator is compiled JAX code, it runs on the same accelerator chip as the reinforcement learning algorithm.' },
+    { who: 'sundu', text: 'Why does that matter?' },
+    { who: 'sriku', text: 'Normally the simulator runs on CPUs in another process or machine, and the learning algorithm runs on a GPU or TPU. The paper says the traffic between them costs latency, and that putting both on one chip improves the speed and cost of RL training by 100 to 1,000 times.' },
+    { who: 'cherry', text: 'Evidence?' },
+    { who: 'sriku', text: 'On the Ant locomotion task with 10 million environment steps, Brax reached good locomotion in about ten seconds. A standard PPO implementation on a CPU simulator took close to half an hour.' },
+  ]}
+/>
+
+<Gif
+  name="jax-speed"
+  alt="Two horizontal bars compare training a simulated robot ant. Brax, with physics and learning compiled together in JAX, takes about ten seconds. A standard PPO setup with a CPU simulator takes close to half an hour. The bar lengths only illustrate the gap."
+  caption="Fig. 85: Ten seconds versus nearly half an hour, from the Brax paper’s Ant comparison."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does that need a data centre?' },
+    { who: 'sriku', text: 'The paper says its policies train in seconds to minutes using just one modern accelerator. It also ships notebooks that run on Google’s free Colab, so anyone can do the research without a cluster.' },
+    { who: 'cherry', text: 'This sounds like the robotics side of the world, not only language models.' },
+    { who: 'sriku', text: 'It is. And it is not the only one. NVIDIA’s Isaac Gym takes the same idea: both the physics simulation and the policy training sit on the GPU. The NVIDIA authors report 2 to 3 orders of magnitude improvement over conventional RL with a CPU simulator.' },
+    { who: 'sundu', text: 'So whichever chip, the trick is keep everything on it.' },
+    { who: 'sriku', text: 'That is the point both papers make. For the robot work that comes later in this series, it is worth knowing both stacks.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Brax (Google, 2021) and Isaac Gym (NVIDIA, 2021)"
+  stats={[
+    { value: '~10 s vs ~30 min', label: 'Ant locomotion, 10M steps: Brax vs standard PPO' },
+    { value: '100 to 1,000×', label: 'Speed and cost gain claimed for RL training in Brax' },
+    { value: '2 to 3 orders', label: 'Of magnitude faster than CPU-simulator RL, per Isaac Gym' },
+  ]}
+  winner="Brax’s authors: it “trains locomotion and dexterous manipulation policies in seconds to minutes using just one modern accelerator.”"
+  takeaway="Moving the simulator onto the accelerator removes the slowest step in robot learning."
+  source={[
+    {
+      text: 'Freeman et al. (Google), “Brax: A Differentiable Physics Engine for Large Scale Rigid Body Simulation”, 2021. Free on arXiv.',
+      href: 'https://arxiv.org/abs/2106.13281',
+    },
+    {
+      text: 'Makoviychuk et al. (NVIDIA), “Isaac Gym: High Performance GPU-Based Physics Simulation For Robot Learning”, 2021. Free on arXiv.',
+      href: 'https://arxiv.org/abs/2108.10470',
+    },
+  ]}
+/>
+
+**Real definition:** an array computing library, bringing together XLA (Accelerated Linear Algebra) and automatic differentiation for high-performance numerical computing, with composable transformations such as grad, jit, vmap and pmap. [Google’s glossary: JAX ↗](https://developers.google.com/machine-learning/glossary#jax)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| JAX | Functions that transform functions | NumPy-style code with grad, jit, vmap and pmap |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Ten weeks. How many letters now?' },
+    { who: 'sriku', text: 'There are 16 more letters.' },
+    { who: 'sundu', text: 'And K is next. Is it connected to J?' },
+    { who: 'sriku', text: 'Keras, which can run on JAX, is on the K list.' },
+  ]}
+/>
+
+[← Part I: Image Recognition to I.I.D.](/writing/ml-glossary-i) · [Part K: From Keras to K-Means →](/writing/ml-glossary-k)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the bar lengths in the speed animation only illustrate the gap, and Cherry and Sundu are very real.*
+
+<Reactions />

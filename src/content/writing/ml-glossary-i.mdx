@@ -1,0 +1,445 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part I: From Image Recognition to I.I.D.',
+  subtitle: 'Week nine at the chai stall: eight machine learning terms, a husky mistaken for a wolf because of the snow, and three fairness rules you cannot have at once.',
+  type: 'Meme Feast',
+  date: '2026-10-15',
+  excerpt:
+    'Eight machine learning terms starting with I, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 9,
+}
+
+Ninth Saturday. The I section is the biggest one so far, so Sundu brought snacks as well as the notebook.
+
+New here? The series starts at [Part A](/writing/ml-glossary-a) and the last one was [Part H](/writing/ml-glossary-h). This round covers the I section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 25 entries. I picked eight. Two of them, interpretability and independently and identically distributed (i.i.d.), are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals).
+
+<Poster
+  badge="Part I · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Eight terms. Two friends. One misjudged husky."
+  rating="10/10 · bench reserved"
+  stats={['8 terms', '8 animations', '8 real cases', '1 husky']}
+/>
+
+---
+
+## Image Recognition: Beating the Human Baseline
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My phone sorts photos into "beach", "dog" and "food". What is that called?' },
+    { who: 'sriku', text: 'Image recognition: a process that classifies objects, patterns or concepts in an image. Google’s glossary says it is also known as image classification.' },
+    { who: 'sundu', text: 'How good is it?' },
+    { who: 'sriku', text: 'Good enough that people started comparing it with humans on the ImageNet challenge, from Part D.' },
+  ]}
+/>
+
+<Gif
+  name="image-recognition"
+  alt="Three horizontal bars show the ImageNet top-5 error: GoogLeNet 6.66 percent, the human figure 5.1 percent, and the PReLU network from He and colleagues 4.94 percent. The numbers are from the paper."
+  caption="Fig. 76: Real numbers from He et al. Lower is better."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Who got below the human number?' },
+    { who: 'sriku', text: 'He, Zhang, Ren and Sun in 2015. Their PReLU networks reached 4.94% top-5 test error on ImageNet 2012. The ILSVRC 2014 winner, GoogLeNet, had 6.66%, so that is a 26% relative improvement.' },
+    { who: 'sundu', text: 'And the human?' },
+    { who: 'sriku', text: 'They cite 5.1% from the ImageNet challenge paper, and say theirs is the first result to surpass human-level performance on this visual recognition challenge.' },
+    { who: 'cherry', text: 'So machines see better than people.' },
+    { who: 'sriku', text: 'On that benchmark, with 1,000 fixed classes, one score. The authors are careful to say it is on this challenge. It is a narrow test, not a claim about seeing in general.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Surpassing human-level performance on ImageNet (He et al., 2015)"
+  stats={[
+    { value: '4.94%', label: 'Top-5 test error, PReLU networks' },
+    { value: '6.66%', label: 'GoogLeNet, ILSVRC 2014 winner' },
+    { value: '5.1%', label: 'Human-level figure cited from the ImageNet paper' },
+    { value: '26%', label: 'Relative improvement over GoogLeNet' },
+  ]}
+  winner="The abstract: “To our knowledge, our result is the first to surpass human-level performance (5.1%, Russakovsky et al.) on this visual recognition challenge.”"
+  takeaway="A benchmark can be beaten without the problem being solved. Read what the test actually measures."
+  source={{
+    text: 'He, Zhang, Ren and Sun, “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification”, ICCV 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1502.01852',
+  }}
+/>
+
+**Real definition:** a process that classifies object(s), pattern(s) or concept(s) in an image. Image recognition is also known as image classification. [Google’s glossary: image recognition ↗](https://developers.google.com/machine-learning/glossary#image-recognition)
+
+---
+
+## Imbalanced Dataset: 97% Accurate and Useless
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My fraud model is 99% accurate. Do I get a bonus?' },
+    { who: 'sriku', text: 'How much of the data is fraud?' },
+    { who: 'cherry', text: 'About 1%.' },
+    { who: 'sriku', text: 'Then "never fraud" is also 99% accurate and catches nothing. You have an imbalanced dataset, a synonym in Google’s glossary for a class-imbalanced dataset.' },
+  ]}
+/>
+
+<Gif
+  name="imbalanced-dataset"
+  alt="A scatter of 150 blue normal points and 5 red rare points. A caption notes that always saying normal is 97 percent accurate and catches none of the rare cases. Then synthetic red points are added around the rare ones. The data is a toy example."
+  caption="Fig. 77: Toy data. High accuracy, zero rare cases caught."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What is the standard fix?' },
+    { who: 'sriku', text: 'Chawla, Bowyer, Hall and Kegelmeyer wrote the classic paper on it, SMOTE. They point out that real-world datasets are often predominantly "normal" examples with a small percentage of "abnormal" ones, and that missing an abnormal one often costs far more than the reverse.' },
+    { who: 'cherry', text: 'Just throw away normal examples?' },
+    { who: 'sriku', text: 'That under-sampling helps, but they show that combining it with over-sampling the minority class, by creating synthetic minority examples, does better in ROC space.' },
+    { who: 'sundu', text: 'Better than other tricks?' },
+    { who: 'sriku', text: 'Better than under-sampling alone, better than varying the loss ratios in Ripper and better than varying class priors in Naive Bayes. They tested with C4.5, Ripper and Naive Bayes, judged by AUC and the ROC convex hull.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SMOTE (Chawla et al., 2002)"
+  stats={[
+    { value: '3', label: 'Classifiers tested: C4.5, Ripper, Naive Bayes' },
+    { value: 'AUC', label: 'And the ROC convex hull, used to judge' },
+    { value: 'Synthetic', label: 'Minority examples created, not copied' },
+  ]}
+  winner="The abstract: a combination of over-sampling the minority class and under-sampling the majority class “can achieve better classifier performance (in ROC space) than only under-sampling the majority class.”"
+  takeaway="When the rare class matters, accuracy is the wrong score. Rebalance the data and judge by AUC."
+  source={{
+    text: 'Chawla, Bowyer, Hall and Kegelmeyer, “SMOTE: Synthetic Minority Over-sampling Technique”, JAIR 2002. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1106.1813',
+  }}
+/>
+
+**Real definition:** a synonym for class-imbalanced dataset, a class-imbalanced dataset is one for a classification in which the total number of labels of each class differs significantly, such as 1,000,000 negative labels against 10 positive ones. [Google’s glossary: imbalanced dataset ↗](https://developers.google.com/machine-learning/glossary#imbalanced-dataset) · [class-imbalanced dataset (Fundamentals) ↗](https://developers.google.com/machine-learning/glossary/fundamentals#class-imbalanced-dataset)
+
+---
+
+## Incompatibility of Fairness Metrics: You Cannot Have Them All
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fine, I will make the model fair. Which fairness metric do I use?' },
+    { who: 'sriku', text: 'Several, and Google’s glossary warns they can be mutually incompatible and cannot always be satisfied simultaneously. There is no single universal fairness metric for every problem.' },
+    { who: 'sundu', text: 'That sounds depressing.' },
+    { who: 'sriku', text: 'The glossary says it does not make fairness efforts fruitless. It means fairness has to be defined for the specific problem, aimed at preventing the harms specific to that use.' },
+  ]}
+/>
+
+<Gif
+  name="fairness-incompatibility"
+  alt="Three fairness conditions are listed: calibration within groups, balance for the negative class and balance for the positive class. The first two get green ticks, and the third turns into a red cross. A caption says all three together are possible only in highly constrained special cases."
+  caption="Fig. 78: The three conditions from Kleinberg et al."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who proved it?' },
+    { who: 'sriku', text: 'Kleinberg, Mullainathan and Raghavan. They formalized three conditions: calibration within groups, balance for the negative class and balance for the positive class.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'Except in highly constrained special cases, no method can satisfy all three at once. Even approximately satisfying them needs the data to look like one of those special cases.' },
+    { who: 'sundu', text: 'Was there a real fight about it?' },
+    { who: 'sriku', text: 'The COMPAS risk tool. ProPublica found that a non-recidivating Black defendant was nearly twice as likely as a white one to be rated high-risk. Later analyses said the scores were equally well calibrated for both groups.' },
+    { who: 'cherry', text: 'So both sides were right.' },
+    { who: 'sriku', text: 'About different conditions. Chouldechova showed that a score satisfying the calibration-style criterion leads to considerable disparate impact when recidivism prevalence differs across groups. Part D’s term, in the wild.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Inherent trade-offs in fair risk scores (Kleinberg et al., 2016)"
+  stats={[
+    { value: '3', label: 'Fairness conditions formalized' },
+    { value: '0', label: 'Methods satisfying all three, outside special cases' },
+    { value: 'COMPAS', label: 'The risk tool at the centre of the debate' },
+  ]}
+  winner="The abstract: “except in highly constrained special cases, there is no method that can satisfy these three conditions simultaneously.”"
+  takeaway="Pick the fairness definition that fits the harm you are trying to prevent, and say which one you picked."
+  source={[
+    {
+      text: 'Kleinberg, Mullainathan and Raghavan, “Inherent Trade-Offs in the Fair Determination of Risk Scores”, ITCS 2017. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1609.05807',
+    },
+    {
+      text: 'Chouldechova, “Fair prediction with disparate impact: A study of bias in recidivism prediction instruments”, 2016. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1610.07524',
+    },
+  ]}
+/>
+
+**Real definition:** the idea that some notions of fairness are mutually incompatible and cannot be satisfied simultaneously, so there is no single universal metric for quantifying fairness. [Google’s glossary: incompatibility of fairness metrics ↗](https://developers.google.com/machine-learning/glossary#incompatibility-of-fairness-metrics)
+
+---
+
+## In-Context Learning: Do the Examples Even Matter?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'In Part F you said a few examples in the prompt can teach the model a task.' },
+    { who: 'sriku', text: 'Yes. In-context learning is a synonym for few-shot prompting: the model learns the task from the prompt alone, with no training.' },
+    { who: 'sundu', text: 'So the examples must be correct.' },
+    { who: 'sriku', text: 'Funnily enough, that is not what the data say.' },
+  ]}
+/>
+
+<Gif
+  name="in-context-learning"
+  alt="Two prompts side by side show movie review examples. In one the labels are correct, in the other they are randomly swapped. Both end with a new review, a delight, and the model answers positive. A caption says randomly wrong labels barely hurt in the paper's tests. The prompts are toy examples."
+  caption="Fig. 79: Toy prompts illustrating the paper’s finding."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who tested that?' },
+    { who: 'sriku', text: 'Min and colleagues. They took the demonstrations in a prompt and randomly replaced the labels. Performance barely dropped, on a range of classification and multiple-choice tasks, consistently over 12 different models including GPT-3.' },
+    { who: 'cherry', text: 'Then what is the model learning from?' },
+    { who: 'sriku', text: 'Three other things the demonstrations provide: the label space, the distribution of the input text, and the overall format of the sequence.' },
+    { who: 'sundu', text: 'So the examples say what the answers look like, not what they should be.' },
+    { who: 'sriku', text: 'That is the paper’s finding. It also says it opens up questions about how much can be learned from language models through inference alone.' },
+  ]}
+/>
+
+<CaseStudy
+  title="What makes in-context learning work? (Min et al., 2022)"
+  stats={[
+    { value: '12', label: 'Models tested, including GPT-3' },
+    { value: 'Barely', label: 'Drop in performance with randomly replaced labels' },
+    { value: '3', label: 'Key drivers: label space, input distribution, format' },
+  ]}
+  winner="The abstract: “randomly replacing labels in the demonstrations barely hurts performance”, consistently over 12 different models including GPT-3."
+  takeaway="Few-shot examples work partly as a template. Show the format and the kind of input, and check whether the labels really matter for your task."
+  source={{
+    text: 'Min et al., “Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?”, EMNLP 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2202.12837',
+  }}
+/>
+
+**Real definition:** a synonym for few-shot prompting. [Google’s glossary: in-context learning ↗](https://developers.google.com/machine-learning/glossary#in-context-learning)
+
+---
+
+## Instruction Tuning: Teaching It to Follow Orders
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I asked the base model to translate a phrase and it just kept writing about the phrase.' },
+    { who: 'sriku', text: 'A base model is trained to continue text, not to obey you. Instruction tuning is a form of fine-tuning that improves a model’s ability to follow instructions.' },
+    { who: 'sundu', text: 'How?' },
+    { who: 'sriku', text: 'You train it on many instruction prompts that cover a wide variety of tasks. The tuned model then tends to give useful responses to zero-shot prompts across tasks, even ones it was not tuned on.' },
+  ]}
+/>
+
+<Gif
+  name="instruction-tuning"
+  alt="The instruction Translate to French: good morning is given to two models. The one before tuning rambles about the phrase. The one after tuning answers Bonjour. The outputs are toy examples."
+  caption="Fig. 80: Toy outputs. The tuned model does what the instruction says."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'The result that made it famous?' },
+    { who: 'sriku', text: 'FLAN, from Google. They took a 137-billion-parameter pre-trained model and instruction-tuned it on over 60 NLP tasks written as natural-language instruction templates.' },
+    { who: 'cherry', text: 'And tested on tasks it had not seen?' },
+    { who: 'sriku', text: 'Yes, unseen task types. It beat zero-shot GPT-3 with 175 billion parameters on 20 of 25 tasks. And it beat few-shot GPT-3 by a large margin on ANLI, RTE, BoolQ, AI2-ARC, OpenbookQA and StoryCloze.' },
+    { who: 'sundu', text: 'Why did it work?' },
+    { who: 'sriku', text: 'Ablation studies in the paper say three things drive it: the number of finetuning datasets, the model’s scale and the natural-language instructions.' },
+  ]}
+/>
+
+<CaseStudy
+  title="FLAN: finetuned language models are zero-shot learners (Google, 2021)"
+  stats={[
+    { value: '137B', label: 'Parameters in the instruction-tuned model' },
+    { value: '60+', label: 'NLP tasks used for instruction tuning' },
+    { value: '20 of 25', label: 'Tasks where it beat zero-shot 175B GPT-3' },
+  ]}
+  winner="The abstract: instruction tuning “substantially improves zero-shot performance on unseen tasks.”"
+  takeaway="A modest pass of varied, well-written instructions can matter more than extra size."
+  source={{
+    text: 'Wei et al. (Google), “Finetuned Language Models Are Zero-Shot Learners”, ICLR 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2109.01652',
+  }}
+/>
+
+**Real definition:** a form of fine-tuning that improves a generative AI model’s ability to follow instructions, by training on a series of instruction prompts typically covering a wide variety of tasks. [Google’s glossary: instruction tuning ↗](https://developers.google.com/machine-learning/glossary#instruction-tuning)
+
+---
+
+## Interpretability: Why Did It Say “Wolf”?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The model is 90% accurate, but I cannot tell you why it makes any single call.' },
+    { who: 'sriku', text: 'Then it is not very interpretable: the ability to explain or present a model’s reasoning in understandable terms to a human.' },
+    { who: 'sundu', text: 'Which models are easy?' },
+    { who: 'sriku', text: 'Linear regression, where you can look at the weights, and decision forests, from Part D, are highly interpretable. Others need sophisticated visualization.' },
+  ]}
+/>
+
+<Gif
+  name="interpretability"
+  alt="A husky stands on snow. A model says wolf. A red heat-map highlights the snow in the picture, not the animal, and a note says the explanation shows the model is looking at the snow. The classifier was deliberately trained to be bad."
+  caption="Fig. 81: The husky and wolf experiment from the LIME paper, redrawn."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is that picture from a real study?' },
+    { who: 'sriku', text: 'Yes, the LIME paper by Ribeiro, Singh and Guestrin. They built a deliberately bad classifier: trained on 20 hand-picked images where every wolf photo had snow in the background and no husky photo did.' },
+    { who: 'cherry', text: 'So it learned snow.' },
+    { who: 'sriku', text: 'It predicted wolf if there was snow or a light background at the bottom, and husky otherwise, regardless of the animal. Then they asked 27 graduate students, each with at least one ML course, whether they trusted it.' },
+    { who: 'sundu', text: 'Before any explanations?' },
+    { who: 'sriku', text: '10 of 27 trusted the bad model, and 12 of 27 mentioned snow as something it might use. After seeing LIME explanations, 3 of 27 trusted it and 25 of 27 identified snow.' },
+  ]}
+/>
+
+<CaseStudy
+  title="LIME: “Why should I trust you?” (Ribeiro, Singh and Guestrin, 2016)"
+  stats={[
+    { value: '10 → 3', label: 'Of 27 people trusting the bad model: before → after explanations' },
+    { value: '12 → 25', label: 'Of 27 who named snow as a feature: before → after' },
+    { value: '20', label: 'Training images behind the deliberately bad classifier' },
+  ]}
+  winner="The authors note that after seeing the explanations, “almost all of the subjects identified the correct insight.”"
+  takeaway="Accuracy can hide a shortcut. An explanation can expose it before you deploy."
+  source={{
+    text: 'Ribeiro, Singh and Guestrin, ““Why Should I Trust You?”: Explaining the Predictions of Any Classifier”, KDD 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1602.04938',
+  }}
+/>
+
+**Real definition:** the ability to explain or to present an ML model’s reasoning in understandable terms to a human. [Google’s glossary (Fundamentals): interpretability ↗](https://developers.google.com/machine-learning/glossary/fundamentals#interpretability)
+
+---
+
+## Intersection over Union (IoU): How Much Do the Boxes Overlap?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My detector drew a box around the dog, but not exactly where I drew mine. Is it right?' },
+    { who: 'sriku', text: 'That is what IoU measures: the intersection of two boxes divided by their union. 0 means no overlap at all, 1 means the same coordinates.' },
+    { who: 'sundu', text: 'So the predicted box against the ground-truth box from Part G.' },
+    { who: 'sriku', text: 'Yes, and Part B’s bounding box. You then pick an IoU threshold to decide whether a prediction counts as correct.' },
+  ]}
+/>
+
+<Gif
+  name="iou"
+  alt="A green rectangle is the ground-truth box and a gold rectangle is the predicted box. The gold box slides over the green one, and a counter shows the IoU rising and passing the 0.5 threshold. A final note says a 10 by 10 object inside a 20 by 20 box has an IoU of 100 over 400, which is 0.25."
+  caption="Fig. 82: Slide the prediction. The IoU number is overlap divided by total area."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is 0.5 a rule?' },
+    { who: 'sriku', text: 'It is the PASCAL VOC convention: a predicted box counts as correct if IoU is at least 0.5. The ImageNet challenge team noticed a problem for tiny objects.' },
+    { who: 'cherry', text: 'Which is?' },
+    { who: 'sriku', text: 'Take a 10 by 10 pixel object and a 20 by 20 detection window that fully contains it. That is about 5 pixels off on each side, roughly average human annotation error. But the IoU is 100 over 400, which is 0.25, far below 0.5.' },
+    { who: 'sundu', text: 'So the fair answer is marked wrong.' },
+    { who: 'sriku', text: 'So for smaller objects ILSVRC loosens the threshold, to allow up to about 5 pixels of slack in each direction. In the paper the threshold is the smaller of 0.5 and w·h divided by (w+10)(h+10).' },
+  ]}
+/>
+
+<CaseStudy
+  title="IoU thresholds in ImageNet detection (Russakovsky et al., 2015)"
+  stats={[
+    { value: '0.5', label: 'PASCAL VOC IoU threshold' },
+    { value: '0.25', label: 'IoU of a 10×10 object in a 20×20 box' },
+    { value: '~5 px', label: 'Slack allowed per side for small objects' },
+  ]}
+  winner="The paper’s formula: if the ground-truth box is w by h, the threshold is “min(0.5, wh / ((w+10)(h+10))).”"
+  takeaway="A fixed cutoff can be unfair at small scales. Choose the threshold to fit the objects."
+  source={{
+    text: 'Russakovsky et al., “ImageNet Large Scale Visual Recognition Challenge”, International Journal of Computer Vision, 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1409.0575',
+  }}
+/>
+
+**Real definition:** the intersection of two sets divided by their union. In image detection, IoU measures the accuracy of a predicted bounding box with respect to the ground-truth bounding box, from 0 (no overlap) to 1 (identical coordinates). [Google’s glossary: intersection over union (IoU) ↗](https://developers.google.com/machine-learning/glossary#intersection-over-union-iou)
+
+---
+
+## I.I.D.: The Ideal Gas of Machine Learning
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The textbook keeps saying "assume the data is i.i.d.". What does that buy me?' },
+    { who: 'sriku', text: 'Independently and identically distributed: data drawn from a distribution that does not change, where each value does not depend on the previous ones. Google’s glossary calls it the ideal gas of machine learning.' },
+    { who: 'sundu', text: 'Useful, but never exactly true.' },
+    { who: 'sriku', text: 'Right. Visitors to a web page may be i.i.d. over a short window, but stretch the window and seasonal differences appear. That is nonstationarity.' },
+  ]}
+/>
+
+<Gif
+  name="iid"
+  alt="Two panels show clouds of dots. On the left, training data from hospital A in blue. On the right, deployment data from hospital B in red, shifted to a different place. A note says models often do worse on the shifted data. The pictures are toy illustrations, not measured numbers."
+  caption="Fig. 83: Toy picture of a distribution shift. Train here, deploy there."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What happens when it fails for real?' },
+    { who: 'sriku', text: 'Koh and colleagues collected the evidence in WILDS, a benchmark of 10 datasets with in-the-wild distribution shifts: across hospitals for tumour identification, across camera traps for wildlife monitoring, and across time and location in satellite imaging and poverty mapping.' },
+    { who: 'cherry', text: 'And did models cope?' },
+    { who: 'sriku', text: 'On each dataset, standard training gave substantially lower out-of-distribution than in-distribution performance. The gap remained even with existing methods designed to tackle distribution shift.' },
+    { who: 'sundu', text: 'So it is not solved.' },
+    { who: 'sriku', text: 'The authors say it underscores the need for new methods. It also ties back to concept drift in Part C and the new test sets in Part H.' },
+  ]}
+/>
+
+<CaseStudy
+  title="WILDS: a benchmark of in-the-wild distribution shifts (Koh et al., 2020)"
+  stats={[
+    { value: '10', label: 'Datasets with real distribution shifts' },
+    { value: 'Hospitals', label: 'Tumour identification across sites' },
+    { value: 'Camera traps', label: 'Wildlife monitoring across sites' },
+    { value: 'Lower', label: 'Out-of-distribution than in-distribution performance, on every dataset' },
+  ]}
+  winner="The abstract: “standard training yields substantially lower out-of-distribution than in-distribution performance.”"
+  takeaway="Test on data from a new place, a new time or a new group. That is where the i.i.d. assumption breaks."
+  source={{
+    text: 'Koh et al., “WILDS: A Benchmark of in-the-Wild Distribution Shifts”, ICML 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2012.07421',
+  }}
+/>
+
+**Real definition:** data drawn from a distribution that does not change, and where each value drawn does not depend on values drawn previously. [Google’s glossary (Fundamentals): independently and identically distributed (i.i.d) ↗](https://developers.google.com/machine-learning/glossary/fundamentals#independently-and-identically-distributed-i.i.d)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Image recognition | Beating the human baseline | Classify what is in an image |
+| Imbalanced dataset | 97% accurate and useless | One class vastly outnumbers another |
+| Incompatibility of fairness metrics | You cannot have them all | Some fairness rules conflict |
+| In-context learning | Do the examples even matter? | Another name for few-shot prompting |
+| Instruction tuning | Teaching it to follow orders | Fine-tune on many instruction prompts |
+| Interpretability | Why did it say “wolf”? | Explaining a model’s reasoning |
+| Intersection over union | How much do the boxes overlap? | Overlap divided by combined area |
+| I.I.D. | The ideal gas of machine learning | Independent draws from a fixed distribution |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Nine weeks. How many letters left?' },
+    { who: 'sriku', text: 'There are 17 more letters.' },
+    { who: 'sundu', text: 'J is tiny. Is that a short week?' },
+    { who: 'sriku', text: 'J has exactly one entry, so the next part is a short one.' },
+  ]}
+/>
+
+[← Part H: Hallucination to Hyperparameter](/writing/ml-glossary-h) · [Part J: JAX →](/writing/ml-glossary-j)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); interpretability and i.i.d. are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy scatter plots are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

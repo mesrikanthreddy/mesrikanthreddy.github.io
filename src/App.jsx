@@ -5,6 +5,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import WritingIndex from './pages/WritingIndex'
 import WritingPost from './pages/WritingPost'
+import Tasks from './pages/Tasks'
+import SeriesPage from './pages/SeriesPage'
 import NotFound from './pages/NotFound'
 
 // React Router keeps the old scroll position between pages. Start each new page at
@@ -33,6 +35,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/writing" element={<WritingIndex />} />
         <Route path="/writing/:slug" element={<WritingPost />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/series/:slug" element={<SeriesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

@@ -1,0 +1,288 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part N: From N-Grams to Normalization',
+  subtitle: 'Week fourteen at the chai stall: five machine learning terms, a language model with two trillion tokens, and a Saturday poll answered mostly by people on an Xbox.',
+  type: 'Meme Feast',
+  date: '2026-10-20',
+  excerpt:
+    'Five machine learning terms starting with N, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 14,
+}
+
+Fourteenth Saturday. Cherry says N is the letter of "no", as in no free lunch and no free labels, so she wants to see the evidence for everything.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part M](/writing/ml-glossary-m). This round covers the N section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 28 entries. I picked five. One of them, normalization, is also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#normalization). Two of the others come with a twist: negative sampling is listed as a synonym for candidate sampling, and non-response bias is listed as a form of selection bias.
+
+<Poster
+  badge="Part N · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. One loud Xbox."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '2 trillion tokens']}
+/>
+
+---
+
+## N-Gram: Predict the Next Word From the Last Few
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My keyboard predicts the next word as I type. Is that magic?' },
+    { who: 'sriku', text: 'Often it starts with an N-gram: an ordered sequence of N words. Truly madly is a 2-gram, and because order matters, madly truly is a different 2-gram.' },
+    { who: 'sundu', text: 'How does it predict?' },
+    { who: 'sriku', text: 'Google’s glossary example: a user types happily ever. A model based on trigrams would likely predict that the next word is after.' },
+  ]}
+/>
+
+<Gif
+  name="n-gram"
+  alt="The words happily ever after the end appear in boxes. The first two, happily and ever, are highlighted as the context and the word after is highlighted as the likely next word. Below, two bars show the share of test five-grams found in a language model: 6 percent with 13 million training tokens and 56 percent with 2 trillion tokens."
+  caption="Fig. 101: A two-word window predicts the next word. The bars are from the paper below."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does more text help?' },
+    { who: 'sriku', text: 'In 2007 a Google team, Brants, Popat, Xu, Och and Jeff Dean, trained n-gram language models for machine translation on up to 2 trillion tokens. The largest model had about 300 billion n-grams.' },
+    { who: 'cherry', text: 'Why does size matter so much?' },
+    { who: 'sriku', text: 'Longer n-grams are rare, so more data means more of the phrases you meet later have been seen before. The fraction of 5-grams in their test data that the model knew grew from 0.06 with 13 million tokens to 0.56 with 2 trillion tokens.' },
+    { who: 'sundu', text: 'And smoothing, for the phrases it has not seen?' },
+    { who: 'sriku', text: 'They introduced Stupid Backoff, which is inexpensive to train on large data and approaches the quality of Kneser-Ney smoothing as the data grows. A footnote says the name came from a time when they thought such a simple scheme could not possibly be good. Their view changed, but the name stuck.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Large language models in machine translation (Brants et al., Google, 2007)"
+  stats={[
+    { value: '2 trillion', label: 'Tokens of training text' },
+    { value: '300 billion', label: 'N-grams in the largest model' },
+    { value: '6% to 56%', label: 'Share of test 5-grams the model knew, from 13 million to 2 trillion tokens' },
+  ]}
+  winner="The abstract: “We introduce a new smoothing method, dubbed Stupid Backoff, that is inexpensive to train on large datasets and approaches the quality of Kneser-Ney Smoothing as the amount of training data increases.”"
+  takeaway="Before neural language models, the way to a better one was a lot more text and a simple scheme you could afford to run on it."
+  source={{
+    text: 'Brants, Popat, Xu, Och and Dean, “Large Language Models in Machine Translation”, EMNLP-CoNLL 2007. Free PDF on the ACL Anthology.',
+    href: 'https://aclanthology.org/D07-1090.pdf',
+  }}
+/>
+
+**Real definition:** an ordered sequence of N words. For example, truly madly is a 2-gram. Many natural language understanding models rely on N-grams to predict the next word that the user will type or say. [Google’s glossary: N-gram ↗](https://developers.google.com/machine-learning/glossary#n-gram)
+
+---
+
+## Negative Sampling: Score a Few Wrong Answers, Not All of Them
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My model has to pick one word out of a million. Do I really have to score all million every time?' },
+    { who: 'sriku', text: 'No. Negative sampling, which Google’s glossary lists as a synonym for candidate sampling, is a training-time optimization. You calculate a probability for all the positive labels, using softmax for example, but only for a random sample of the negative labels.' },
+    { who: 'sundu', text: 'Example?' },
+    { who: 'sriku', text: 'Given an example labeled beagle and dog, you compute predictions and loss terms for beagle, for dog, and for a random subset of the other classes, say cat, lollipop and fence. The idea is that negative classes can learn from less frequent negative reinforcement, as long as the positive classes always get proper positive reinforcement. The glossary says this is observed empirically.' },
+  ]}
+/>
+
+<Gif
+  name="negative-sampling"
+  alt="A gold word chai sits in a toy embedding space with a green word cup nearby. A few random red words, fence, lollipop, tractor, sofa and anvil, are scattered around. The green word moves closer to chai while the red words are pushed away. A caption says to use 2 to 20 random negatives rather than the whole vocabulary. The positions are a toy example."
+  caption="Fig. 102: Toy embedding. Pull the true neighbour in, push a few random words away."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where was this used in practice?' },
+    { who: 'sriku', text: 'Word vectors. Mikolov, Sutskever, Chen, Corrado and Dean at Google describe negative sampling as a simple alternative to the hierarchical softmax for the Skip-gram model. This is the same word2vec line of work as the king, minus man, plus woman story in Part E.' },
+    { who: 'cherry', text: 'How many negatives do you need?' },
+    { who: 'sriku', text: 'Their experiments indicate that values of k in the range 5 to 20 are useful for small training datasets, while for large datasets k can be as small as 2 to 5.' },
+    { who: 'sundu', text: 'So a handful of wrong words per example instead of a million.' },
+    { who: 'sriku', text: 'Yes. The same paper adds subsampling of frequent words, which its abstract says gives a significant speedup and more regular word representations.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Negative sampling for word vectors (Mikolov et al., Google, 2013)"
+  stats={[
+    { value: '5 to 20', label: 'Negative samples per example for small datasets' },
+    { value: '2 to 5', label: 'Negative samples per example for large datasets' },
+  ]}
+  winner="The abstract: “We also describe a simple alternative to the hierarchical softmax called negative sampling.”"
+  takeaway="When there are far more wrong answers than right ones, you do not need to look at all of them on every step."
+  source={{
+    text: 'Mikolov, Sutskever, Chen, Corrado and Dean, “Distributed Representations of Words and Phrases and their Compositionality”, 2013. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1310.4546',
+  }}
+/>
+
+**Real definition:** a synonym for candidate sampling, a training-time optimization that calculates a probability for all the positive labels, but only for a random sample of negative labels. [Google’s glossary: negative sampling ↗](https://developers.google.com/machine-learning/glossary#negative-sampling) · [candidate sampling ↗](https://developers.google.com/machine-learning/glossary#candidate-sampling)
+
+---
+
+## Neural Architecture Search: A Network That Designs Networks
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I spent a week choosing layer types and sizes by hand.' },
+    { who: 'sriku', text: 'Neural architecture search automates that. It is a technique for automatically designing the architecture of a neural network, and NAS algorithms can reduce the time and resources needed to build one.' },
+    { who: 'sundu', text: 'What goes into it?' },
+    { who: 'sriku', text: 'A search space, which is the set of possible architectures, and a fitness function, a measure of how well a particular architecture does on a given task. The glossary adds that the algorithm is typically trained with a reinforcement learning technique.' },
+  ]}
+/>
+
+<Gif
+  name="nas"
+  alt="A controller box proposes candidate network designs one at a time. Each candidate is trained and scored, shown as a toy accuracy, and the score is sent back to the controller as a reward. A caption quotes the paper's 3.65 percent test error on CIFAR-10. The designs and scores are toy examples."
+  caption="Fig. 103: Toy loop. Propose, train, score, reward."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Has a search ever beaten a human designer?' },
+    { who: 'sriku', text: 'Barret Zoph and Quoc Le at Google Brain used a recurrent network to generate model descriptions of neural networks, and trained that network with reinforcement learning to maximize the expected accuracy of what it generated, measured on a validation set.' },
+    { who: 'cherry', text: 'And the result?' },
+    { who: 'sriku', text: 'On CIFAR-10, starting from scratch, it designed an architecture that rivals the best human-invented one, with a test error rate of 3.65%. They say that is 0.09 percent better and 1.05x faster than the previous state of the art with a similar scheme. On Penn Treebank it composed a recurrent cell that outperforms the widely used LSTM cell, with a test perplexity of 62.4, which is 3.6 better than the previous best.' },
+    { who: 'sundu', text: 'It beat the LSTM from Part L.' },
+    { who: 'sriku', text: 'On that benchmark, yes. The abstract reports accuracy, not the search bill, so read the paper’s cost before you copy the idea.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Neural Architecture Search with Reinforcement Learning (Zoph and Le, Google Brain, 2016)"
+  stats={[
+    { value: '3.65%', label: 'CIFAR-10 test error, 0.09 percent better and 1.05x faster than the previous best with a similar scheme' },
+    { value: '62.4', label: 'Penn Treebank test perplexity, 3.6 better than the previous best' },
+  ]}
+  winner="The abstract: “On the CIFAR-10 dataset, our method, starting from scratch, can design a novel network architecture that rivals the best human-invented architecture in terms of test set accuracy.”"
+  takeaway="Architecture itself can be learned. The price is running many training jobs to score the candidates."
+  source={{
+    text: 'Zoph and Le, “Neural Architecture Search with Reinforcement Learning”, ICLR 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1611.01578',
+  }}
+/>
+
+**Real definition:** a technique for automatically designing the architecture of a neural network. NAS typically uses a search space, which is a set of possible architectures, and a fitness function, a measure of how well a particular architecture performs on a given task. [Google’s glossary: Neural Architecture Search (NAS) ↗](https://developers.google.com/machine-learning/glossary#neural-architecture-search-nas)
+
+---
+
+## Non-Response Bias: The Silent Ones Still Count
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I sent a survey to all my customers. Only the loud ones replied.' },
+    { who: 'sriku', text: 'That is non-response bias, also called participation bias: users from certain groups opt out of surveys at different rates than users from other groups. Google’s glossary files it under selection bias. It also says that people with strong opinions tend to respond to optional surveys more often than people with mild opinions.' },
+    { who: 'sundu', text: 'So selection bias is the bigger family.' },
+    { who: 'sriku', text: 'Yes. It means errors in conclusions drawn from sampled data, because the selection process creates systematic differences between the samples you observe and those you do not. Coverage bias and sampling bias are the other two forms the glossary lists.' },
+  ]}
+/>
+
+<Gif
+  name="non-response-bias"
+  alt="A hundred dots show a population split evenly between red and blue. Most red dots fade out because red people rarely answer, so the dots that answer are mostly blue and the toy survey says 82 percent blue. Reweighting each group to its true share brings the estimate back to 50 percent. A caption cites the Xbox polls: 65 percent aged 18 to 29 compared with 19 percent of the electorate, and 93 percent men compared with 47 percent."
+  caption="Fig. 104: Toy survey. Who answers is not who exists, until you reweight."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is a lopsided sample hopeless?' },
+    { who: 'sriku', text: 'Not always. Wang, Rothschild, Goel and Gelman used daily voter-intention polls on the Xbox gaming platform during the 2012 US presidential election. They collected 750,148 interviews from 345,858 unique respondents.' },
+    { who: 'cherry', text: 'Who plays on an Xbox?' },
+    { who: 'sriku', text: 'Young men dominate. Respondents aged 18 to 29 were 65% of the Xbox sample against 19% in the exit poll, and men were 93% against 47% of the electorate.' },
+    { who: 'sundu', text: 'Then the poll is useless.' },
+    { who: 'sriku', text: 'They adjusted the responses with multilevel regression and poststratification, and the estimates came out in line with the forecasts of leading poll analysts, which aggregated hundreds of traditional polls. Their claim is that with proper statistical adjustment, non-representative polls can give accurate forecasts, often faster and at lower cost. The adjustment relied on knowing each respondent’s demographics and the make-up of the electorate.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Forecasting elections with non-representative polls (Wang, Rothschild, Goel and Gelman)"
+  stats={[
+    { value: '345,858', label: 'Unique Xbox respondents in 2012' },
+    { value: '65% vs 19%', label: 'Share aged 18 to 29: Xbox sample versus exit poll' },
+    { value: '93% vs 47%', label: 'Share men: Xbox sample versus electorate' },
+  ]}
+  winner="The abstract: “with proper statistical adjustment, non-representative polls can be used to generate accurate election forecasts.”"
+  takeaway="A skewed sample is a warning, not a verdict. Know who is missing, and correct for it, or do not trust the number."
+  source={{
+    text: 'Wang, Rothschild, Goel and Gelman, “Forecasting elections with non-representative polls”, International Journal of Forecasting. Free PDF from Columbia University.',
+    href: 'http://www.stat.columbia.edu/~gelman/research/published/forecasting-with-nonrepresentative-polls.pdf',
+  }}
+/>
+
+**Real definition:** in the glossary, non-response bias is a form of selection bias, also called participation bias, in which users from certain groups opt out of surveys at different rates than users from other groups. [Google’s glossary: non-response bias ↗](https://developers.google.com/machine-learning/glossary#non-response-bias) · [selection bias ↗](https://developers.google.com/machine-learning/glossary#selection-bias)
+
+---
+
+## Normalization: Put Every Feature on the Same Ruler
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'One of my features runs from 800 to 2,400 and another from 0 to 1. The model treats them like they are from different planets.' },
+    { who: 'sriku', text: 'Normalization, broadly, is converting a variable’s actual range of values into a standard range, such as -1 to +1, 0 to 1, or Z-scores, roughly -3 to +3. Google’s example is yours: a feature that runs from 800 to 2,400 normalized down to -1 to +1.' },
+    { who: 'sundu', text: 'Why bother?' },
+    { who: 'sriku', text: 'Models usually train faster, and produce better predictions, when every numerical feature in the feature vector has roughly the same range.' },
+  ]}
+/>
+
+<Gif
+  name="normalization"
+  alt="A histogram of a feature whose raw values run from 800 to 2,400 slides and rescales until the same shape sits on an axis from minus 1 to 1. A caption cites the batch normalization paper: the same accuracy in 14 times fewer training steps. The data is a toy example."
+  caption="Fig. 105: Toy feature. Same shape, friendlier numbers."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it only apply to the input features?' },
+    { who: 'sriku', text: 'Ioffe and Szegedy at Google applied the same idea inside the network. They noticed that the distribution of each layer’s inputs changes during training as earlier layers’ parameters change, and they call that internal covariate shift. Batch normalization normalizes the layer inputs for each training mini-batch.' },
+    { who: 'cherry', text: 'What did it buy them?' },
+    { who: 'sriku', text: 'They could use much higher learning rates and be less careful about initialization. Remember the learning rate from Part L. Applied to a state-of-the-art image classification model, it reached the same accuracy with 14 times fewer training steps.' },
+    { who: 'sundu', text: 'And it beat the original model?' },
+    { who: 'sriku', text: 'By a significant margin, they say. An ensemble of batch-normalized networks reached 4.9% top-5 validation error, 4.8% on the test set, which the paper says exceeds the accuracy of human raters. It also acts as a regularizer, in some cases removing the need for Dropout.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Batch Normalization (Ioffe and Szegedy, Google, 2015)"
+  stats={[
+    { value: '14x', label: 'Fewer training steps for the same accuracy' },
+    { value: '4.9%', label: 'Top-5 validation error on ImageNet with an ensemble' },
+  ]}
+  winner="The abstract: “Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin.”"
+  takeaway="Keep the numbers flowing through a network in a friendly range, and you can take bigger steps."
+  source={{
+    text: 'Ioffe and Szegedy, “Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift”, ICML 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1502.03167',
+  }}
+/>
+
+**Real definition:** broadly speaking, the process of converting a variable’s actual range of values into a standard range of values, such as -1 to +1, 0 to 1, or Z-scores. [Google’s glossary (Fundamentals): normalization ↗](https://developers.google.com/machine-learning/glossary/fundamentals#normalization)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| N-gram | Predict the next word from the last few | An ordered sequence of N words |
+| Negative sampling | Score a few wrong answers | Compute loss for a random sample of negative labels |
+| Neural architecture search | A network that designs networks | Automatically search for a good architecture |
+| Non-response bias | The silent ones still count | Groups answer surveys at different rates |
+| Normalization | One ruler for every feature | Convert values into a standard range |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fourteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 12 more letters, from O to Z.' },
+    { who: 'sundu', text: 'O has overfitting. I have strong feelings about overfitting.' },
+    { who: 'sriku', text: 'And optimizers, oversampling, out-of-bag evaluation and one-shot learning. Bring the notebook.' },
+  ]}
+/>
+
+[← Part M: From Machine Translation to MNIST](/writing/ml-glossary-m) · [Part O: From One-Shot Learning to Oversampling →](/writing/ml-glossary-o)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); normalization is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy window, embedding, search loop, survey and histogram are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

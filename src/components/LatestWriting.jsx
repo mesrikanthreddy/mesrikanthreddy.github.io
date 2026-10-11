@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useReveal } from '../hooks/useReveal'
-import { posts, formatDate } from '../content/writing'
+import { entries, formatDate } from '../content/writing'
 
 // Newest post gets the featured card; this many older ones are listed below it.
 const MORE_COUNT = 1
@@ -11,9 +11,9 @@ export default function LatestWriting() {
   const featuredRef = useReveal()
   const moreRef = useReveal()
 
-  if (posts.length === 0) return null
+  if (entries.length === 0) return null
 
-  const [featured, ...rest] = posts
+  const [featured, ...rest] = entries
   const more = rest.slice(0, MORE_COUNT)
   const { meta } = featured
 
@@ -34,7 +34,7 @@ export default function LatestWriting() {
 
         <Link
           className="feature-post reveal"
-          to={`/writing/${featured.slug}`}
+          to={featured.href}
           data-type={meta.type}
           ref={featuredRef}
         >
@@ -50,10 +50,10 @@ export default function LatestWriting() {
             <span className="post-meta">
               <time dateTime={meta.date}>{formatDate(meta.date)}</time>
               <span className="post-meta-dot" aria-hidden="true" />
-              <span>{featured.readingTime} min read</span>
+              <span>{featured.isSeries ? `${featured.partCount} parts` : `${featured.readingTime} min read`}</span>
             </span>
             <span className="feature-cta">
-              Read the {meta.type ? meta.type.toLowerCase() : 'post'} →
+              {featured.isSeries ? 'See all the parts →' : `Read the ${meta.type ? meta.type.toLowerCase() : 'post'} →`}
             </span>
           </span>
         </Link>
@@ -61,7 +61,7 @@ export default function LatestWriting() {
         {more.length > 0 && (
           <div className="post-list reveal" ref={moreRef}>
             {more.map((post) => (
-              <Link className="post-item" to={`/writing/${post.slug}`} key={post.slug}>
+              <Link className="post-item" to={post.href} key={post.key}>
                 <div className="post-item-top">
                   <span className="post-title">
                     {post.meta.type && (
@@ -76,7 +76,7 @@ export default function LatestWriting() {
                 <div className="post-meta">
                   <time dateTime={post.meta.date}>{formatDate(post.meta.date)}</time>
                   <span className="post-meta-dot" aria-hidden="true" />
-                  <span>{post.readingTime} min read</span>
+                  <span>{post.isSeries ? `${post.partCount} parts · ${post.readingTime} min total` : `${post.readingTime} min read`}</span>
                 </div>
                 {post.meta.excerpt && (
                   <p className="post-excerpt">{post.meta.excerpt}</p>

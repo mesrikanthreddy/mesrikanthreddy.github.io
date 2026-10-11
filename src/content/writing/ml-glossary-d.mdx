@@ -1,0 +1,491 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part D: From Data Augmentation to Dropout',
+  subtitle: 'Week four at the chai stall: nine machine learning terms, one cat photographed six ways, and a rule that every claim needs a source.',
+  type: 'Meme Feast',
+  date: '2026-10-10',
+  excerpt:
+    'Nine machine learning terms starting with D, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 4,
+}
+
+Fourth Saturday, same bench. The house rule from last time still stands: no claim without a source. Cherry has started checking the links, and so far none of them has failed.
+
+New here? Start with [Part A](/writing/ml-glossary-a), [Part B](/writing/ml-glossary-b) and [Part C](/writing/ml-glossary-c). This round covers the D section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 40 entries. I picked nine. One of them, deep neural network, is a synonym for [deep model](https://developers.google.com/machine-learning/glossary/fundamentals#deep-model), which is on Google's Fundamentals page.
+
+<Poster
+  badge="Part D · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Nine terms. Two friends. Sources checked."
+  rating="10/10 · bench reserved"
+  stats={['9 terms', '9 animations', '9 real cases', '1 cat, six ways']}
+/>
+
+---
+
+## Data Augmentation: One Photo, Six Photos
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I only have a thousand photos of cats. My model needs ten thousand.' },
+    { who: 'sriku', text: 'Then make more from the ones you have. Data augmentation means artificially boosting the range and number of training examples by transforming the existing ones.' },
+    { who: 'sundu', text: 'Transform how?' },
+    { who: 'sriku', text: 'Rotate, stretch and reflect each image. A cat flipped left to right is still a cat, and the model gets a new example for free.' },
+  ]}
+/>
+
+<Gif
+  name="data-augmentation"
+  alt="One cat photo labelled original is turned into five more training examples: rotated, flipped, zoomed, rotated the other way, and flipped with a zoom. The counter rises from one example to six."
+  caption="Fig. 33: One real photo, six training examples."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it only work for pictures?' },
+    { who: 'sriku', text: 'No. A Google Brain team made one for speech, called SpecAugment. It works on the spectrogram, the picture of the sound.' },
+    { who: 'cherry', text: 'So what do they do to the sound?' },
+    { who: 'sriku', text: 'Three simple things: warp the features, mask blocks of frequency channels, and mask blocks of time steps. The model has to cope with sound that has bits missing.' },
+    { who: 'sundu', text: 'Did that help?' },
+    { who: 'sriku', text: 'On the LibriSpeech benchmark they reported a 6.8% word error rate on the harder test-other set without a language model, and 5.8% with one. The previous state-of-the-art hybrid system had 7.5%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SpecAugment (Google Brain, 2019): augmenting sound"
+  stats={[
+    { value: '6.8%', label: 'Word error rate, test-other, no language model' },
+    { value: '5.8%', label: 'With a language model' },
+    { value: '7.5%', label: 'Previous state-of-the-art hybrid system' },
+  ]}
+  winner="The paper presents “SpecAugment, a simple data augmentation method for speech recognition” and reports state-of-the-art results on LibriSpeech 960h and Switchboard 300h."
+  takeaway="If you cannot collect more data, bend the data you have. The model learns what really matters."
+  source={{
+    text: 'Park et al. (Google Brain), “SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition”, Interspeech 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1904.08779',
+  }}
+/>
+
+**Real definition:** artificially boosting the range and number of training examples by transforming existing examples to create additional ones. [Google’s glossary: data augmentation ↗](https://developers.google.com/machine-learning/glossary#data-augmentation)
+
+---
+
+## Data Parallelism: Same Model, Different Slices
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Training takes four days on my one GPU. Can I just buy three more?' },
+    { who: 'sriku', text: 'You can, with data parallelism: copy the whole model onto several devices, then give each one a different slice of the data.' },
+    { who: 'cherry', text: 'So four cooks, the same recipe, four different trays of dough.' },
+    { who: 'sriku', text: 'And after each round they compare notes. One catch from Google’s glossary: the model has to be small enough to fit on every device.' },
+  ]}
+/>
+
+<Gif
+  name="data-parallelism"
+  alt="A batch of 32 examples, colour coded in four groups of eight, is split across four GPUs. Each GPU shows the same brain icon, a full copy of the model, and receives only its own eight examples. A banner says the updates are averaged so every copy stays in sync."
+  caption="Fig. 34: Four copies of the model, four slices of the batch."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How far can you push that?' },
+    { who: 'sriku', text: 'A Facebook team trained ResNet-50 on ImageNet with a minibatch of 8,192 images spread over 256 GPUs. The whole run took one hour.' },
+    { who: 'sundu', text: 'Did the model get worse?' },
+    { who: 'sriku', text: 'They report no loss of accuracy at that size. It needed a fix, though. Large minibatches caused optimization trouble, so they raised the learning rate in proportion to the batch size and added a warmup at the start.' },
+    { who: 'cherry', text: 'Was the hardware clever?' },
+    { who: 'sriku', text: 'Commodity hardware. They got roughly 90% scaling efficiency going from 8 to 256 GPUs.' },
+  ]}
+/>
+
+<CaseStudy
+  title="ImageNet in one hour (Facebook, 2017)"
+  stats={[
+    { value: '8,192', label: 'Images per minibatch' },
+    { value: '256', label: 'GPUs' },
+    { value: '1 hour', label: 'To train ResNet-50' },
+    { value: '~90%', label: 'Scaling efficiency, 8 to 256 GPUs' },
+  ]}
+  winner="Their system trains ResNet-50 “with a minibatch size of 8192 on 256 GPUs in one hour, while matching small minibatch accuracy.”"
+  takeaway="More devices only help if the training recipe is adjusted to match."
+  source={{
+    text: 'Goyal et al. (Facebook), “Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.02677',
+  }}
+/>
+
+**Real definition:** a way of scaling training or inference that replicates an entire model onto multiple devices and then passes a subset of the input data to each device. [Google’s glossary: data parallelism ↗](https://developers.google.com/machine-learning/glossary#data-parallelism)
+
+---
+
+## Decision Forest: Let the Trees Vote
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'One decision tree keeps being very sure and very wrong.' },
+    { who: 'sriku', text: 'Plant more. A decision forest is a model made from several decision trees, and it predicts by aggregating what its trees say.' },
+    { who: 'sundu', text: 'Like asking three friends instead of one.' },
+    { who: 'sriku', text: 'And going with the majority. Random forests and gradient boosted trees are the popular kinds.' },
+  ]}
+/>
+
+<Gif
+  name="decision-forest"
+  alt="Three small decision trees each follow a highlighted path to an answer. Trees one and two vote cat, tree three votes dog. The forest answers cat, two votes to one. The votes are a toy example."
+  caption="Fig. 35: Toy votes. Two out of three trees is enough."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Anything real that runs on this?' },
+    { who: 'sriku', text: 'The Xbox Kinect. Microsoft Research needed to work out where your body joints are from a single depth image, fast enough for a game.' },
+    { who: 'cherry', text: 'How do you do that with trees?' },
+    { who: 'sriku', text: 'They turned it into a per-pixel question: which of 31 body parts does this pixel belong to? A forest answers it for every pixel.' },
+    { who: 'sundu', text: 'How big was the forest?' },
+    { who: 'sriku', text: 'The paper says training 3 trees to depth 20 from 1 million images takes about a day on a 1,000-core cluster. At run time the system does 200 frames per second on the Xbox GPU.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Xbox Kinect body tracking (Microsoft Research, 2011)"
+  stats={[
+    { value: '31', label: 'Body parts classified per pixel' },
+    { value: '3 trees', label: 'Depth 20, 1 million training images' },
+    { value: '~1 day', label: 'Training on a 1,000-core cluster' },
+    { value: '200 fps', label: 'On the Xbox GPU' },
+  ]}
+  winner="From the abstract: “The system runs at 200 frames per second on consumer hardware.”"
+  takeaway="A few shallow-looking trees, voting on every pixel, were fast enough to run inside a game console."
+  source={{
+    text: 'Shotton et al. (Microsoft Research), “Real-Time Human Pose Recognition in Parts from Single Depth Images”, CVPR 2011. Free PDF.',
+    href: 'https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/BodyPartRecognition.pdf',
+  }}
+/>
+
+**Real definition:** a model created from multiple decision trees, which makes a prediction by aggregating the predictions of its trees. Popular types include random forests and gradient boosted trees. [Google’s glossary: decision forest ↗](https://developers.google.com/machine-learning/glossary#decision-forest)
+
+---
+
+## Deep Neural Network: The Layer Cake
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Everyone says "deep". Deep how?' },
+    { who: 'sriku', text: 'Deep means many layers. Google’s glossary says deep neural network is a synonym for deep model, a neural network with more than one hidden layer.' },
+    { who: 'sundu', text: 'Why does that help?' },
+    { who: 'sriku', text: 'Each layer builds on the one before. Pixels become edges, edges become shapes, shapes become parts, and parts become "cat". That picture is the idea, not a literal readout of one network.' },
+  ]}
+/>
+
+<Gif
+  name="deep-neural-network"
+  alt="A network with five columns of dots labelled pixels, edges, shapes, parts and answer lights up from left to right. At the end a cat emoji and the word cat appear. The labels illustrate the idea and are not read from a real network."
+  caption="Fig. 36: Illustration of the idea, not a real network."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'The famous deep one?' },
+    { who: 'sriku', text: 'AlexNet, in 2012. Five convolutional layers and three fully connected ones, trained on 1.2 million ImageNet photos.' },
+    { who: 'cherry', text: 'And it won?' },
+    { who: 'sriku', text: 'A variant of it won the ImageNet competition with a top-5 error of 15.3%. The second-best entry had 26.2%.' },
+    { who: 'sundu', text: 'Was it quick to train?' },
+    { who: 'sriku', text: 'About 90 passes through the data, five to six days on two NVIDIA GTX 580 GPUs. The authors say the network was limited by how much GPU memory and training time they had.' },
+  ]}
+/>
+
+<CaseStudy
+  title="AlexNet (Krizhevsky, Sutskever and Hinton, 2012)"
+  stats={[
+    { value: '15.3%', label: 'Top-5 error, ILSVRC-2012 winner' },
+    { value: '26.2%', label: 'Second-best entry' },
+    { value: '1.2M', label: 'Training images' },
+    { value: '5 to 6 days', label: 'On two GTX 580 GPUs' },
+  ]}
+  winner="The authors entered a variant in ILSVRC-2012 “and achieved a winning top-5 test error rate of 15.3%, compared to 26.2% achieved by the second-best entry.”"
+  takeaway="Many layers, a lot of data and GPUs beat the hand-built methods by a wide margin."
+  source={{
+    text: 'Krizhevsky, Sutskever and Hinton, “ImageNet Classification with Deep Convolutional Neural Networks”, NeurIPS 2012. Free PDF.',
+    href: 'https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf',
+  }}
+/>
+
+**Real definition:** a synonym for deep model, a neural network containing more than one hidden layer. [Google’s glossary: deep neural network ↗](https://developers.google.com/machine-learning/glossary#deep-neural-network) · [deep model (Fundamentals) ↗](https://developers.google.com/machine-learning/glossary/fundamentals#deep-model)
+
+---
+
+## Deep Q-Network (DQN): The Arcade Kid
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a program learn to play a video game by itself?' },
+    { who: 'sriku', text: 'One way is Q-learning, where the program scores every possible move. A Deep Q-Network is a deep neural network that predicts those scores, the Q-functions.' },
+    { who: 'sundu', text: 'Then it just plays the best-scoring move.' },
+    { who: 'sriku', text: 'Yes. Pixels go in, a score for each button comes out, and it presses the highest one.' },
+  ]}
+/>
+
+<Gif
+  name="dqn"
+  alt="A toy brick-breaking game shows a ball and a paddle. Beside it, three bars score the moves left, stay and right as the ball moves, and the highest bar is highlighted. The game and scores are a toy illustration."
+  caption="Fig. 37: Toy game. The network scores each move and the best one is played."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Did anybody do this for real?' },
+    { who: 'sriku', text: 'DeepMind, in Nature in 2015. One agent, given only the screen pixels and the game score, played 49 Atari 2600 games.' },
+    { who: 'cherry', text: 'One agent per game?' },
+    { who: 'sriku', text: 'Same algorithm, same network architecture and same hyperparameters for all 49. It beat the best earlier reinforcement learning methods on 43 of them.' },
+    { who: 'sundu', text: 'Versus a human?' },
+    { who: 'sriku', text: 'It reached more than 75% of a professional games tester’s score on more than half of the games, 29 of them.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Deep Q-Network on Atari (DeepMind, 2015)"
+  stats={[
+    { value: '49', label: 'Atari games, one algorithm' },
+    { value: '43', label: 'Games where it beat the best earlier methods' },
+    { value: '29', label: 'Games above 75% of a professional human tester' },
+  ]}
+  winner="The paper: the agent “was able to surpass the performance of all previous algorithms and achieve a level comparable to that of a professional human games tester across a set of 49 games.”"
+  takeaway="Raw pixels and a score were enough input. No hand-written game knowledge."
+  source={{
+    text: 'Mnih et al. (DeepMind), “Human-level control through deep reinforcement learning”, Nature 2015. Free PDF hosted by DeepMind.',
+    href: 'https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf',
+  }}
+/>
+
+**Real definition:** in Q-learning, a deep neural network that predicts Q-functions. [Google’s glossary: Deep Q-Network ↗](https://developers.google.com/machine-learning/glossary#deep-q-network-dqn)
+
+---
+
+## Differential Privacy: Hide in the Noise
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A model trained on people’s data might leak something about one of them.' },
+    { who: 'sriku', text: 'Right. Differential privacy is an anonymization approach: sample, and add noise during training or counting, so the model does not learn much about any one individual.' },
+    { who: 'sundu', text: 'So my data is in there, but blurred.' },
+    { who: 'sriku', text: 'Blurred enough that the result looks about the same whether you are in the data or not.' },
+  ]}
+/>
+
+<Gif
+  name="differential-privacy"
+  alt="Two bar charts labelled without you and with you. With exact counts one bar differs by one. After random noise is added the two charts look the same, so you cannot tell whether one person is in the data. The counts are a toy example."
+  caption="Fig. 38: Toy counts. With noise, one person’s presence disappears."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who runs this in the wild?' },
+    { who: 'sriku', text: 'Google, in Chrome. A system called RAPPOR collects statistics from browsers, anonymously, using randomized responses.' },
+    { who: 'cherry', text: 'Collects what?' },
+    { who: 'sriku', text: 'Chrome settings such as the homepage, because malicious software often changes them without consent. The paper reports daily collection from about 14 million opted-in respondents.' },
+    { who: 'sundu', text: 'Did they see the individual settings?' },
+    { who: 'sriku', text: 'The authors put it this way: the forest of client data can be studied without looking at individual trees.' },
+  ]}
+/>
+
+<CaseStudy
+  title="RAPPOR in Chrome (Google, 2014)"
+  stats={[
+    { value: '~14 million', label: 'Opted-in respondents, daily collection' },
+    { value: 'Homepage, search engine…', label: 'Chrome settings studied' },
+  ]}
+  winner="In the paper’s words, RAPPOR allows “the forest of client data to be studied, without permitting the possibility of looking at individual trees.”"
+  takeaway="You can learn what a crowd is doing without learning what any one person did."
+  source={{
+    text: 'Erlingsson, Pihur and Korolova (Google), “RAPPOR: Randomized Aggregatable Privacy-Preserving Ordinal Response”, CCS 2014. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1407.6981',
+  }}
+/>
+
+**Real definition:** in machine learning, an anonymization approach to protect sensitive data in a model’s training set from being exposed, by sampling and adding noise during training to obscure individual data points. [Google’s glossary: differential privacy ↗](https://developers.google.com/machine-learning/glossary#differential-privacy)
+
+---
+
+## Disparate Impact: Accurate on Average, Not for Everyone
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The model is 90% accurate overall. Surely that is fine?' },
+    { who: 'sriku', text: 'Not if the 10% lands on one group. Disparate impact is when decisions about people affect different subgroups disproportionately.' },
+    { who: 'sundu', text: 'Nobody meant to do it, though.' },
+    { who: 'sriku', text: 'That is the difference from disparate treatment, which is about treating subgroups differently on purpose. Disparate impact can happen with a rule that looks neutral.' },
+  ]}
+/>
+
+<Gif
+  name="disparate-impact"
+  alt="Two bars compare the highest error rate found for lighter-skinned men, 0.8 percent, and for darker-skinned women, 34.7 percent, across three commercial gender classification systems. The numbers are from the Gender Shades paper."
+  caption="Fig. 39: Real numbers from the Gender Shades study, 2018."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Real numbers?' },
+    { who: 'sriku', text: 'The Gender Shades study by Joy Buolamwini and Timnit Gebru. They checked the datasets used to test face analysis and found them overwhelmingly lighter-skinned: 79.6% for IJB-A and 86.2% for Adience.' },
+    { who: 'cherry', text: 'So they built a better test set.' },
+    { who: 'sriku', text: 'Balanced by gender and skin type, and they tested three commercial gender classification systems on it. Darker-skinned females were the most misclassified group, with error rates of up to 34.7%.' },
+    { who: 'sundu', text: 'And the other end?' },
+    { who: 'sriku', text: 'The maximum error rate for lighter-skinned males was 0.8%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gender Shades (Buolamwini and Gebru, 2018)"
+  stats={[
+    { value: '34.7%', label: 'Highest error rate, darker-skinned females' },
+    { value: '0.8%', label: 'Highest error rate, lighter-skinned males' },
+    { value: '3', label: 'Commercial gender classifiers tested' },
+    { value: '79.6% / 86.2%', label: 'Lighter-skinned share of IJB-A / Adience' },
+  ]}
+  winner="The authors conclude the gaps “require urgent attention.”"
+  takeaway="Always check the error rate for each group, not just the average."
+  source={{
+    text: 'Buolamwini and Gebru, “Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification”, FAT* 2018. Free PDF.',
+    href: 'https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf',
+  }}
+/>
+
+**Real definition:** making decisions about people that impact different population subgroups disproportionately, usually where an algorithmic decision-making process harms or benefits some subgroups more than others. [Google’s glossary: disparate impact ↗](https://developers.google.com/machine-learning/glossary#disparate-impact)
+
+---
+
+## Distillation: The Teacher’s Notes
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My model is brilliant and far too big for a phone.' },
+    { who: 'sriku', text: 'Distillation: shrink a big model, the teacher, into a smaller one, the student, that copies the teacher’s predictions as closely as it can.' },
+    { who: 'sundu', text: 'The student copies the answers?' },
+    { who: 'sriku', text: 'It copies the teacher’s whole set of scores, not only the final pick. "70% cat, 22% fox, 8% dog" teaches more than "cat".' },
+  ]}
+/>
+
+<Gif
+  name="distillation"
+  alt="A large teacher model and a small student model each show bars for cat, fox and dog. The student's bars start flat and move until they match the teacher's. The scores are a toy example."
+  caption="Fig. 40: Toy scores. The student learns the teacher’s full set of scores."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who did it for real?' },
+    { who: 'sriku', text: 'Hinton, Vinyals and Dean, in 2015. They improved the acoustic model of a heavily used commercial speech system by distilling the knowledge of a whole ensemble into a single model.' },
+    { who: 'cherry', text: 'And newer?' },
+    { who: 'sriku', text: 'DistilBERT, from Hugging Face. It reduced the size of a BERT model by 40% while retaining 97% of its language understanding capabilities, and it was 60% faster.' },
+    { who: 'sundu', text: 'Free lunch?' },
+    { who: 'sriku', text: 'Almost. Google’s glossary says the student’s predictions are typically not as good as the teacher’s. 97% is not 100%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="DistilBERT (Hugging Face, 2019), after Hinton et al. (2015)"
+  stats={[
+    { value: '40%', label: 'Smaller than BERT' },
+    { value: '97%', label: 'Of BERT’s language understanding retained' },
+    { value: '60%', label: 'Faster' },
+  ]}
+  winner="The authors show it is possible “to reduce the size of a BERT model by 40%, while retaining 97% of its language understanding capabilities and being 60% faster.”"
+  takeaway="Train big once, then ship the small copy."
+  source={[
+    {
+      text: 'Sanh et al., “DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter”, 2019. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1910.01108',
+    },
+    {
+      text: 'Hinton, Vinyals and Dean, “Distilling the Knowledge in a Neural Network”, 2015. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1503.02531',
+    },
+  ]}
+/>
+
+**Real definition:** the process of reducing the size of one model (the teacher) into a smaller model (the student) that emulates the original model’s predictions as faithfully as possible. [Google’s glossary: distillation ↗](https://developers.google.com/machine-learning/glossary#distillation)
+
+---
+
+## Dropout Regularization: Nobody Gets to Rely on a Friend
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My network aced training and flopped on new data.' },
+    { who: 'sriku', text: 'Overfitting. One cure is dropout regularization: at each training step, remove a random selection of units in a layer.' },
+    { who: 'sundu', text: 'Why would breaking the network help?' },
+    { who: 'sriku', text: 'No unit can lean on a particular neighbour, because the neighbour might be gone this step. Each one has to be useful on its own.' },
+    { who: 'cherry', text: 'Like a team where anyone might be absent on match day.' },
+  ]}
+/>
+
+<Gif
+  name="dropout"
+  alt="A small network is drawn six times. Each time a different random set of units is crossed out and their connections disappear, while the remaining units stay lit."
+  caption="Fig. 41: A different random set is switched off at every step."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did that idea come from?' },
+    { who: 'sriku', text: 'Hinton’s group, in 2012. When a big network is trained on a small training set, it typically performs poorly on held-out data. They reduced that by randomly omitting half of the feature detectors on each training case.' },
+    { who: 'cherry', text: 'The reason?' },
+    { who: 'sriku', text: 'It prevents complex co-adaptations, where a detector is only useful alongside several specific others. They reported big improvements on many benchmarks and new records for speech and object recognition.' },
+    { who: 'sundu', text: 'It showed up again in AlexNet.' },
+    { who: 'sriku', text: 'Yes. AlexNet used dropout in its fully connected layers, which its authors say proved very effective.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Dropout (Hinton et al., 2012)"
+  stats={[
+    { value: '50%', label: 'Feature detectors omitted per training case' },
+    { value: 'Records', label: 'Set for speech and object recognition' },
+  ]}
+  winner="The abstract: “Random ‘dropout’ gives big improvements on many benchmark tasks and sets new records for speech and object recognition.”"
+  takeaway="Training with parts of the network missing made the whole network sturdier."
+  source={{
+    text: 'Hinton et al., “Improving neural networks by preventing co-adaptation of feature detectors”, 2012. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1207.0580',
+  }}
+/>
+
+**Real definition:** a form of regularization useful in training neural networks that removes a random selection of a fixed number of the units in a network layer for a single gradient step. The more units dropped out, the stronger the regularization. [Google’s glossary: dropout regularization ↗](https://developers.google.com/machine-learning/glossary#dropout-regularization)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Data augmentation | One photo, six photos | Transform examples to create more |
+| Data parallelism | Same model, different slices | Copy the model to many devices, split the data |
+| Decision forest | Let the trees vote | Aggregate the predictions of many trees |
+| Deep neural network | The layer cake | A network with many hidden layers |
+| Deep Q-Network (DQN) | The arcade kid | A deep network that scores each move |
+| Differential privacy | Hide in the noise | Noise hides any one person’s data |
+| Disparate impact | Accurate on average, not for everyone | A decision harms one subgroup more |
+| Distillation | The teacher’s notes | A small model copies a big one |
+| Dropout regularization | Nobody gets to rely on a friend | Randomly remove units at each step |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Four weeks and we are only at D?' },
+    { who: 'sriku', text: 'There are 22 more letters.' },
+    { who: 'sundu', text: 'Then same bench, same chai, same rule. Sources.' },
+  ]}
+/>
+
+[← Part C: Candidate Generation to Convolution](/writing/ml-glossary-c)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); deep model, the entry that deep neural network points to, is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the cat photographed six ways is a cartoon, and Cherry and Sundu are very real.*
+
+<Reactions />

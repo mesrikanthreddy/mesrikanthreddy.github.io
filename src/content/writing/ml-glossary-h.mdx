@@ -1,0 +1,442 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part H: From Hallucination to Hyperparameter',
+  subtitle: 'Week eight at the chai stall: eight machine learning terms, a chatbot that is sure the capital is Sydney, and 126 yeast genes that all work on ribosomes.',
+  type: 'Meme Feast',
+  date: '2026-10-14',
+  excerpt:
+    'Eight machine learning terms starting with H, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 8,
+}
+
+Eighth Saturday. Sundu brought a third notebook as promised, and Cherry has started colour-coding the sources.
+
+Catching up? Start at [Part A](/writing/ml-glossary-a) and work through to [Part G](/writing/ml-glossary-g). This round covers the H section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 14 entries. I picked eight. Two of them, hidden layer and hyperparameter, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals).
+
+<Poster
+  badge="Part H · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Eight terms. Two friends. Three notebooks."
+  rating="10/10 · bench reserved"
+  stats={['8 terms', '8 animations', '8 real cases', '1 wrong capital']}
+/>
+
+---
+
+## Hallucination: Confident, Fluent, Wrong
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I asked a chatbot for the capital of Australia. It said Sydney, very politely.' },
+    { who: 'sriku', text: 'That is a hallucination: plausible-seeming but factually incorrect output from a generative AI model that purports to be making an assertion about the real world.' },
+    { who: 'sundu', text: 'Is that the same as the confabulation from Part C?' },
+    { who: 'sriku', text: 'Google’s glossary treats them as synonyms. Same disease, two names.' },
+  ]}
+/>
+
+<Gif
+  name="hallucination"
+  alt="A chat window asks what the capital of Australia is. The model answers Sydney, with a bar that looks confident. A red fact-check banner says the answer is Canberra and that the reply is plausible-sounding but wrong. The confidence bar is illustrative."
+  caption="Fig. 68: An illustration. The tone of the answer tells you nothing about its truth."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Has anyone measured how often they do it?' },
+    { who: 'sriku', text: 'Lin, Hilton and Evans built TruthfulQA: 817 questions in 38 categories, including health, law, finance and politics.' },
+    { who: 'cherry', text: 'Trick questions?' },
+    { who: 'sriku', text: 'Questions that some humans answer falsely because of a false belief or misconception. To do well a model must avoid repeating falsehoods it learned from human text.' },
+    { who: 'sundu', text: 'Score?' },
+    { who: 'sriku', text: 'The best model was truthful on 58% of questions. Humans managed 94%. And the largest models were generally the least truthful.' },
+    { who: 'cherry', text: 'Bigger was worse?' },
+    { who: 'sriku', text: 'Which is the expected result if falsehoods are in the training text: a better imitator imitates the myths too. The authors suggest fine-tuning with objectives other than imitating web text.' },
+  ]}
+/>
+
+<CaseStudy
+  title="TruthfulQA (Lin, Hilton and Evans, 2021)"
+  stats={[
+    { value: '817', label: 'Questions, in 38 categories' },
+    { value: '58%', label: 'Best model, truthful answers' },
+    { value: '94%', label: 'Human performance' },
+  ]}
+  winner="The abstract: “The largest models were generally the least truthful. This contrasts with other NLP tasks, where performance improves with model size.”"
+  takeaway="Fluency is not accuracy. Test the facts, especially on topics where people believe myths."
+  source={{
+    text: 'Lin, Hilton and Evans, “TruthfulQA: Measuring How Models Mimic Human Falsehoods”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2109.07958',
+  }}
+/>
+
+**Real definition:** the production of plausible-seeming but factually incorrect output by a generative AI model that purports to be making an assertion about the real world. [Google’s glossary: hallucination ↗](https://developers.google.com/machine-learning/glossary#hallucination)
+
+---
+
+## Hashing: Many Categories, Few Buckets
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have a categorical feature with a million possible values and my model runs out of memory.' },
+    { who: 'sriku', text: 'Hashing. It is a mechanism for bucketing categorical data when the number of categories is large, but few of them actually appear in your dataset.' },
+    { who: 'sundu', text: 'Bucketing how?' },
+    { who: 'sriku', text: 'A hash function sends each category to one of a smaller number of buckets. Google’s glossary example: 73,000 tree species, but only 200 appear in your data, so use maybe 500 buckets.' },
+    { who: 'cherry', text: 'Two species in one bucket?' },
+    { who: 'sriku', text: 'Sometimes, yes. Baobab and red maple could share one. That is a collision, and it is usually fine when it is rare.' },
+  ]}
+/>
+
+<Gif
+  name="hashing"
+  alt="Eight tree names drop into five buckets. Baobab and red maple land in the same bucket, bucket zero, which is highlighted. A caption says sharing a bucket is fine if it is rare."
+  caption="Fig. 69: Toy example. Collisions are the price of a small table."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it scale to something big?' },
+    { who: 'sriku', text: 'Weinberger and colleagues used it for personalized spam filtering. Their data: 3.2 million emails from 433,167 users, with 40 million unique words.' },
+    { who: 'cherry', text: 'Why is that hard?' },
+    { who: 'sriku', text: 'They wanted a classifier per user, plus a global one. Combining about 400,000 users with 40 million words gives 16 trillion possible personalized features.' },
+    { who: 'sundu', text: 'And hashing squeezes that down?' },
+    { who: 'sriku', text: 'Into a table indexed by 22 bits. Even with that aggressive hashing, personalization cut spam by 30%.' },
+    { who: 'cherry', text: 'For the people who had sent them lots of examples?' },
+    { who: 'sriku', text: 'Those users saw up to 65% less spam. Users who had contributed no training emails at all still got almost 20% less.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Personalized spam filtering with feature hashing (Weinberger et al., 2009)"
+  stats={[
+    { value: '16 trillion', label: 'Possible personalized features, before hashing' },
+    { value: '22 bits', label: 'Size of the hashed table indexed' },
+    { value: '−30%', label: 'Spam reaching inboxes, on average' },
+    { value: '~20%', label: 'Less spam even for users with no training emails' },
+  ]}
+  winner="The paper: “despite aggressive hashing, personalization results in a 30% spam reduction once the hash table is indexed by 22 bits.”"
+  takeaway="A small table with a few collisions can replace a table too big to build."
+  source={{
+    text: 'Weinberger, Dasgupta, Attenberg, Langford and Smola, “Feature Hashing for Large Scale Multitask Learning”, ICML 2009. Free on arXiv.',
+    href: 'https://arxiv.org/abs/0902.2206',
+  }}
+/>
+
+**Real definition:** in machine learning, a mechanism for bucketing categorical data, particularly when the number of categories is large but the number of categories actually appearing in the dataset is comparatively small. [Google’s glossary: hashing ↗](https://developers.google.com/machine-learning/glossary#hashing)
+
+---
+
+## Hidden Layer: The Part You Never See
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why are the middle layers called hidden?' },
+    { who: 'sriku', text: 'A hidden layer sits between the input layer, which is your features, and the output layer, which is the prediction. You see what goes in and what comes out, but not the middle.' },
+    { who: 'sundu', text: 'And a deep network?' },
+    { who: 'sriku', text: 'More than one hidden layer. We covered that in Part D.' },
+  ]}
+/>
+
+<Gif
+  name="hidden-layer"
+  alt="A small network with an input layer on the left and an output layer on the right. A dark panel slides over the middle layers and is labelled hidden, between input and output."
+  caption="Fig. 70: Inputs and outputs are visible. The middle is hidden."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'So nobody knows what they learn?' },
+    { who: 'sriku', text: 'Zeiler and Fergus built a way to look. They introduced a visualization technique that shows what intermediate layers of a convolutional network respond to.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'A hierarchy. Layer 2 responds to corners and edge and colour combinations. Layer 3 captures textures such as mesh patterns and text. Layer 4 is more class-specific, such as dog faces and bird’s legs. Layer 5 shows entire objects, like keyboards and dogs.' },
+    { who: 'sundu', text: 'Did that help them build a better model?' },
+    { who: 'sriku', text: 'Yes. Using the visualizations and an ablation study, they found architectures that outperform Krizhevsky and colleagues, the AlexNet from Part D, on ImageNet.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Visualizing hidden layers (Zeiler and Fergus, 2013)"
+  stats={[
+    { value: 'Layer 2', label: 'Corners and edge/colour combinations' },
+    { value: 'Layer 3', label: 'Textures, such as mesh patterns and text' },
+    { value: 'Layer 4', label: 'Class-specific parts: dog faces, bird’s legs' },
+    { value: 'Layer 5', label: 'Entire objects: keyboards, dogs' },
+  ]}
+  winner="The paper: “The projections from each layer show the hierarchical nature of the features in the network.”"
+  takeaway="Early layers find simple shapes. Later layers combine them into things."
+  source={{
+    text: 'Zeiler and Fergus, “Visualizing and Understanding Convolutional Networks”, ECCV 2014. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1311.2901',
+  }}
+/>
+
+**Real definition:** a layer in a neural network between the input layer (the features) and the output layer (the prediction). Each hidden layer consists of one or more neurons. [Google’s glossary (Fundamentals): hidden layer ↗](https://developers.google.com/machine-learning/glossary/fundamentals#hidden-layer)
+
+---
+
+## Hierarchical Clustering: A Family Tree for Data
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I want groups, but I do not know how many, and I want to see how they nest.' },
+    { who: 'sriku', text: 'Hierarchical clustering builds a tree of clusters. It suits data that is already hierarchical, such as botanical taxonomies.' },
+    { who: 'sundu', text: 'How does the tree get built?' },
+    { who: 'sriku', text: 'One way is agglomerative: every example starts as its own cluster, and the closest clusters are merged again and again, up to one big tree.' },
+  ]}
+/>
+
+<Gif
+  name="hierarchical-clustering"
+  alt="Six animals are drawn as leaves of a tree. The closest pairs merge first: wolf with dog, cat with lion and sparrow with eagle. The pairs then join into larger groups until one tree covers everything. The distances are a toy example."
+  caption="Fig. 71: Toy distances. Close pairs merge first, then bigger groups."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Real use?' },
+    { who: 'sriku', text: 'Biology. In 1998 Eisen and colleagues, with Botstein among them, used it on gene expression data. They applied pairwise average-linkage clustering, a form of hierarchical clustering, to yeast genes.' },
+    { who: 'cherry', text: 'How many genes?' },
+    { who: 'sriku', text: '2,467, every gene with a functional annotation at the time. The tree grouped genes that behave alike across conditions.' },
+    { who: 'sundu', text: 'Did the groups mean something?' },
+    { who: 'sriku', text: 'One cluster of 126 genes, strongly down-regulated under stress, was dominated by genes encoding ribosomal proteins: 112 of them. The authors note that genes of unrelated sequence but similar function cluster tightly together.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Clustering yeast genes (Eisen, Spellman, Brown and Botstein, 1998)"
+  stats={[
+    { value: '2,467', label: 'Yeast genes clustered' },
+    { value: '126', label: 'Genes in one stress-responsive cluster' },
+    { value: '112', label: 'Of those encode ribosomal proteins' },
+  ]}
+  winner="The authors: “genes of unrelated sequence but similar function cluster tightly together.”"
+  takeaway="A tree shows both the groups and how they nest, so you can cut it wherever you like."
+  source={{
+    text: 'Eisen, Spellman, Brown and Botstein, “Cluster analysis and display of genome-wide expression patterns”, PNAS 1998. Free PDF.',
+    href: 'https://www.cs.princeton.edu/courses/archive/fall03/cs597F/Articles/cluster_analysis_hier_eisen.pdf',
+  }}
+/>
+
+**Real definition:** a category of clustering algorithms that create a tree of clusters, well suited to hierarchical data. Agglomerative clustering merges the closest clusters; divisive clustering splits one big cluster. [Google’s glossary: hierarchical clustering ↗](https://developers.google.com/machine-learning/glossary#hierarchical-clustering)
+
+---
+
+## Historical Bias: The Past in the Dataset
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Our data is accurate. Every record is true. Why would it be biased?' },
+    { who: 'sriku', text: 'Because the world was. Historical bias is bias that already exists in the world and has made its way into a dataset. It tends to reflect cultural stereotypes, demographic inequalities and prejudice against certain social groups.' },
+    { who: 'sundu', text: 'So the model just learns what happened.' },
+    { who: 'sriku', text: 'And repeats it. Google’s glossary example is a loan model trained on 1980s default data, which can learn to approve fewer loans in a community that was historically treated worse.' },
+  ]}
+/>
+
+<Gif
+  name="historical-bias"
+  alt="A sentence reads man is to computer programmer as woman is to, and the completion homemaker appears in a red box. A caption says the stereotype was already in the text the model learned from."
+  caption="Fig. 72: A real analogy from a real embedding, reported in the paper."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'A real example?' },
+    { who: 'sriku', text: 'Bolukbasi and colleagues looked at word embeddings trained on Google News articles. Remember the king, man and woman trick from Part E?' },
+    { who: 'cherry', text: 'King minus man plus woman is queen.' },
+    { who: 'sriku', text: 'The same arithmetic also says man is to computer programmer as woman is to homemaker. They showed that the embeddings exhibit female and male gender stereotypes to a disturbing extent.' },
+    { who: 'sundu', text: 'How did they check?' },
+    { who: 'sriku', text: 'They had crowd-workers rate generated analogies, ten raters per analogy. And the top "she" occupations in the embedding included homemaker, nurse and receptionist.' },
+    { who: 'cherry', text: 'Can it be fixed?' },
+    { who: 'sriku', text: 'They proposed algorithms to remove the stereotype, such as the link between receptionist and female, while keeping legitimate associations, like queen and female.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Debiasing word embeddings (Bolukbasi et al., 2016)"
+  stats={[
+    { value: 'Google News', label: 'Text the embeddings were trained on' },
+    { value: '10', label: 'Crowd-workers rating each generated analogy' },
+    { value: 'Top 3 “she”', label: 'Occupations: homemaker, nurse, receptionist' },
+  ]}
+  winner="The abstract: “even word embeddings trained on Google News articles exhibit female/male gender stereotypes to a disturbing extent.”"
+  takeaway="Clean data can still carry old prejudice. Measure it, then decide what to remove."
+  source={{
+    text: 'Bolukbasi, Chang, Zou, Saligrama and Kalai, “Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings”, NeurIPS 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1607.06520',
+  }}
+/>
+
+**Real definition:** a type of bias that already exists in the world and has made its way into a dataset, tending to reflect existing cultural stereotypes, demographic inequalities and prejudices against certain social groups. [Google’s glossary: historical bias ↗](https://developers.google.com/machine-learning/glossary#historical-bias)
+
+---
+
+## Holdout Data: Never Touch the Test Set
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My model scored 99%. Why is the boss unimpressed?' },
+    { who: 'sriku', text: 'Which data was that on? Holdout data are examples intentionally not used during training. The validation and test sets are both holdout data.' },
+    { who: 'sundu', text: 'So the score on the training data is not the real score.' },
+    { who: 'sriku', text: 'The loss on the holdout set is a better estimate of the loss on unseen data than the loss on the training set.' },
+  ]}
+/>
+
+<Gif
+  name="holdout-data"
+  alt="A strip is split into a large training part, a small validation part and a small test part with a padlock. Below, a toy score of 99 percent on training data is compared with 91 percent on holdout data."
+  caption="Fig. 73: Toy scores. The holdout number is the honest one."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Can a holdout set wear out? People reuse the same ones for years.' },
+    { who: 'sriku', text: 'Recht and colleagues tested exactly that. CIFAR-10 and ImageNet had been the focus of intense research for almost a decade. They worried about overfitting to excessively reused test sets.' },
+    { who: 'cherry', text: 'So they made new ones.' },
+    { who: 'sriku', text: 'They built new test sets, closely following the original dataset creation processes. Accuracy dropped by 3% to 15% on CIFAR-10 and 11% to 14% on ImageNet.' },
+    { who: 'sundu', text: 'Overfitting to the old test set?' },
+    { who: 'sriku', text: 'The authors say not. Gains on the old test sets still translated into larger gains on the new ones. They suggest the drop is because models struggle with slightly harder images than the originals.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Do ImageNet classifiers generalize to ImageNet? (Recht et al., 2019)"
+  stats={[
+    { value: '3% to 15%', label: 'Accuracy drop on the new CIFAR-10 test set' },
+    { value: '11% to 14%', label: 'Accuracy drop on the new ImageNet test set' },
+  ]}
+  winner="Their conclusion: the drops “are not caused by adaptivity, but by the models’ inability to generalize to slightly ‘harder’ images than those found in the original test sets.”"
+  takeaway="A fresh holdout set is the strongest check. Expect a lower score than the leaderboard says."
+  source={{
+    text: 'Recht, Roelofs, Schmidt and Shankar, “Do ImageNet Classifiers Generalize to ImageNet?”, ICML 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1902.10811',
+  }}
+/>
+
+**Real definition:** examples intentionally not used (“held out”) during training. The validation dataset and test dataset are examples of holdout data. [Google’s glossary: holdout data ↗](https://developers.google.com/machine-learning/glossary#holdout-data)
+
+---
+
+## Human Evaluation: Ask the People
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I score two chatbot answers when there is no single right answer?' },
+    { who: 'sriku', text: 'Ask people. Human evaluation is a process in which people judge the quality of a model’s output. It is particularly useful for models that have no one right answer.' },
+    { who: 'sundu', text: 'The alternatives?' },
+    { who: 'sriku', text: 'Automatic evaluation, which uses a fixed metric, and autorater evaluation, which uses another model as the judge.' },
+  ]}
+/>
+
+<Gif
+  name="human-evaluation"
+  alt="Two answers, labelled A and B, are shown side by side. Sixteen small people icons each cast a vote for A or B, and the tally reads A twelve, B four. The votes are a toy tally."
+  caption="Fig. 74: Toy votes. People pick the answer they like better."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'People are slow and expensive, though.' },
+    { who: 'sriku', text: 'That is the problem Zheng and colleagues set out to ease. They built MT-bench, a multi-turn question set, and Chatbot Arena, a crowdsourced battle platform where people compare two anonymous chatbots.' },
+    { who: 'cherry', text: 'And the autorater?' },
+    { who: 'sriku', text: 'They tested strong LLMs as judges. GPT-4 matched both controlled and crowdsourced human preferences, with over 80% agreement. That is the same level of agreement as between two humans.' },
+    { who: 'sundu', text: 'So we can stop asking people.' },
+    { who: 'sriku', text: 'Not quite. The paper lists the judge’s own biases: position, verbosity and self-enhancement, plus limited reasoning ability. It calls LLM judges a scalable way to approximate human preferences, which are otherwise very expensive. They released the 3,000 expert votes and 30,000 conversations.' },
+  ]}
+/>
+
+<CaseStudy
+  title="MT-bench and Chatbot Arena (Zheng et al., 2023)"
+  stats={[
+    { value: '80%+', label: 'Agreement between GPT-4 as judge and humans' },
+    { value: '3K', label: 'Expert votes released' },
+    { value: '30K', label: 'Conversations with human preferences released' },
+  ]}
+  winner="The abstract: “strong LLM judges like GPT-4 can match both controlled and crowdsourced human preferences well, achieving over 80% agreement, the same level of agreement between humans.”"
+  takeaway="People are the reference. Models can approximate them, but they have biases of their own."
+  source={{
+    text: 'Zheng et al., “Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena”, NeurIPS 2023. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2306.05685',
+  }}
+/>
+
+**Real definition:** a process in which people judge the quality of an ML model’s output, such as bilingual people judging a translation model. Contrast with automatic evaluation and autorater evaluation. [Google’s glossary: human evaluation ↗](https://developers.google.com/machine-learning/glossary#human-evaluation)
+
+---
+
+## Hyperparameter: The Dials You Set
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My model has a learning rate, a batch size and a dropout rate. Which of those does it learn?' },
+    { who: 'sriku', text: 'None. Those are hyperparameters: the variables that you, or a tuning service, adjust between training runs. The weights and biases it learns are the parameters.' },
+    { who: 'sundu', text: 'So how do I find good settings?' },
+    { who: 'sriku', text: 'The textbook way is a grid. A neater way, it turns out, is to pick randomly.' },
+  ]}
+/>
+
+<Gif
+  name="hyperparameter"
+  alt="Two squares of trial points. Grid search tries nine points on a three by three grid, so only three distinct values along the one important axis, marked by a curve above. Random search tries nine random points, so nine distinct values along that axis. The picture is a toy illustration."
+  caption="Fig. 75: Toy picture. Nine trials, three values on the axis that matters, or nine."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Random beats a grid? Surely not.' },
+    { who: 'sriku', text: 'Bergstra and Bengio showed it, empirically and theoretically. The reason is that usually only a few hyperparameters matter for a given dataset, and a grid wastes most trials repeating the same values of the important ones.' },
+    { who: 'cherry', text: 'Evidence?' },
+    { who: 'sriku', text: 'They compared with a large earlier study that had configured neural networks and deep belief networks by grid and manual search. Random search found models as good or better within a small fraction of the computation time.' },
+    { who: 'sundu', text: 'And with the same budget?' },
+    { who: 'sriku', text: 'It found better models, by searching a larger, less promising configuration space.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Random search for hyperparameters (Bergstra and Bengio, 2012)"
+  stats={[
+    { value: 'Same or better', label: 'Models found by random search, vs pure grid search' },
+    { value: 'Small fraction', label: 'Of the computation time, for neural networks' },
+  ]}
+  winner="The abstract: “randomly chosen trials are more efficient for hyper-parameter optimization than trials on a grid.”"
+  takeaway="When you cannot try everything, vary every dial at once instead of one at a time."
+  source={{
+    text: 'Bergstra and Bengio, “Random Search for Hyper-Parameter Optimization”, JMLR 2012. Free PDF.',
+    href: 'https://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf',
+  }}
+/>
+
+**Real definition:** the variables that you or a hyperparameter tuning service adjust during successive runs of training a model. Parameters, in contrast, are the weights and biases the model learns. [Google’s glossary (Fundamentals): hyperparameter ↗](https://developers.google.com/machine-learning/glossary/fundamentals#hyperparameter)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Hallucination | Confident, fluent, wrong | Plausible-sounding but false output |
+| Hashing | Many categories, few buckets | Squeeze a huge category list into a small table |
+| Hidden layer | The part you never see | A layer between input and output |
+| Hierarchical clustering | A family tree for data | Build a tree of nested clusters |
+| Historical bias | The past in the dataset | Old prejudice that ends up in the data |
+| Holdout data | Never touch the test set | Examples kept out of training |
+| Human evaluation | Ask the people | People judge the model’s output |
+| Hyperparameter | The dials you set | Settings you choose between training runs |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Eight weeks. How many letters?' },
+    { who: 'sriku', text: 'There are 18 more letters.' },
+    { who: 'sundu', text: 'I is next, and it has a lot of entries. Bring snacks.' },
+  ]}
+/>
+
+[← Part G: GAN to Guardrails](/writing/ml-glossary-g) · [Part I: From Image Recognition to I.I.D. →](/writing/ml-glossary-i)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); hidden layer and hyperparameter are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the wrong capital is a made-up chatbot answer, and Cherry and Sundu are very real.*
+
+<Reactions />

@@ -1,0 +1,292 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part K: From Keras to K-Means',
+  subtitle: 'Week eleven at the chai stall: five machine learning terms, a stick figure made of dots, and a clustering trick that fits in a fraction of a second.',
+  type: 'Meme Feast',
+  date: '2026-10-17',
+  excerpt:
+    'Five machine learning terms starting with K, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 11,
+}
+
+Eleventh Saturday. K is a small section, but Cherry says every one of these five has come up at her job.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last two rounds were [Part I](/writing/ml-glossary-i) and the one-term [Part J](/writing/ml-glossary-j). This round covers the K section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 6 entries: Keras, kernel support vector machines, keypoints, k-fold cross validation, k-means and k-median. I picked the first five and fold k-median into the k-means story. None of the K terms are on Google's Fundamentals page.
+
+<Poster
+  badge="Part K · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. One fast cluster."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '1 stick figure']}
+/>
+
+---
+
+## Keras: One API, Many Engines
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Should I learn Keras or PyTorch?' },
+    { who: 'sriku', text: 'Keras is a popular Python machine learning API. Google’s glossary says it runs on several deep learning frameworks, including TensorFlow, where it is available as tf.keras.' },
+    { who: 'sundu', text: 'So it is not a competitor, it sits on top.' },
+    { who: 'sriku', text: 'Right. You write the model once in Keras, and an engine underneath runs it.' },
+  ]}
+/>
+
+<Gif
+  name="keras"
+  alt="A box at the top reads your model written once in Keras. Below it three engine boxes labelled JAX, TensorFlow and PyTorch light up one at a time as the backend is switched. A caption says to choose the backend that suits your model."
+  caption="Fig. 86: One Keras model, three possible backends."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Which engines now?' },
+    { who: 'sriku', text: 'The Keras 3 README says it is a multi-backend deep learning framework, with support for JAX, TensorFlow and PyTorch, plus OpenVINO for inference only.' },
+    { who: 'cherry', text: 'Why would I switch backend?' },
+    { who: 'sriku', text: 'Speed and debugging. The project says that by picking the fastest backend for your model, often JAX, you can see speedups from 20% to 350% compared with other frameworks, and that eager runtimes like PyTorch or JAX are easy to debug.' },
+    { who: 'sundu', text: 'Is that independent?' },
+    { who: 'sriku', text: 'No, those are the Keras team’s own benchmarks, so treat them as a claim to test on your model. It also says nearly three million developers use it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Keras 3: a multi-backend framework (Keras project README)"
+  stats={[
+    { value: '3 + 1', label: 'Backends: JAX, TensorFlow, PyTorch, plus OpenVINO for inference' },
+    { value: '20% to 350%', label: 'Speedups the project reports from choosing the best backend' },
+    { value: '~3 million', label: 'Developers, per the project' },
+  ]}
+  winner="The README: “Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only).”"
+  takeaway="Your model code does not have to be tied to one engine. Check the speed claims on your own model."
+  source={{
+    text: 'Keras project README, “Keras 3: Deep Learning for Humans”, on GitHub.',
+    href: 'https://github.com/keras-team/keras',
+  }}
+/>
+
+**Real definition:** a popular Python machine learning API that runs on several deep learning frameworks, including TensorFlow, where it is available as tf.keras. [Google’s glossary: Keras ↗](https://developers.google.com/machine-learning/glossary#keras)
+
+---
+
+## Kernel Support Vector Machines: Bend the Problem Until It Is Straight
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My two classes are mixed in a circle. No straight line will separate them.' },
+    { who: 'sriku', text: 'A kernel support vector machine, a KSVM, maps your data into a higher-dimensional space, then looks for the boundary that maximizes the margin between the classes.' },
+    { who: 'sundu', text: 'How much higher?' },
+    { who: 'sriku', text: 'Google’s glossary example: a dataset with a hundred features might be mapped internally into a million-dimension space. KSVMs train with a loss function called hinge loss.' },
+  ]}
+/>
+
+<Gif
+  name="kernel-svm"
+  alt="Red points sit inside a ring of blue points, so no straight line separates them. The points are lifted into a higher dimension so the red ones rise above the blue, and a flat green boundary then separates the two groups. The data is a toy example."
+  caption="Fig. 87: Toy data. Lift it, and a flat boundary is enough."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did people actually use them?' },
+    { who: 'sriku', text: 'Text. Thorsten Joachims’ 1998 paper applied SVMs to text categorization. Text has more than 10,000 features, one per word, and that usually breaks learning algorithms.' },
+    { who: 'cherry', text: 'Why did SVMs cope?' },
+    { who: 'sriku', text: 'The paper argues that an SVM’s protection against overfitting does not depend on the number of features, only on the margin. It also found that there are very few irrelevant features in text, and that most categories are linearly separable.' },
+    { who: 'sundu', text: 'So a kernel was not even needed?' },
+    { who: 'sriku', text: 'Often a plain linear boundary was enough, which is the paper’s point. The kernel is a tool for when the data is bent. The paper reports substantial improvements over the best methods then, tested on the Reuters-21578 and Ohsumed collections.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SVMs for text categorization (Joachims, 1998)"
+  stats={[
+    { value: '10,000+', label: 'Features: one per word' },
+    { value: '9,603', label: 'Training documents in the Reuters ModApte split' },
+    { value: '2', label: 'Test collections: Reuters-21578 and Ohsumed' },
+  ]}
+  winner="The abstract: “SVMs achieve substantial improvements over the currently best performing methods and behave robustly over a variety of different learning tasks.”"
+  takeaway="A wide margin can generalize even with huge numbers of features, and often a straight boundary is enough."
+  source={{
+    text: 'Joachims, “Text Categorization with Support Vector Machines: Learning with Many Relevant Features”, ECML 1998. Free PDF on Springer.',
+    href: 'https://rd.springer.com/content/pdf/10.1007/BFb0026683.pdf',
+  }}
+/>
+
+**Real definition:** a classification algorithm that seeks to maximize the margin between positive and negative classes by mapping input data vectors to a higher-dimensional space; it uses the hinge loss. [Google’s glossary: Kernel Support Vector Machines (KSVMs) ↗](https://developers.google.com/machine-learning/glossary#kernel-support-vector-machines-ksvms)
+
+---
+
+## Keypoints: Dots That Describe a Pose
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a fitness app know I am doing a squat?' },
+    { who: 'sriku', text: 'It finds keypoints: the coordinates of particular features in an image. For a person, those are the joints, such as shoulders, elbows, wrists, hips, knees and ankles.' },
+    { who: 'sundu', text: 'The glossary example is a flower?' },
+    { who: 'sriku', text: 'For a flower recognizer, keypoints might be the center of each petal, the stem and the stamen. Same idea, different subject.' },
+  ]}
+/>
+
+<Gif
+  name="keypoints"
+  alt="A stick figure appears one dot at a time: head, neck, shoulders, elbows, wrists, hips, knees and ankles, with lines joining them. Notes beside it say each dot is a coordinate of a body part."
+  caption="Fig. 88: Each dot is an (x, y) coordinate. Joined up, they describe a pose."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How about several people at once?' },
+    { who: 'sriku', text: 'That is what OpenPose from Carnegie Mellon does. Cao, Simon, Wei and Sheikh detect the 2D pose of multiple people in an image using Part Affinity Fields, which learn to associate body parts with the right individual.' },
+    { who: 'cherry', text: 'In real time?' },
+    { who: 'sriku', text: 'Yes, they say it runs in real time irrespective of the number of people in the image. It placed first in the inaugural COCO 2016 keypoints challenge.' },
+    { who: 'sundu', text: 'The Kinect did something similar in Part D.' },
+    { who: 'sriku', text: 'Yes, that one used a forest of trees on depth images to find body parts. OpenPose works from ordinary 2D images.' },
+  ]}
+/>
+
+<CaseStudy
+  title="OpenPose: real-time multi-person keypoints (Cao et al., 2016)"
+  stats={[
+    { value: '1st', label: 'Place in the COCO 2016 keypoints challenge' },
+    { value: 'Real time', label: 'Irrespective of the number of people' },
+  ]}
+  winner="The abstract: “Our method placed first in the inaugural COCO 2016 keypoints challenge, and significantly exceeds the previous state-of-the-art result on the MPII Multi-Person benchmark, both in performance and efficiency.”"
+  takeaway="Learn where the parts are, and how they belong together, and a camera can read a pose."
+  source={{
+    text: 'Cao, Simon, Wei and Sheikh, “Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields”, CVPR 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1611.08050',
+  }}
+/>
+
+**Real definition:** the coordinates of particular features in an image. [Google’s glossary: keypoints ↗](https://developers.google.com/machine-learning/glossary#keypoints)
+
+---
+
+## K-Fold Cross-Validation: Everyone Gets a Turn as the Test
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I only have 120 examples. Setting 20% aside as a test set leaves very little to train on.' },
+    { who: 'sriku', text: 'Use k-fold cross-validation. Split the data into k equal groups. Train and test k times, and each time a different group is the test set while the rest train.' },
+    { who: 'sundu', text: 'And the score?' },
+    { who: 'sriku', text: 'After the k rounds you take the mean and standard deviation of your metric. Google’s example is 120 examples with k = 4, so four groups of 30 and four rounds.' },
+  ]}
+/>
+
+<Gif
+  name="k-fold"
+  alt="Five rows each show five blocks. In each row a different block is marked test and the other four train. A toy score appears at the end of each row, and the animation ends with the mean and standard deviation of the five scores. The scores are a toy example."
+  caption="Fig. 89: Toy scores, k = 5. Every block is the test set once."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there a best k?' },
+    { who: 'sriku', text: 'Ron Kohavi studied it at Stanford. He compared cross-validation with the bootstrap in an experiment of over half a million runs of the C4.5 and Naive Bayes algorithms on real-world datasets.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'Leave-one-out, the extreme where k equals the number of examples, is almost unbiased but has high variance, so its estimates are unreliable. His conclusion: for real-world datasets like his, the best method for model selection is ten-fold stratified cross-validation, even if you could afford more folds.' },
+    { who: 'sundu', text: 'More folds is not better.' },
+    { who: 'sriku', text: 'Not always. More computation does not necessarily buy a better estimate, especially if the relative accuracies matter more than the exact values.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Choosing k (Kohavi, 1995)"
+  stats={[
+    { value: '500,000+', label: 'Runs of C4.5 and Naive Bayes in the experiment' },
+    { value: '10', label: 'Folds recommended, stratified' },
+    { value: 'High variance', label: 'Of leave-one-out, despite being nearly unbiased' },
+  ]}
+  winner="His result: for real-world datasets like his, “the best method to use for model selection is ten-fold stratified cross validation, even if computation power allows using more folds.”"
+  takeaway="Ten stratified folds is a solid default. Beyond that you pay more and may not learn more."
+  source={{
+    text: 'Kohavi, “A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection”, IJCAI 1995. Free PDF.',
+    href: 'https://ai.stanford.edu/~ronnyk/accEst.pdf',
+  }}
+/>
+
+**Real definition:** an algorithm for predicting a model’s ability to generalize to new data. The k refers to the number of equal groups the dataset is divided into; you train and test k times, with a different group as the test set each time. [Google’s glossary: k-fold cross validation ↗](https://developers.google.com/machine-learning/glossary#k-fold-cross-validation)
+
+---
+
+## K-Means: Find the Centres of the Crowds
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have thousands of customers and no labels. How do I group them?' },
+    { who: 'sriku', text: 'K-means, a popular clustering algorithm for unsupervised learning. It repeatedly finds the best k centre points, called centroids, and assigns each example to its closest centroid.' },
+    { who: 'sundu', text: 'Best in what sense?' },
+    { who: 'sriku', text: 'It picks centroid positions that minimize the sum of the squared distances from each example to its closest centroid.' },
+    { who: 'cherry', text: 'And k-median?' },
+    { who: 'sriku', text: 'A close relative. K-median minimizes the sum of the distances instead of the squared distances. That is the practical difference.' },
+  ]}
+/>
+
+<Gif
+  name="k-means"
+  alt="Three clouds of toy points are coloured by the nearest of three diamond-shaped centroids. In each round the points are reassigned to their nearest centroid, and then each centroid moves to the middle of its points, until nothing changes."
+  caption="Fig. 90: Toy data, k = 3. Assign, move, repeat."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it scale to the web?' },
+    { who: 'sriku', text: 'D. Sculley at Google found the classic batch version too slow for user-facing applications that need results in a fraction of a second. His fix was mini-batch k-means: update the centroids from small random batches.' },
+    { who: 'cherry', text: 'How much faster?' },
+    { who: 'sriku', text: 'On the RCV1 news collection, with 781,265 training documents, the mini-batch method reached near-optimal values several orders of magnitude faster than full batch, and gave significantly better solutions than online stochastic gradient descent.' },
+    { who: 'sundu', text: 'Real numbers for latency?' },
+    { who: 'sriku', text: 'For small k it produced near-best cluster centres for nearly a million documents in a fraction of a CPU second, on a single ordinary 2.4 GHz machine. That makes real-time clustering practical.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Web-scale k-means (Sculley, Google, 2010)"
+  stats={[
+    { value: '781,265', label: 'RCV1 training documents' },
+    { value: 'Orders of magnitude', label: 'Faster than batch k-means to near-optimal values' },
+    { value: '< 1 CPU second', label: 'For nearly a million documents, small k, one 2.4 GHz machine' },
+  ]}
+  winner="The abstract: mini-batch optimization “reduces computation cost by orders of magnitude compared to the classic batch algorithm while yielding significantly better solutions than online stochastic gradient descent.”"
+  takeaway="You do not need every point to update the centres. A small random batch is enough."
+  source={{
+    text: 'Sculley (Google), “Web-Scale K-Means Clustering”, WWW 2010. Free PDF (hosted on a Northeastern University course page).',
+    href: 'https://ccs.neu.edu/home/vip/teach/DMcourse/2_cluster_EM_mixt/notes_slides/sculey_webscale_kmeans_approx.pdf',
+  }}
+/>
+
+**Real definition:** a popular clustering algorithm that groups examples in unsupervised learning by iteratively determining the best k centroids and assigning each example to the closest one. [Google’s glossary: k-means ↗](https://developers.google.com/machine-learning/glossary#k-means) · [k-median ↗](https://developers.google.com/machine-learning/glossary#k-median)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Keras | One API, many engines | A Python API that runs on several frameworks |
+| Kernel SVM | Bend the problem until it is straight | Maximize the margin in a higher-dimensional space |
+| Keypoints | Dots that describe a pose | Coordinates of features in an image |
+| K-fold cross-validation | Everyone gets a turn as the test | Train and test k times on different splits |
+| K-means | Find the centres of the crowds | Group examples around k centroids |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Eleven weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 15 more letters, from L to Z, and then we are done.' },
+    { who: 'sundu', text: 'L has a lot of loss functions in it.' },
+    { who: 'sriku', text: 'It does. I will bring a bigger flask.' },
+  ]}
+/>
+
+[← Part J: JAX](/writing/ml-glossary-j) · [Part L: From L1 Regularization to Lost in the Middle →](/writing/ml-glossary-l)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy clusters and scores are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

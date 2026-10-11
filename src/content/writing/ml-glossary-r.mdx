@@ -1,0 +1,241 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part R: From Random Forests to ROUGE',
+  subtitle: 'Week eighteen at the chai stall: four machine learning terms, a forest that votes, and a metric that counts words so nobody has to read 3,000 hours of summaries.',
+  type: 'Meme Feast',
+  date: '2026-10-24',
+  excerpt:
+    'Four machine learning terms starting with R, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 18,
+}
+
+Eighteenth Saturday. R is the third-biggest section so far, and Cherry has opinions about every entry.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part Q](/writing/ml-glossary-q). This round covers the R section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 50 entries. I picked four. Retrieval-augmented generation already has its story in [Part G](/writing/ml-glossary-g) and ReLU in [Part A](/writing/ml-glossary-a), so I skipped them here. None of the four terms below are on Google's Fundamentals page.
+
+<Poster
+  badge="Part R · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Four terms. Two friends. One loud forest."
+  rating="10/10 · bench reserved"
+  stats={['4 terms', '4 animations', '4 real cases', '3,000 hours saved']}
+/>
+
+---
+
+## Random Forest: Seven Imperfect Trees, One Better Answer
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A single decision tree memorizes my training data. What is the fix?' },
+    { who: 'sriku', text: 'A random forest: an ensemble of decision trees in which each tree is trained with a specific random noise, such as bagging. Part D met decision forests, and random forests are one type.' },
+    { who: 'sundu', text: 'What is random about it?' },
+    { who: 'sriku', text: 'Leo Breiman’s definition is that each tree depends on the values of a random vector, sampled independently with the same distribution for all trees. In practice, each tree sees a random sample of the examples, and each split considers a random selection of features.' },
+  ]}
+/>
+
+<Gif
+  name="random-forest"
+  alt="Seven small trees each cast a vote, cat or dog. Five vote cat and two vote dog, so the forest answers cat. Captions note that each tree sees a random sample of examples and features. The votes are a toy example."
+  caption="Fig. 119: Toy vote. Seven imperfect trees, one better answer."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there theory behind it, or just habit?' },
+    { who: 'sriku', text: 'Breiman’s 2001 paper shows that the generalization error of a forest converges to a limit as the number of trees becomes large. It depends on the strength of the individual trees and the correlation between them.' },
+    { who: 'cherry', text: 'How does it compare with boosting?' },
+    { who: 'sriku', text: 'He reports that using a random selection of features to split each node yields error rates that compare favorably to Adaboost, but are more robust with respect to noise.' },
+    { who: 'sundu', text: 'Can it check itself?' },
+    { who: 'sriku', text: 'Internal estimates monitor error, strength and correlation. They are the out-of-bag estimates from Part O, and the paper also uses internal estimates to measure variable importance.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Random Forests (Breiman, 2001)"
+  stats={[
+    { value: '2', label: 'Things the forest’s error depends on: strength of each tree, correlation between trees' },
+    { value: 'More robust', label: 'To noise than Adaboost, with error rates that compare favorably' },
+  ]}
+  winner="The abstract: “Using a random selection of features to split each node yields error rates that compare favorably to Adaboost, but are more robust with respect to noise.”"
+  takeaway="Make the trees different from each other and each reasonably good, then let them vote."
+  source={{
+    text: 'Breiman, “Random Forests”, Machine Learning, 2001. Free PDF from the Berkeley Statistics Department.',
+    href: 'https://www.stat.berkeley.edu/~breiman/randomforest2001.pdf',
+  }}
+/>
+
+**Real definition:** an ensemble of decision trees in which each decision tree is trained with a specific random noise, such as bagging. Random forests are a type of decision forest. [Google’s glossary: random forest ↗](https://developers.google.com/machine-learning/glossary#random-forest)
+
+---
+
+## RealToxicityPrompts: Score What the Model Says Next
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Our chatbot was polite in every demo. Then a user typed something ordinary and it replied with something awful.' },
+    { who: 'sriku', text: 'That is what RealToxicityPrompts tests. Google describes it as a dataset of sentence beginnings that might lead to toxic content. You use it to evaluate an LLM’s ability to complete the sentence without producing toxic text, and you typically score the completions with the Perspective API.' },
+    { who: 'sundu', text: 'Who built it?' },
+    { who: 'sriku', text: 'Gehman, Gururangan, Sap, Choi and Smith, in a paper called RealToxicityPrompts: Evaluating Neural Toxic Degeneration in Language Models.' },
+  ]}
+/>
+
+<Gif
+  name="realtoxicityprompts"
+  alt="Three sentence beginnings are each continued by a language model, and a bar beside each shows the toxicity score of the continuation. Two bars are short and one is long. A caption says even innocuous-looking prompts can lead to toxic continuations. The prompts and scores are toy examples."
+  caption="Fig. 120: Toy scores. Score the continuation, not just the prompt."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How big is the dataset?' },
+    { who: 'sriku', text: 'It has 100K naturally occurring, sentence-level prompts derived from a large corpus of English web text, each paired with a toxicity score from a widely used toxicity classifier.' },
+    { who: 'cherry', text: 'And what did they find?' },
+    { who: 'sriku', text: 'That pretrained language models can degenerate into toxic text even from seemingly innocuous prompts.' },
+    { who: 'sundu', text: 'Can you steer it away?' },
+    { who: 'sriku', text: 'They tried several controllable generation methods. Data-heavy or compute-heavy ones, like adaptive pretraining on non-toxic data, steer away from toxicity better than simpler ones, like banning bad words. But they find no current method is failsafe.' },
+    { who: 'cherry', text: 'Where does the toxicity come from?' },
+    { who: 'sriku', text: 'They analysed two web-text corpora used to pretrain several models, including GPT-2, and found a significant amount of offensive, factually unreliable and otherwise toxic content. It is a good companion to the guardrails in Part G.' },
+  ]}
+/>
+
+<CaseStudy
+  title="RealToxicityPrompts (Gehman et al., 2020)"
+  stats={[
+    { value: '100K', label: 'Naturally occurring prompts, each with a toxicity score' },
+    { value: 'None', label: 'Of the tested mitigation methods is failsafe, per the authors' },
+  ]}
+  winner="The abstract: “pretrained LMs can degenerate into toxic text even from seemingly innocuous prompts.”"
+  takeaway="Test the model on realistic, ordinary prompts, and measure the toxicity of what it writes. A polite demo proves very little."
+  source={{
+    text: 'Gehman, Gururangan, Sap, Choi and Smith, “RealToxicityPrompts: Evaluating Neural Toxic Degeneration in Language Models”, 2020. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2009.11462',
+  }}
+/>
+
+**Real definition:** a dataset that contains a set of sentence beginnings that might contain toxic content, used to evaluate an LLM’s ability to generate non-toxic text to complete the sentence. [Google’s glossary: RealToxicityPrompts ↗](https://developers.google.com/machine-learning/glossary#realtoxicityprompts)
+
+---
+
+## RLHF: Teach It With Thumbs Up, Not Rules
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I reward behaviour that I cannot write a formula for?' },
+    { who: 'sriku', text: 'Ask people. Google defines reinforcement learning from human feedback as using feedback from human raters to improve the quality of a model’s responses. For example, users rate a response with a thumbs up or thumbs down, and the system adjusts its future responses.' },
+    { who: 'sundu', text: 'And the research version?' },
+    { who: 'sriku', text: 'Christiano, Leike, Brown, Martic, Legg and Amodei, in 2017. They define goals in terms of non-expert human preferences between pairs of trajectory segments, rather than a hand-written reward function.' },
+  ]}
+/>
+
+<Gif
+  name="rlhf"
+  alt="Four boxes show the loop: a model writes answers, humans rank them, a reward model learns the ranking, and the policy is updated to earn reward. Three answers are ranked from best to worst. A caption quotes the paper that human feedback on under one percent of the agent's interactions was enough for Atari and robot tasks. The loop is a toy illustration."
+  caption="Fig. 121: The RLHF loop in four boxes."
+/>
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Did it work?' },
+    { who: 'sriku', text: 'They show it can effectively solve complex RL tasks without access to the reward function, including Atari games and simulated robot locomotion, while providing feedback on less than one percent of the agent’s interactions with the environment.' },
+    { who: 'sundu', text: 'What is that in human time?' },
+    { who: 'sriku', text: 'The authors say it reduces the cost of human oversight far enough to be practical, and that they trained complex novel behaviours with about an hour of human time.' },
+    { who: 'cherry', text: 'And for language models?' },
+    { who: 'sriku', text: 'The same recipe came back for text. Part F’s InstructGPT used labeler rankings. In 2020 Stiennon and colleagues trained a model on human comparisons between summaries, and used it as a reward function to fine-tune a summarization policy with reinforcement learning.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Deep reinforcement learning from human preferences (Christiano et al., 2017)"
+  stats={[
+    { value: 'Under 1%', label: 'Of the agent’s interactions needed human feedback' },
+    { value: '~1 hour', label: 'Of human time for complex novel behaviours' },
+  ]}
+  winner="The abstract: “we explore goals defined in terms of (non-expert) human preferences between pairs of trajectory segments.”"
+  takeaway="It is often easier to say which of two outputs is better than to write the rule that explains why."
+  source={{
+    text: 'Christiano, Leike, Brown, Martic, Legg and Amodei, “Deep reinforcement learning from human preferences”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.03741',
+  }}
+/>
+
+**Real definition:** using feedback from human raters to improve the quality of a model’s responses. For example, an RLHF mechanism can ask users to rate the quality of a model’s response with a 👍 or 👎 emoji, and the system can then adjust its future responses based on that feedback. [Google’s glossary: Reinforcement Learning from Human Feedback (RLHF) ↗](https://developers.google.com/machine-learning/glossary#reinforcement-learning-from-human-feedback-rlhf)
+
+---
+
+## ROUGE: A Ruler for Summaries
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I score a thousand summaries without reading them all?' },
+    { who: 'sriku', text: 'With ROUGE, a family of metrics for automatic summarization and machine translation. ROUGE determines how much a reference text overlaps with a model’s generated text, and higher scores mean more similarity. Each member measures overlap differently, and typically reports precision, recall and F1.' },
+    { who: 'sundu', text: 'Why is recall in the name?' },
+    { who: 'sriku', text: 'It stands for Recall-Oriented Understudy for Gisting Evaluation. The glossary says BLEU optimizes for precision and ROUGE for recall, which is why BLEU suits translation and ROUGE suits summarization. BLEU was in Part B.' },
+  ]}
+/>
+
+<Gif
+  name="rouge"
+  alt="A reference summary and a candidate summary of seven words each are laid out in boxes. Words that appear in both light up green. Five of the seven reference words are found in the candidate, so the toy ROUGE-1 recall is 5 over 7, or 0.71. A caption cites the 3,000 hours that manual evaluation would need."
+  caption="Fig. 122: Toy summaries. ROUGE-1 counts overlapping words."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who came up with it?' },
+    { who: 'sriku', text: 'Chin-Yew Lin at the Information Sciences Institute, University of Southern California, in 2004. ROUGE automatically determines the quality of a summary by comparing it to ideal summaries created by humans, counting overlapping units such as n-grams, word sequences and word pairs. The paper introduces four measures: ROUGE-N, ROUGE-L, ROUGE-W and ROUGE-S.' },
+    { who: 'cherry', text: 'Why not just ask people?' },
+    { who: 'sriku', text: 'Lin estimates that even simple manual evaluation of summaries at the scale of the Document Understanding Conference would take over 3,000 hours of human effort, which is very expensive. Three of the measures were used in DUC 2004.' },
+    { who: 'sundu', text: 'Is it the final word on quality?' },
+    { who: 'sriku', text: 'No. Stiennon and colleagues note that summarization models are often trained to predict reference summaries and evaluated using ROUGE, but both are rough proxies for summary quality. They report that optimizing their human-feedback reward model produced better summaries than optimizing ROUGE, according to humans.' },
+  ]}
+/>
+
+<CaseStudy
+  title="ROUGE: A Package for Automatic Evaluation of Summaries (Lin, 2004)"
+  stats={[
+    { value: '4', label: 'Measures introduced: ROUGE-N, ROUGE-L, ROUGE-W and ROUGE-S' },
+    { value: '3,000+ hours', label: 'Of human effort that manual evaluation at DUC scale would need' },
+  ]}
+  winner="The abstract: “It includes measures to automatically determine the quality of a summary by comparing it to other (ideal) summaries created by humans.”"
+  takeaway="ROUGE is a cheap ruler, not a judge. Use it to rank quickly, and ask people before you decide."
+  source={{
+    text: 'Lin, “ROUGE: A Package for Automatic Evaluation of Summaries”, ACL Workshop 2004. Free PDF on the ACL Anthology.',
+    href: 'https://aclanthology.org/W04-1013.pdf',
+  }}
+/>
+
+**Real definition:** a family of metrics that evaluate automatic summarization and machine translation models. ROUGE metrics determine the degree to which a reference text overlaps an ML model’s generated text. [Google’s glossary: ROUGE ↗](https://developers.google.com/machine-learning/glossary#rouge-recall-oriented-understudy-for-gisting-evaluation)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Random forest | Seven imperfect trees, one better answer | Many randomized decision trees that vote |
+| RealToxicityPrompts | Score what the model says next | A dataset for testing toxic completions |
+| RLHF | Teach it with thumbs up, not rules | Improve a model with human feedback |
+| ROUGE | A ruler for summaries | Word overlap with a reference summary |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Eighteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 8 more letters, from S to Z. Y has no entries, so that is 7 more parts.' },
+    { who: 'sundu', text: 'S has 63 entries. That is the biggest yet.' },
+    { who: 'sriku', text: 'Which is why I brought the big flask. Self-supervised learning, sentiment, SQuAD and subword tokens are next.' },
+  ]}
+/>
+
+[← Part Q: From Q-Learning to Quantization](/writing/ml-glossary-q) · [Part S: From Self-Supervised Learning to SuperGLUE →](/writing/ml-glossary-s)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy trees, prompts, loop and summaries are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

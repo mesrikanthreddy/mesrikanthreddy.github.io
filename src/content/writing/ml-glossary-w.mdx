@@ -1,0 +1,289 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part W: From Wasserstein Loss to Word Embeddings',
+  subtitle: 'Week twenty-three at the chai stall: five machine learning terms, a shovel, a trophy that does not fit in a suitcase, and an ox that a crowd weighed almost perfectly.',
+  type: 'Meme Feast',
+  date: '2026-10-29',
+  excerpt:
+    'Five machine learning terms starting with W, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 23,
+}
+
+Twenty-third Saturday. W is a section of odd bedfellows: a shovel, a suitcase, an ox and a vector space.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part V](/writing/ml-glossary-v). This round covers the W section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 14 entries. I picked five. Weight and weighted sum are on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals), but none of my five are.
+
+<Poster
+  badge="Part W · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. One ox."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '1 ox']}
+/>
+
+---
+
+## Wasserstein Loss: How Far Do We Have to Shovel?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The forger and the detective from Part G keep getting stuck. Training a GAN is a nightmare.' },
+    { who: 'sriku', text: 'One fix is a different loss. Wasserstein loss is one of the loss functions commonly used in generative adversarial networks, based on the earth mover’s distance between the distribution of generated data and the distribution of real data.' },
+    { who: 'sundu', text: 'Earth mover as in moving dirt?' },
+    { who: 'sriku', text: 'Picture two piles of earth, the real data and the generated data. The distance is the least work needed to reshape one pile into the other, where work is the amount moved times how far it moves.' },
+  ]}
+/>
+
+<Gif
+  name="wasserstein-loss"
+  alt="Blue columns on the left represent a pile of real data and red columns on the right represent generated data. An arrow shows earth being moved from the blue pile to the red pile, with the label cost equals amount moved times distance. The blue pile gradually becomes the red pile. A caption notes that the cost shrinks smoothly as the piles get closer. The piles are a toy example."
+  caption="Fig. 140: Toy piles. The cost of reshaping one pile into the other."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Why is that better than the usual loss?' },
+    { who: 'sriku', text: 'Arjovsky, Chintala and Bottou introduced WGAN, an alternative to traditional GAN training. They report that it improves the stability of learning, gets rid of problems like mode collapse, and provides meaningful learning curves that are useful for debugging and hyperparameter searches.' },
+    { who: 'cherry', text: 'Meaningful learning curves?' },
+    { who: 'sriku', text: 'In a standard GAN the loss curves are hard to read. Their claim is that this loss tracks something you can actually watch. They also show the corresponding optimization problem is sound, and lay out the connections to other distances between distributions.' },
+    { who: 'sundu', text: 'The paper calls the distance by two names.' },
+    { who: 'sriku', text: 'The Earth-Mover distance, also called Wasserstein-1. Same thing.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Wasserstein GAN (Arjovsky, Chintala and Bottou, 2017)"
+  stats={[
+    { value: 'Stability', label: 'Improved learning stability, per the authors' },
+    { value: 'No mode collapse', label: 'Problems like mode collapse eliminated, per the abstract' },
+    { value: 'Meaningful', label: 'Learning curves, useful for debugging and hyperparameter searches' },
+  ]}
+  winner="The abstract: “we show that we can improve the stability of learning, get rid of problems like mode collapse, and provide meaningful learning curves.”"
+  takeaway="A loss that measures how far apart two distributions are keeps giving you a direction, even when they barely overlap."
+  source={{
+    text: 'Arjovsky, Chintala and Bottou, “Wasserstein GAN”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1701.07875',
+  }}
+/>
+
+**Real definition:** one of the loss functions commonly used in generative adversarial networks, based on the earth mover’s distance between the distribution of generated data and real data. [Google’s glossary: Wasserstein loss ↗](https://developers.google.com/machine-learning/glossary#wasserstein-loss)
+
+---
+
+## WALS: Every Guess Comes With a Confidence
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Matrix factorization from Part M assumes people rate things. My users never rate anything. They just watch.' },
+    { who: 'sriku', text: 'Then use Weighted Alternating Least Squares. WALS is an algorithm for minimizing the objective function during matrix factorization in recommendation systems, and it lets you downweight the missing examples. It minimizes the weighted squared error between the original matrix and the reconstruction by alternating between fixing the row factorization and fixing the column factorization.' },
+    { who: 'sundu', text: 'Each half is a least squares problem.' },
+    { who: 'sriku', text: 'Right. Hold the users fixed and solve for the items, then hold the items fixed and solve for the users, and keep taking turns.' },
+  ]}
+/>
+
+<Gif
+  name="wals"
+  alt="A 6 by 6 grid of toy data shows which users watched which items, with bright cells for watched and dark cells for unknown. Beside it, a users column and an items row take turns being highlighted as the algorithm alternates between solving for users with items fixed and for items with users fixed. Text explains that watched means positive preference and unknown means weak negative preference, each with its own confidence."
+  caption="Fig. 141: Toy watch history. Alternate between solving for users and items."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who wrote the paper that made this popular?' },
+    { who: 'sriku', text: 'Hu, Koren and Volinsky, in Collaborative Filtering for Implicit Feedback Datasets. Implicit feedback means systems passively track behaviour such as purchase history, watching habits and browsing activity. There is no direct input from users about their preferences, and no strong evidence about which products they dislike.' },
+    { who: 'cherry', text: 'So what is the model?' },
+    { who: 'sriku', text: 'They propose treating the data as an indication of positive and negative preference associated with vastly varying confidence levels. That leads to a factor model tailored to implicit feedback recommenders.' },
+    { who: 'sundu', text: 'Does it scale?' },
+    { who: 'sriku', text: 'They suggest a scalable optimization procedure that scales linearly with the data size. The algorithm was used successfully within a recommender system for television shows, and they say it compares favorably with well-tuned implementations of other known methods.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Collaborative Filtering for Implicit Feedback Datasets (Hu, Koren and Volinsky, 2008)"
+  stats={[
+    { value: 'Linear', label: 'Scaling of the optimization procedure with the data size' },
+    { value: 'TV shows', label: 'The recommender system where it was used successfully' },
+  ]}
+  winner="The abstract: “We propose treating the data as indication of positive and negative preference associated with vastly varying confidence levels.”"
+  takeaway="Not watching is weak evidence, not a no. Give every cell a weight that says how much you believe it."
+  source={{
+    text: 'Hu, Koren and Volinsky, “Collaborative Filtering for Implicit Feedback Datasets”, ICDM 2008. Free PDF from the first author’s site.',
+    href: 'http://yifanhu.net/PUB/cf.pdf',
+  }}
+/>
+
+**Real definition:** an algorithm for minimizing the objective function during matrix factorization in recommendation systems, which allows a downweighting of the missing examples. [Google’s glossary: Weighted Alternating Least Squares (WALS) ↗](https://developers.google.com/machine-learning/glossary#weighted-alternating-least-squares-wals)
+
+---
+
+## Winograd Schema Challenge: Change One Word, Flip the Answer
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I test whether a model actually understands a sentence, rather than matching patterns?' },
+    { who: 'sriku', text: 'Google describes the Winograd Schema Challenge as a format, or a dataset in that format, for evaluating an LLM’s ability to determine which noun phrase a pronoun refers to. Each entry has a short passage with a target pronoun, candidate noun phrases, and the correct answer.' },
+    { who: 'sundu', text: 'Give me one.' },
+    { who: 'sriku', text: 'The trophy doesn’t fit in the brown suitcase because it’s too big. What is too big? The trophy. Now change big to small, and it is the suitcase.' },
+  ]}
+/>
+
+<Gif
+  name="winograd"
+  alt="The sentence The trophy doesn't fit in the brown suitcase because it's too big appears, with the answer the trophy. The word big is then swapped for small and the answer changes to the suitcase. Two bars compare people at 94.0 percent with the best methods tested on the WinoGrande dataset at 79.1 percent."
+  caption="Fig. 142: One word flips the answer. The bars are from the WinoGrande paper."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Whose idea was it?' },
+    { who: 'sriku', text: 'Levesque, Davis and Morgenstern proposed it as an alternative to the Turing Test with some conceptual and practical advantages. A Winograd schema is a pair of sentences that differ in only one or two words and contain a referential ambiguity that is resolved in opposite directions in the two sentences.' },
+    { who: 'cherry', text: 'Why is it hard for a machine?' },
+    { who: 'sriku', text: 'They designed the schemas so that the correct answer is obvious to a human reader but cannot easily be found using selectional restrictions or statistical techniques over text corpora.' },
+    { who: 'sundu', text: 'Did machines eventually crack it?' },
+    { who: 'sriku', text: 'The WinoGrande paper says the original set has 273 expert-crafted problems, and recent neural language models had reached around 90% on variants of it. It asked whether they were truly reasoning or exploiting dataset biases, and built a 44,000-problem dataset. The best methods there got 59.4 to 79.1%, which is 15 to 35 points below human performance of 94.0%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The Winograd Schema Challenge (Levesque, Davis and Morgenstern) and WinoGrande (Sakaguchi et al., 2019)"
+  stats={[
+    { value: '273', label: 'Expert-crafted problems in the original set, per WinoGrande' },
+    { value: '44,000', label: 'Problems in the WinoGrande dataset' },
+    { value: '94.0%', label: 'Human performance on WinoGrande, against 59.4% to 79.1% for the best methods' },
+  ]}
+  winner="The challenge paper: a Winograd schema is “a pair of sentences that differ only in one or two words and that contain a referential ambiguity that is resolved in opposite directions in the two sentences.”"
+  takeaway="A good test makes shortcuts useless. Flipping one word flips the answer, so word-association tricks cannot work."
+  source={{
+    text: 'Levesque, Davis and Morgenstern, “The Winograd Schema Challenge”. Free PDF from New York University. The WinoGrande numbers are from its arXiv abstract (arXiv 1907.10641).',
+    href: 'https://cs.nyu.edu/~davise/papers/WSKR2012.pdf',
+  }}
+/>
+
+**Real definition:** a format (or dataset conforming to that format) for evaluating an LLM’s ability to determine the noun phrase that a pronoun refers to. [Google’s glossary: Winograd Schema Challenge (WSC) ↗](https://developers.google.com/machine-learning/glossary#winograd-schema-challenge-wsc)
+
+---
+
+## Wisdom of the Crowd: One Guess Is Noise, a Crowd Is Signal
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My team’s individual estimates for this project are all over the place. Which one do I trust?' },
+    { who: 'sriku', text: 'Maybe none of them, and maybe all of them. The wisdom of the crowd is the idea that averaging the opinions or estimates of a large group of people often produces surprisingly good results. Google’s example is guessing the number of jelly beans in a jar: most individual guesses are inaccurate, but the average of all the guesses has been shown empirically to be surprisingly close.' },
+    { who: 'sundu', text: 'The ensembles from Part E and the forest in Part R work the same way.' },
+    { who: 'sriku', text: 'Many noisy, somewhat independent estimates, averaged. That is the whole trick.' },
+  ]}
+/>
+
+<Gif
+  name="wisdom-of-the-crowd"
+  alt="Many toy guesses for the weight of an ox appear as dots along a number line from 900 to 1500 pounds, with the guesses scattered widely. A green line marks the true weight of 1,198 pounds and a gold line marks the crowd's middle guess of 1,207. A caption notes Galton's 1906 fair. The individual guesses are toy data."
+  caption="Fig. 143: Toy guesses. The true weight and the crowd’s middle guess are the real figures."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there a classic case?' },
+    { who: 'sriku', text: 'Francis Galton, at a livestock fair in Plymouth in 1906. About 800 people entered a contest to guess the weight of a slaughtered and dressed ox. Galton noticed that the median guess, 1,207 pounds, was within 1% of the true weight of 1,198 pounds. He wrote it up in Nature in 1907 under the title Vox Populi.' },
+    { who: 'cherry', text: 'Who is telling us those numbers?' },
+    { who: 'sriku', text: 'I took the figures from Wikipedia’s summary of Galton’s result, because the Nature article itself is behind a paywall. The dots in my animation are made up, so only the true weight and the median are real.' },
+    { who: 'sundu', text: 'What is the catch?' },
+    { who: 'sriku', text: 'The guesses must be reasonably independent and not all wrong in the same direction. A crowd that copies each other is just one opinion repeated.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Galton’s ox, 1906 (as reported in Nature, 1907)"
+  stats={[
+    { value: '~800', label: 'People who entered the weight-guessing contest' },
+    { value: '1,207 lb', label: 'Median guess' },
+    { value: '1,198 lb', label: 'True weight, within 1% of the median' },
+  ]}
+  winner="The summary: the median guess “was accurate within 1% of the true weight of 1198 pounds.”"
+  takeaway="Do not hunt for the one clever estimator. Collect many independent ones and take the middle."
+  source={{
+    text: 'Figures as summarized in Wikipedia, “Wisdom of the crowd”. Galton’s original is “Vox Populi”, Nature, 7 March 1907, which is paywalled.',
+    href: 'https://en.wikipedia.org/wiki/Wisdom_of_the_crowd',
+  }}
+/>
+
+**Real definition:** the idea that averaging the opinions or estimates of a large group of people (“the crowd”) often produces surprisingly good results. [Google’s glossary: wisdom of the crowd ↗](https://developers.google.com/machine-learning/glossary#wisdom-of-the-crowd)
+
+---
+
+## Word Embedding: Meaning as Geometry
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a model know that carrot and celery are related but carrot and airplane are not?' },
+    { who: 'sriku', text: 'With word embeddings: representing each word as a vector of numbers so that words with similar meanings have more similar vectors than words with different meanings. Google’s example is carrots, celery and cucumbers, which end up relatively close to each other and far from airplanes and sunglasses.' },
+    { who: 'sundu', text: 'This is the embedding space from Part E.' },
+    { who: 'sriku', text: 'Yes, and the word2vec negative sampling from Part N was one way to train them. Here is another.' },
+  ]}
+/>
+
+<Gif
+  name="word-embedding"
+  alt="Four toy words are plotted as points: France, Paris, Italy and Rome. A green arrow from France to Paris is labelled capital of, and a parallel green arrow from Italy to Rome is labelled same shift. Text says Paris minus France plus Italy lands next to Rome. A caption cites GloVe's 75 percent on the word analogy task. The coordinates are a toy example."
+  caption="Fig. 144: Toy coordinates. The same shift from country to capital, for every country."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Which paper is it?' },
+    { who: 'sriku', text: 'GloVe, by Pennington, Socher and Manning at Stanford, EMNLP 2014. They start from the observation that earlier methods captured fine-grained semantic and syntactic regularities with vector arithmetic, but the origin of those regularities had remained opaque.' },
+    { who: 'cherry', text: 'And what is new?' },
+    { who: 'sriku', text: 'A global log-bilinear regression model that combines the two major families, global matrix factorization and local context window methods. It trains only on the nonzero elements of a word-word co-occurrence matrix, rather than on the entire sparse matrix or on individual context windows in a large corpus.' },
+    { who: 'sundu', text: 'Results?' },
+    { who: 'sriku', text: 'The vector space has meaningful substructure, as shown by 75% performance on a recent word analogy task. It also outperforms related models on similarity tasks and named entity recognition. The toy arrows in my animation are made up, but the idea is the same.' },
+  ]}
+/>
+
+<CaseStudy
+  title="GloVe: Global Vectors for Word Representation (Pennington, Socher and Manning, 2014)"
+  stats={[
+    { value: '75%', label: 'Performance on a word analogy task' },
+    { value: 'Co-occurrence', label: 'Trained on the nonzero entries of a word-word matrix' },
+  ]}
+  winner="The abstract: “The model produces a vector space with meaningful sub-structure, as evidenced by its performance of 75% on a recent word analogy task.”"
+  takeaway="Count which words appear near each other across the whole corpus, and directions in the resulting space start to mean things."
+  source={{
+    text: 'Pennington, Socher and Manning, “GloVe: Global Vectors for Word Representation”, EMNLP 2014. Free PDF on the ACL Anthology.',
+    href: 'https://aclanthology.org/D14-1162.pdf',
+  }}
+/>
+
+**Real definition:** representing each word in a word set within an embedding vector; that is, representing each word as a vector of floating-point values. Words with similar meanings have more-similar representations than words with different meanings. [Google’s glossary: word embedding ↗](https://developers.google.com/machine-learning/glossary#word-embedding)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Wasserstein loss | How far do we have to shovel? | Earth mover’s distance between real and generated data |
+| WALS | Every guess comes with a confidence | Weighted least squares for matrix factorization |
+| Winograd Schema Challenge | Change one word, flip the answer | Pronoun tests that defeat word tricks |
+| Wisdom of the crowd | One guess is noise, a crowd is signal | Averaging many estimates beats most individuals |
+| Word embedding | Meaning as geometry | Words represented as vectors, similar words close |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty-three weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 3 more letters, from X to Z. Y is empty, so that is 2 more parts.' },
+    { who: 'sundu', text: 'X has three entries.' },
+    { who: 'sriku', text: 'XLA, XL-Sum and XSum. I only trust two of them enough to tell stories about.' },
+  ]}
+/>
+
+[← Part V: From Vanishing Gradients to Vibe Coding](/writing/ml-glossary-v) · [Part X: From XL-Sum to XSum →](/writing/ml-glossary-x)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy piles, watch history, guesses and coordinates are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

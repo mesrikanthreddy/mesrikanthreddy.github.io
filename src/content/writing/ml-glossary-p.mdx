@@ -1,0 +1,294 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part P: From Pass at k to Prompt Tuning',
+  subtitle: 'Week sixteen at the chai stall: five machine learning terms, a 1958 demonstration with a five-ton computer, and a ROC curve that looks far too happy.',
+  type: 'Meme Feast',
+  date: '2026-10-22',
+  excerpt:
+    'Five machine learning terms starting with P, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 16,
+}
+
+Sixteenth Saturday. P is the biggest section so far, so the flask came early.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part O](/writing/ml-glossary-o). This round covers the P section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 61 entries. I picked five. None of the P terms I picked are on Google's Fundamentals page.
+
+<Poster
+  badge="Part P · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. A very big flask."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '1 five-ton computer']}
+/>
+
+---
+
+## Pass at k: Any Sample That Passes Counts
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My code model writes a function, and half the time it fails the unit tests. Should I give up on it?' },
+    { who: 'sriku', text: 'Try asking it k times. Pass at k is a metric for the quality of code a large language model generates. It tells you the likelihood that at least one of k generated blocks of code will pass all of its unit tests.' },
+    { who: 'sundu', text: 'Do engineers really do that?' },
+    { who: 'sriku', text: 'The glossary says large language models often struggle with complex programming problems, so engineers prompt the model to generate multiple solutions and then test each one against the unit tests.' },
+  ]}
+/>
+
+<Gif
+  name="pass-at-k"
+  alt="Ten sample solutions to one problem appear as boxes. Eight are marked fail and two are marked pass, so at least one passes. Two bars then show the Codex paper's results on HumanEval: 28.8 percent of problems solved with one sample and 70.2 percent with 100 samples. The ten attempts are a toy example."
+  caption="Fig. 111: Toy attempts. One passing sample in k is enough."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where does the metric come from?' },
+    { who: 'sriku', text: 'The Codex paper, by Mark Chen and colleagues. Codex is a GPT language model fine-tuned on publicly available code from GitHub. On HumanEval, a new set of problems that measures functional correctness for writing programs from docstrings, Codex solves 28.8% of the problems, GPT-3 solves 0% and GPT-J solves 11.4%.' },
+    { who: 'cherry', text: 'And with more samples?' },
+    { who: 'sriku', text: 'Repeated sampling from the model is, in their words, a surprisingly effective strategy for producing working solutions to difficult prompts. With 100 samples per problem they solve 70.2%.' },
+    { who: 'sundu', text: 'Do they really generate exactly k and count?' },
+    { who: 'sriku', text: 'Counting that way can have high variance. They generate n samples per task, with n = 200 and k at most 100, count the c that pass the unit tests, and compute an unbiased estimator of pass at k from n, c and k.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Evaluating Large Language Models Trained on Code (Chen et al., 2021)"
+  stats={[
+    { value: '28.8%', label: 'HumanEval problems solved with one sample' },
+    { value: '70.2%', label: 'Solved with 100 samples per problem' },
+    { value: '200', label: 'Samples generated per task to estimate pass at k' },
+  ]}
+  winner="The abstract: “repeated sampling from the model is a surprisingly effective strategy for producing working solutions to difficult prompts.”"
+  takeaway="Pass at 1 is your first-try score. Pass at k is your score if you can test several tries, which you can, because tests are cheap."
+  source={{
+    text: 'Chen et al., “Evaluating Large Language Models Trained on Code”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2107.03374',
+  }}
+/>
+
+**Real definition:** a metric to determine the quality of code that a large language model generates. Pass at k tells you the likelihood that at least one generated block of code out of k generated blocks will pass all of its unit tests. [Google’s glossary: pass at k (pass@k) ↗](https://developers.google.com/machine-learning/glossary#pass-at-k-passk)
+
+---
+
+## Perceptron: The Great-Grandparent of the Neuron
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'People call a neuron in a neural network a perceptron. Which is it?' },
+    { who: 'sriku', text: 'Google defines a perceptron as a system, hardware or software, that takes in one or more input values, runs a function on the weighted sum of the inputs, and computes a single output value. In machine learning the function is typically nonlinear, such as ReLU, sigmoid or tanh. The glossary says perceptrons are the neurons in neural networks.' },
+    { who: 'sundu', text: 'So where is the history?' },
+    { who: 'sriku', text: 'In 1958.' },
+  ]}
+/>
+
+<Gif
+  name="perceptron"
+  alt="Three inputs, each multiplied by a weight, feed a circle labelled sum. A box on the right shows the output, which fires or stays silent depending on the weighted sum. When the answer is wrong the weights are nudged and the output flips. A caption notes that in 1958 an IBM 704 learned to tell left-marked cards from right-marked cards in 50 trials. The numbers are a toy example."
+  caption="Fig. 112: Toy numbers. A wrong answer nudges the weights."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who built the first one?' },
+    { who: 'sriku', text: 'Frank Rosenblatt, a research psychologist and project engineer at the Cornell Aeronautical Laboratory in Buffalo. In July 1958 the US Office of Naval Research unveiled a demonstration. An IBM 704, a five-ton computer the size of a room, was fed a series of punch cards, and after 50 trials it taught itself to tell cards marked on the left from cards marked on the right.' },
+    { who: 'cherry', text: 'Big claims?' },
+    { who: 'sriku', text: 'Rosenblatt wrote in 1958 that we were about to witness the birth of a machine capable of perceiving, recognizing and identifying its surroundings without any human training or control. The New York Times headline was New Navy Device Learns by Doing.' },
+    { who: 'sundu', text: 'And the hardware version?' },
+    { who: 'sriku', text: 'His Mark I perceptron, a visual pattern classifier, now sits in the Smithsonian Institution, according to Cornell’s own history of it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The perceptron demonstration of 1958 (Cornell Chronicle, 2019)"
+  stats={[
+    { value: '1958', label: 'Year of the Navy demonstration' },
+    { value: '50', label: 'Trials before the computer told left-marked cards from right-marked cards' },
+    { value: '5-ton', label: 'IBM 704 that ran it' },
+  ]}
+  winner="The Chronicle: “After 50 trials, the computer taught itself to distinguish cards marked on the left from cards marked on the right.”"
+  takeaway="Weighted inputs, one output, and a machine that adjusts itself with practice. Every neuron in this series descends from it."
+  source={{
+    text: 'Melanie Lefkowitz, “Professor’s perceptron paved the way for AI – 60 years too soon”, Cornell Chronicle, 25 September 2019. A news article, not the original paper.',
+    href: 'https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon',
+  }}
+/>
+
+**Real definition:** a system (either hardware or software) that takes in one or more input values, runs a function on the weighted sum of the inputs, and computes a single output value. Perceptrons are the neurons in neural networks. [Google’s glossary: perceptron ↗](https://developers.google.com/machine-learning/glossary#perceptron)
+
+---
+
+## Positional Encoding: Tell the Model Who Stands Where
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A Transformer reads all the words at once. How does it know dog bites man from man bites dog?' },
+    { who: 'sriku', text: 'Positional encoding. It is a technique that adds information about a token’s position in the sequence to the token’s embedding. A common implementation uses a sinusoidal function whose frequency and amplitude are determined by the position.' },
+    { who: 'sundu', text: 'And that helps how?' },
+    { who: 'sriku', text: 'It lets a Transformer learn to attend to different parts of the sequence based on their position.' },
+  ]}
+/>
+
+<Gif
+  name="positional-encoding"
+  alt="The sentences dog bites man and man bites dog each show three word boxes. Without positions the model sees the same bag of words. Then a small strip of coloured cells, a sinusoid pattern for each position, appears under each word and the two sentences become different. A caption notes that learned positions gave nearly identical results. The patterns are a toy example with 8 dimensions."
+  caption="Fig. 113: Toy encoding. Same words, different positions, different sentences."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where does the sinusoid version come from?' },
+    { who: 'sriku', text: 'Attention Is All You Need, by Vaswani and colleagues at Google. They use sine and cosine functions of different frequencies, so each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from 2π to 10000·2π.' },
+    { who: 'cherry', text: 'Why sine waves?' },
+    { who: 'sriku', text: 'They hypothesized it would let the model easily learn to attend by relative positions, since for any fixed offset k, the encoding at position pos+k can be represented as a linear function of the encoding at pos.' },
+    { who: 'sundu', text: 'Did they try learning the positions instead?' },
+    { who: 'sriku', text: 'Yes, and they found the two versions produced nearly identical results. They chose the sinusoidal one because it may let the model extrapolate to sequence lengths longer than the ones seen in training.' },
+    { who: 'cherry', text: 'And the model itself?' },
+    { who: 'sriku', text: 'It scored 28.4 BLEU on WMT 2014 English-to-German, over 2 BLEU better than the best earlier results including ensembles, and a single-model 41.8 on English-to-French after 3.5 days on eight GPUs. That is machine translation again, from Part M.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Attention Is All You Need (Vaswani et al., Google, 2017)"
+  stats={[
+    { value: '2π to 10000·2π', label: 'Range of wavelengths in the sinusoids' },
+    { value: 'Nearly identical', label: 'Results with learned positional embeddings instead' },
+    { value: '28.4 BLEU', label: 'WMT 2014 English-to-German' },
+  ]}
+  winner="The paper: “We also experimented with using learned positional embeddings … instead, and found that the two versions produced nearly identical results.”"
+  takeaway="Attention alone has no sense of order. Positions have to be added, and a fixed sine pattern does the job."
+  source={{
+    text: 'Vaswani et al., “Attention Is All You Need”, NeurIPS 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.03762',
+  }}
+/>
+
+**Real definition:** a technique to add information about the position of a token in a sequence to the token’s embedding. Transformer models use positional encoding to better understand the relationship between different parts of the sequence. [Google’s glossary: positional encoding ↗](https://developers.google.com/machine-learning/glossary#positional-encoding)
+
+---
+
+## Precision-Recall Curve: When ROC Looks Too Happy
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My ROC curve looks perfect, but the people who review my flagged cases say most of them are false alarms.' },
+    { who: 'sriku', text: 'Look at the precision-recall curve: a curve of precision versus recall at different classification thresholds.' },
+    { who: 'sundu', text: 'Why would the two disagree?' },
+    { who: 'sriku', text: 'When one class is rare. The ROC curve uses the false positive rate, the share of all negatives you wrongly flag. In my toy, 100 positives and 10,000 negatives, a 5% false positive rate is 500 false alarms, which sounds small as a rate and is huge next to 95 real hits.' },
+  ]}
+/>
+
+<Gif
+  name="pr-curve"
+  alt="Two charts for a toy classifier with 100 positives and 10,000 negatives. The ROC curve hugs the top-left corner and looks excellent. The precision-recall curve starts low and falls as recall rises. A caption says that at a 5 percent false positive rate and 95 percent recall only 16 percent of flagged items are real. The numbers are a toy example."
+  caption="Fig. 114: Toy numbers. The ROC curve smiles, the PR curve tells the truth."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is that a real finding, or just your toy?' },
+    { who: 'sriku', text: 'Saito and Rehmsmeier published it in PLOS ONE in 2015. The title says it: the precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets.' },
+    { who: 'cherry', text: 'Why would ROC mislead?' },
+    { who: 'sriku', text: 'They show that ROC plots can be deceptive on imbalanced data, because of an intuitive but wrong interpretation of specificity. PRC plots evaluate the fraction of true positives among the positive predictions, so they can give an accurate picture of future performance.' },
+    { who: 'sundu', text: 'Did people in the field notice?' },
+    { who: 'sriku', text: 'They reviewed 58 genome-wide studies that used support vector machines. ROC was the most popular evaluation method, in 60.3% of the studies, and they note that only four papers used PRC. They also re-evaluated a published microRNA gene discovery study with PRC plots, and say it confirmed the advantages of PRC over ROC.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The precision-recall plot versus the ROC plot (Saito and Rehmsmeier, 2015)"
+  stats={[
+    { value: '58', label: 'Genome-wide SVM studies reviewed' },
+    { value: '60.3%', label: 'Of those studies evaluated with ROC' },
+  ]}
+  winner="The abstract: “PRC plots, on the other hand, can provide the viewer with an accurate prediction of future classification performance due to the fact that they evaluate the fraction of true positives among positive predictions.”"
+  takeaway="When positives are rare, ask how many of your flagged items are real. The precision-recall curve is that question as a picture."
+  source={{
+    text: 'Saito and Rehmsmeier, “The Precision-Recall Plot Is More Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced Datasets”, PLOS ONE 10(3), 2015. Free to read.',
+    href: 'https://doi.org/10.1371/journal.pone.0118432',
+  }}
+/>
+
+**Real definition:** a curve of precision versus recall at different classification thresholds. [Google’s glossary: precision-recall curve ↗](https://developers.google.com/machine-learning/glossary#precision-recall-curve)
+
+---
+
+## Prompt Tuning: Train Only the Prefix
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have one huge frozen model and twenty tasks. Do I need twenty copies of it?' },
+    { who: 'sriku', text: 'Prompt tuning says no. It is a parameter-efficient tuning mechanism that learns a prefix the system prepends to the actual prompt. One variation, often called prefix tuning, prepends the prefix at every layer. Most prompt tuning only adds a prefix to the input layer.' },
+    { who: 'sundu', text: 'Is that the same trick as LoRA in Part L?' },
+    { who: 'sriku', text: 'Both are parameter-efficient, but LoRA inserts small trainable weights into the model, while prompt tuning leaves the model alone and learns the prefix on the input.' },
+  ]}
+/>
+
+<Gif
+  name="prompt-tuning"
+  alt="A stack of five coloured cells labelled soft prompt feeds into a large blue box labelled frozen T5 model, with a padlock. During the animation the colours of the soft prompt cells change as gradients update only the prompt. A caption quotes the paper: 20,480 trainable parameters per task with a 5-token prompt, 20,000 times fewer than tuning the model. The cells are a toy picture."
+  caption="Fig. 115: Toy picture. The model stays frozen, only the prompt changes."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did it come from?' },
+    { who: 'sriku', text: 'Lester, Al-Rfou and Constant at Google Research, in The Power of Scale for Parameter-Efficient Prompt Tuning. They learn soft prompts, which are trained by backpropagation and can incorporate signal from any number of labeled examples, to condition frozen language models for specific tasks.' },
+    { who: 'cherry', text: 'How is that different from writing a prompt by hand?' },
+    { who: 'sriku', text: 'Unlike the discrete text prompts used by GPT-3, soft prompts are learned. The abstract says the approach outperforms GPT-3’s few-shot learning by a large margin.' },
+    { who: 'sundu', text: 'Does model size matter?' },
+    { who: 'sriku', text: 'A lot. Prompt tuning becomes more competitive with scale: as models exceed billions of parameters, it closes the gap and matches the performance of model tuning, where all the weights are tuned. At the T5 XXL size, 11 billion parameters, it matched the stronger multi-task model-tuning baseline with over 20,000 times fewer task-specific parameters.' },
+    { who: 'cherry', text: 'How big is the prompt itself?' },
+    { who: 'sriku', text: '20,480 parameters per task, assuming a prompt length of 5 tokens, against 11 billion for a tuned copy of T5 XXL. The paper calls that a reduction of over five orders of magnitude.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The Power of Scale for Parameter-Efficient Prompt Tuning (Lester, Al-Rfou and Constant, Google Research, 2021)"
+  stats={[
+    { value: '20,480', label: 'Trainable parameters per task, with a 5-token prompt' },
+    { value: '11 billion', label: 'Parameters in the frozen T5 XXL model, shared by every task' },
+    { value: '20,000x', label: 'Fewer task-specific parameters than model tuning, at the XXL size' },
+  ]}
+  winner="The abstract: “as models exceed billions of parameters, our method ‘closes the gap’ and matches the strong performance of model tuning (where all model weights are tuned).”"
+  takeaway="With a big enough frozen model, a few learned input vectors can stand in for a whole fine-tuned copy."
+  source={{
+    text: 'Lester, Al-Rfou and Constant, “The Power of Scale for Parameter-Efficient Prompt Tuning”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2104.08691',
+  }}
+/>
+
+**Real definition:** a parameter efficient tuning mechanism that learns a “prefix” that the system prepends to the actual prompt. [Google’s glossary: prompt tuning ↗](https://developers.google.com/machine-learning/glossary#prompt-tuning)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Pass at k | Any sample that passes counts | Chance that at least one of k code samples passes its tests |
+| Perceptron | The great-grandparent of the neuron | A weighted sum of inputs, then a function |
+| Positional encoding | Tell the model who stands where | Add position information to token embeddings |
+| Precision-recall curve | When ROC looks too happy | Precision against recall across thresholds |
+| Prompt tuning | Train only the prefix | Learn a prefix and keep the model frozen |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Sixteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 10 more letters, from Q to Z.' },
+    { who: 'sundu', text: 'Q must be tiny.' },
+    { who: 'sriku', text: 'Q has 6 entries. R is the one to prepare for: it has 50. Bring the notebook.' },
+  ]}
+/>
+
+[← Part O: From One-Shot Learning to Oversampling](/writing/ml-glossary-o) · [Part Q: From Q-Learning to Quantization →](/writing/ml-glossary-q)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy attempts, perceptron numbers, positions, curves and prompt cells are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />
