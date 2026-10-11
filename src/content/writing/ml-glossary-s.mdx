@@ -1,0 +1,287 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part S: From Self-Supervised Learning to SuperGLUE',
+  subtitle: 'Week nineteen at the chai stall: five machine learning terms, a movie-review test that people lose to a classifier, and a benchmark named after glue that got too easy.',
+  type: 'Meme Feast',
+  date: '2026-10-25',
+  excerpt:
+    'Five machine learning terms starting with S, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 19,
+}
+
+Nineteenth Saturday. S is the biggest section of the whole glossary, so Sriku brought two flasks and a plan.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part R](/writing/ml-glossary-r). This round covers the S section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 63 entries. I picked five. Several S entries, such as sigmoid, softmax and stochastic gradient descent, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals), but none of the five I picked are.
+
+<Poster
+  badge="Part S · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. Two flasks."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '63 entries']}
+/>
+
+---
+
+## Self-Supervised Learning: The Data Makes Its Own Labels
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have millions of unlabeled photos and no budget for labels.' },
+    { who: 'sriku', text: 'Self-supervised learning is a family of techniques for converting an unsupervised problem into a supervised one by creating surrogate labels from unlabeled examples. Google’s glossary notes that some Transformer-based models such as BERT use it.' },
+    { who: 'sundu', text: 'The masked words in Part M.' },
+    { who: 'sriku', text: 'Exactly. The hidden word is the label, and the sentence itself supplies it. For images, you can do something similar with two edited versions of the same photo.' },
+  ]}
+/>
+
+<Gif
+  name="self-supervised"
+  alt="One cat image is edited in two random ways. In a representation space the two edited versions of the same image are pulled close together, while points for other images are far away. A caption cites SimCLR's 76.5 percent top-1 accuracy on ImageNet. The positions are a toy illustration."
+  caption="Fig. 123: Toy picture. Two edits of one image should land close together."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it actually compete with labels?' },
+    { who: 'sriku', text: 'SimCLR, from Chen, Kornblith, Norouzi and Hinton, is a simple framework for contrastive learning of visual representations, with no specialized architecture or memory bank. They find that composing data augmentations plays a critical role, that adding a learnable nonlinear transformation before the contrastive loss helps a lot, and that contrastive learning benefits from larger batch sizes and more training steps than supervised learning.' },
+    { who: 'cherry', text: 'And the number?' },
+    { who: 'sriku', text: 'A linear classifier trained on the self-supervised representations reaches 76.5% top-1 accuracy on ImageNet, matching a supervised ResNet-50. Fine-tuned on only 1% of the labels, it gets 85.8% top-5 accuracy, which they say outperforms AlexNet with 100 times fewer labels.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SimCLR (Chen, Kornblith, Norouzi and Hinton, 2020)"
+  stats={[
+    { value: '76.5%', label: 'Top-1 ImageNet accuracy from self-supervised features and a linear classifier' },
+    { value: '85.8%', label: 'Top-5 accuracy with only 1% of the labels' },
+    { value: '100x', label: 'Fewer labels than AlexNet, per the authors' },
+  ]}
+  winner="The abstract: “A linear classifier trained on self-supervised representations learned by SimCLR achieves 76.5% top-1 accuracy… matching the performance of a supervised ResNet-50.”"
+  takeaway="If you can invent a task whose answer is hiding in the data, you can learn from data nobody labeled."
+  source={{
+    text: 'Chen, Kornblith, Norouzi and Hinton, “A Simple Framework for Contrastive Learning of Visual Representations”, 2020. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2002.05709',
+  }}
+/>
+
+**Real definition:** a family of techniques for converting an unsupervised machine learning problem into a supervised machine learning problem by creating surrogate labels from unlabeled examples. [Google’s glossary: self-supervised learning ↗](https://developers.google.com/machine-learning/glossary#self-supervised-learning)
+
+---
+
+## Sentiment Analysis: Was the Review Happy?
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Our app has fifty thousand reviews. Are people happy?' },
+    { who: 'sriku', text: 'That is sentiment analysis: using statistical or machine learning algorithms to determine a group’s overall attitude, positive or negative, toward a service, product, organization or topic. Google’s example is student feedback on a university course.' },
+    { who: 'sundu', text: 'Can’t I just count nice words?' },
+    { who: 'sriku', text: 'People tried exactly that, and we have numbers.' },
+  ]}
+/>
+
+<Gif
+  name="sentiment-analysis"
+  alt="A toy review is split into words, with wonderful marked positive and boring marked negative, which is a tie. Below, bars compare accuracy: two hand-made word lists reach 58 percent and 64 percent, and the best trained classifier reaches 82.9 percent."
+  caption="Fig. 124: A toy review, and the paper’s accuracy numbers."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where do the numbers come from?' },
+    { who: 'sriku', text: 'Pang, Lee and Vaithyanathan, in a 2002 paper called Thumbs up? They classified movie reviews as positive or negative, using 700 positive and 700 negative reviews. Two sets of positive and negative words chosen by people reached accuracies of 58% and 64%, and a lot of reviews were ties.' },
+    { who: 'cherry', text: 'And the learned classifiers?' },
+    { who: 'sriku', text: 'Naive Bayes, maximum entropy and support vector machines. The abstract says these standard techniques definitively outperform human-produced baselines, and the best accuracies in their three-fold cross-validation table reach about 82.9%.' },
+    { who: 'sundu', text: 'Perfect, then.' },
+    { who: 'sriku', text: 'Far from it. They also conclude that these methods do not do as well on sentiment as on traditional topic-based categorization, and they examine what makes the problem harder.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Thumbs up? Sentiment Classification using Machine Learning Techniques (Pang, Lee and Vaithyanathan, 2002)"
+  stats={[
+    { value: '700 + 700', label: 'Positive and negative movie reviews used' },
+    { value: '58% / 64%', label: 'Accuracy of the two human-made word lists' },
+    { value: '82.9%', label: 'Best accuracy in the paper’s cross-validation table' },
+  ]}
+  winner="The abstract: “standard machine learning techniques definitively outperform human-produced baselines.”"
+  takeaway="Sentiment is harder than topic. Learn from labeled examples instead of hand-picking happy words."
+  source={{
+    text: 'Pang, Lee and Vaithyanathan, “Thumbs up? Sentiment Classification using Machine Learning Techniques”, EMNLP 2002. Free on arXiv.',
+    href: 'https://arxiv.org/abs/cs/0205070',
+  }}
+/>
+
+**Real definition:** using statistical or machine learning algorithms to determine a group’s overall attitude, positive or negative, toward a service, product, organization or topic. [Google’s glossary: sentiment analysis ↗](https://developers.google.com/machine-learning/glossary#sentiment-analysis)
+
+---
+
+## SQuAD: Find the Answer in the Passage
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I test whether a model really reads a passage?' },
+    { who: 'sriku', text: 'With SQuAD, the Stanford Question Answering Dataset. Its questions come from people posing questions about Wikipedia articles. Google adds that some questions intentionally have no answer, so you can test both whether a model answers what it can and whether it admits when it cannot.' },
+    { who: 'sundu', text: 'Where is it from?' },
+    { who: 'sriku', text: 'The paper SQuAD: 100,000+ Questions for Machine Comprehension of Text, by Rajpurkar, Zhang, Lopyrev and Liang.' },
+  ]}
+/>
+
+<Gif
+  name="squad"
+  alt="A toy passage says chai is a spiced tea drink that originated in the Indian subcontinent. The question asks where chai originated, and the answer span the Indian subcontinent is highlighted. Bars show the paper's F1 scores: 20 percent for a simple baseline, 51.0 percent for logistic regression and 86.8 percent for humans. The passage is a toy example."
+  caption="Fig. 125: A toy passage, with the dataset paper’s F1 scores."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How is it built?' },
+    { who: 'sriku', text: 'The first version has 100,000+ questions posed by crowdworkers on a set of Wikipedia articles, where the answer to each question is a segment of text from the passage.' },
+    { who: 'cherry', text: 'How hard did they say it was?' },
+    { who: 'sriku', text: 'They built a strong logistic regression model with an F1 score of 51.0%, a significant improvement over a simple baseline of 20%. Human performance was 86.8%, which they said showed the dataset is a good challenge problem.' },
+    { who: 'sundu', text: 'And then?' },
+    { who: 'sriku', text: 'Part M’s BERT reported a SQuAD v1.1 test F1 of 93.2, above that 86.8 human figure from the dataset paper. A benchmark’s headroom does not last.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SQuAD: 100,000+ Questions for Machine Comprehension of Text (Rajpurkar et al., 2016)"
+  stats={[
+    { value: '100,000+', label: 'Questions on Wikipedia passages' },
+    { value: '51.0%', label: 'F1 of the authors’ logistic regression model' },
+    { value: '86.8%', label: 'F1 of human performance' },
+  ]}
+  winner="The abstract: “human performance (86.8%) is much higher, indicating that the dataset presents a good challenge problem for future research.”"
+  takeaway="A good benchmark starts with a gap. Watch how fast the gap closes, and ask what the benchmark was really measuring."
+  source={{
+    text: 'Rajpurkar, Zhang, Lopyrev and Liang, “SQuAD: 100,000+ Questions for Machine Comprehension of Text”, 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1606.05250',
+  }}
+/>
+
+**Real definition:** an acronym for Stanford Question Answering Dataset, introduced in the paper SQuAD: 100,000+ Questions for Machine Comprehension of Text. [Google’s glossary: SQuAD ↗](https://developers.google.com/machine-learning/glossary#squad)
+
+---
+
+## Subword Token: No Word Is Too Rare to Spell
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My translation model panics on rare words and names.' },
+    { who: 'sriku', text: 'Use subword tokens. A subword token is a token that is a substring of a word, which may be the whole word. Google’s example splits itemize into item and ize, each with its own token, while a common word like going may stay a single token.' },
+    { who: 'sundu', text: 'So a rare word becomes pieces of common words.' },
+    { who: 'sriku', text: 'Yes. The language model operates on the word’s more common constituent parts, such as prefixes and suffixes.' },
+  ]}
+/>
+
+<Gif
+  name="subword-token"
+  alt="Four toy words, low, lower, newest and widest, start as single characters. The most frequent neighbouring pair is merged step by step, forming es, then est, then est with an end marker, then lo, then low. A caption notes the paper's gains of 1.1 and 1.3 BLEU. The corpus is the small example used in the paper."
+  caption="Fig. 126: A tiny corpus. Merge the most frequent pair, repeat."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How did it enter translation?' },
+    { who: 'sriku', text: 'Sennrich, Haddow and Birch pointed out that neural machine translation usually has a fixed vocabulary, but translation is an open-vocabulary problem. They encode rare and unknown words as sequences of subword units, with a segmentation based on the byte pair encoding compression algorithm.' },
+    { who: 'cherry', text: 'Why would that work?' },
+    { who: 'sriku', text: 'The intuition is that many word classes are translatable via smaller units: names via character copying, compounds via compositional translation, and cognates and loanwords via phonological and morphological transformations.' },
+    { who: 'sundu', text: 'And the gain?' },
+    { who: 'sriku', text: 'Subword models improved over a back-off dictionary baseline on the WMT 15 tasks by 1.1 BLEU for English-German and 1.3 BLEU for English-Russian.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Neural Machine Translation of Rare Words with Subword Units (Sennrich, Haddow and Birch, 2015)"
+  stats={[
+    { value: '+1.1 BLEU', label: 'English to German, WMT 15, over a back-off dictionary' },
+    { value: '+1.3 BLEU', label: 'English to Russian, WMT 15' },
+  ]}
+  winner="The abstract: “making the NMT model capable of open-vocabulary translation by encoding rare and unknown words as sequences of subword units.”"
+  takeaway="Do not give every rare word its own slot. Spell it from pieces the model already knows."
+  source={{
+    text: 'Sennrich, Haddow and Birch, “Neural Machine Translation of Rare Words with Subword Units”, 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1508.07909',
+  }}
+/>
+
+**Real definition:** in language models, a token that is a substring of a word, which may be the entire word. [Google’s glossary: subword token ↗](https://developers.google.com/machine-learning/glossary#subword-token)
+
+---
+
+## SuperGLUE: The Benchmark That Replaced a Too-Easy One
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I rate a language model with one score instead of twenty?' },
+    { who: 'sriku', text: 'SuperGLUE is an ensemble of datasets for rating an LLM’s overall ability to understand and generate text. It combines BoolQ, CB, COPA, MultiRC, ReCoRD, RTE, WiC and WSC.' },
+    { who: 'sundu', text: 'Why the name?' },
+    { who: 'sriku', text: 'The paper is called SuperGLUE: A Stickier Benchmark for General-Purpose Language Understanding Systems. It follows GLUE, which came out a little over a year earlier.' },
+  ]}
+/>
+
+<Gif
+  name="superglue"
+  alt="Eight task boxes, BoolQ, CB, COPA, MultiRC, ReCoRD, RTE, WiC and WSC, appear in two rows. Below, bars compare benchmark average scores on the test sets: 47.1 for the most frequent class, 69.0 for a BERT baseline and 89.8 for the human estimate."
+  caption="Fig. 127: Eight tasks, and the gap the paper reported."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What was wrong with GLUE?' },
+    { who: 'sriku', text: 'By the authors’ account, performance on GLUE had recently surpassed the level of non-expert humans, which suggested little headroom for further research. So Wang and colleagues built a benchmark with a new set of more difficult tasks, a software toolkit and a public leaderboard.' },
+    { who: 'cherry', text: 'How big was the gap at the start?' },
+    { who: 'sriku', text: 'On the test sets, their BERT baseline averaged 69.0, and a stronger BERT variant averaged 71.5. The human estimate was 89.8.' },
+    { who: 'sundu', text: 'Some of those tasks are our old friends.' },
+    { who: 'sriku', text: 'ReCoRD, WiC and the Winograd Schema Challenge are all in it. Part W has the Winograd one.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SuperGLUE (Wang et al., 2019)"
+  stats={[
+    { value: '8', label: 'Language understanding tasks' },
+    { value: '69.0 vs 89.8', label: 'BERT baseline versus human estimate, benchmark average on the test sets' },
+  ]}
+  winner="The paper: GLUE performance “has recently surpassed the level of non-expert humans, suggesting limited headroom for further research.”"
+  takeaway="Benchmarks wear out. When the models catch the humans, someone has to build a harder test."
+  source={{
+    text: 'Wang et al., “SuperGLUE: A Stickier Benchmark for General-Purpose Language Understanding Systems”, 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1905.00537',
+  }}
+/>
+
+**Real definition:** an ensemble of datasets for rating an LLM’s overall ability to understand and generate text, consisting of BoolQ, CB, COPA, MultiRC, ReCoRD, RTE, WiC and WSC. [Google’s glossary: SuperGLUE ↗](https://developers.google.com/machine-learning/glossary#superglue)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Self-supervised learning | The data makes its own labels | Create surrogate labels from unlabeled examples |
+| Sentiment analysis | Was the review happy? | Find the positive or negative attitude in text |
+| SQuAD | Find the answer in the passage | A reading-comprehension question set on Wikipedia |
+| Subword token | No word is too rare to spell | A token that is a piece of a word |
+| SuperGLUE | The stickier benchmark | Eight harder language understanding tasks |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Nineteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 7 more letters, from T to Z. Y is empty, so that is 6 more parts.' },
+    { who: 'sundu', text: 'T has temperature, and I am hoping for TPUs.' },
+    { who: 'sriku', text: 'And T5, transfer learning and tree-of-thought prompting. Bring the notebook.' },
+  ]}
+/>
+
+[← Part R: From Random Forests to ROUGE](/writing/ml-glossary-r) · [Part T: From T5 to Tree of Thought →](/writing/ml-glossary-t)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy cats, review, passage, merges and benchmark layout are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

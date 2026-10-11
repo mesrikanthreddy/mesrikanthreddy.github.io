@@ -1,0 +1,241 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part V: From Vanishing Gradients to Vibe Coding',
+  subtitle: 'Week twenty-two at the chai stall: four machine learning terms, a 152-layer network, and a stopwatch that disagreed with the vibes.',
+  type: 'Meme Feast',
+  date: '2026-10-28',
+  excerpt:
+    'Four machine learning terms starting with V, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 22,
+}
+
+Twenty-second Saturday. Sundu has been promising to behave during the vibe coding section, and Cherry has her doubts.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part U](/writing/ml-glossary-u). The V section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) has 10 entries. I picked four. The Fundamentals page has validation entries from this letter, but none of my four are on it.
+
+<Poster
+  badge="Part V · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Four terms. Two friends. One stopwatch."
+  rating="10/10 · bench reserved"
+  stats={['4 terms', '4 animations', '4 real cases', '152 layers']}
+/>
+
+---
+
+## Vanishing Gradient Problem: Give the Signal a Shortcut
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I made my network deeper and it got worse, not better.' },
+    { who: 'sriku', text: 'One possible culprit is the vanishing gradient problem: the tendency for the gradients of early hidden layers of some deep networks to become surprisingly flat. Smaller and smaller gradients mean smaller and smaller weight changes, so there is little or no learning in those layers. Part L’s LSTM cells address it for recurrent networks.' },
+    { who: 'sundu', text: 'And the opposite is the cliff in Part E.' },
+    { who: 'sriku', text: 'Yes, the exploding gradient problem is its mirror image.' },
+  ]}
+/>
+
+<Gif
+  name="vanishing-gradient"
+  alt="Two bar charts show the size of the gradient at each of ten layers, from the output on the left to the input on the right. In a plain deep network the bars shrink rapidly towards zero. In a network with skip connections the bars stay almost the same height. The values are toy numbers."
+  caption="Fig. 136: Toy gradients. A shortcut keeps the early layers in the conversation."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What fixed deep networks, then?' },
+    { who: 'sriku', text: 'The best-known answer is the residual network, ResNet, by He, Zhang, Ren and Sun. Their opening line is that deeper neural networks are more difficult to train. They reformulate the layers as learning residual functions with reference to the layer inputs, and show these networks are easier to optimize and can gain accuracy from considerably increased depth.' },
+    { who: 'cherry', text: 'How deep?' },
+    { who: 'sriku', text: 'Up to 152 layers on ImageNet, which is 8 times deeper than VGG nets with lower complexity. An ensemble of residual nets achieved 3.57% error on the ImageNet test set and won first place in the ILSVRC 2015 classification task. They also analysed CIFAR-10 with 100 and 1000 layers.' },
+    { who: 'sundu', text: 'So skip connections cure vanishing gradients.' },
+    { who: 'sriku', text: 'Careful. The paper itself says the vanishing and exploding gradient problem has been largely addressed by normalized initialization and intermediate normalization layers, like Part N’s batch normalization. What it tackles is a different problem it calls degradation: as depth grows, accuracy saturates and then degrades rapidly, and it says that is not caused by overfitting. My animation is a toy picture of the shortcut idea, not a claim about their experiment.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Deep Residual Learning for Image Recognition (He et al., 2015)"
+  stats={[
+    { value: '152', label: 'Layers, 8x deeper than VGG nets, with lower complexity' },
+    { value: '3.57%', label: 'Ensemble error on the ImageNet test set' },
+    { value: '1st', label: 'Place in the ILSVRC 2015 classification task' },
+  ]}
+  winner="The abstract: “these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.”"
+  takeaway="Depth only helps if the network can still be trained. Shortcuts make very deep networks trainable."
+  source={{
+    text: 'He, Zhang, Ren and Sun, “Deep Residual Learning for Image Recognition”, 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1512.03385',
+  }}
+/>
+
+**Real definition:** the tendency for the gradients of early hidden layers of some deep neural networks to become surprisingly flat (low). Increasingly lower gradients result in increasingly smaller changes to the weights on nodes in a deep neural network, leading to little or no learning. [Google’s glossary: vanishing gradient problem ↗](https://developers.google.com/machine-learning/glossary#vanishing-gradient-problem)
+
+---
+
+## Variable Importances: Handle With Care
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My random forest gave me a ranked list of features. Can I just drop the ones at the bottom?' },
+    { who: 'sriku', text: 'Variable importances are a set of scores that indicate the relative importance of each feature to the model. Google’s example is a decision tree for house prices, with size scoring 5.8, style 4.7 and age 2.5, so size matters most to that tree. The glossary adds that different variable importance metrics exist.' },
+    { who: 'sundu', text: 'Are the scores always trustworthy?' },
+    { who: 'sriku', text: 'Not always, and there is a paper about it.' },
+  ]}
+/>
+
+<Gif
+  name="variable-importances"
+  alt="Four bars show toy importance scores from a random forest. A truly informative binary variable scores 0.52, a pure-noise variable with 20 categories scores 0.78, a pure-noise continuous variable scores 0.55 and a pure-noise binary variable scores 0.12. A caption notes that measures can be unreliable when variables vary in scale or number of categories. The scores are a toy example."
+  caption="Fig. 137: Toy scores. A noisy variable with many categories can outscore the real signal."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What did the paper find?' },
+    { who: 'sriku', text: 'Strobl, Boulesteix, Zeileis and Hothorn, in BMC Bioinformatics in 2007. They show that random forest variable importance measures are a sensible means of variable selection in many applications, but are not reliable when potential predictors vary in their scale of measurement or their number of categories.' },
+    { who: 'cherry', text: 'How bad is unreliable?' },
+    { who: 'sriku', text: 'In their simulation studies, the results were misleading, because suboptimal predictor variables could be artificially preferred in variable selection. They traced it to two mechanisms: biased variable selection in the individual trees, and effects of bootstrap sampling with replacement.' },
+    { who: 'sundu', text: 'Is there a fix?' },
+    { who: 'sriku', text: 'They propose an alternative implementation of random forests that provides unbiased variable selection in the trees. Used with subsampling without replacement, the importance measures can be used reliably even when predictors vary in scale or number of categories. My animation uses made-up numbers, only to show the direction of the bias.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Bias in random forest variable importance measures (Strobl et al., 2007)"
+  stats={[
+    { value: '2', label: 'Mechanisms behind the bias: tree-level variable selection and bootstrap sampling' },
+    { value: 'Unbiased', label: 'Importances with the proposed forests and subsampling without replacement' },
+  ]}
+  winner="The abstract: when variable types differ, “the results are misleading because suboptimal predictor variables may be artificially preferred in variable selection.”"
+  takeaway="A ranked importance list is a hint, not a verdict. Check how your features differ in type and number of categories before you trust it."
+  source={{
+    text: 'Strobl, Boulesteix, Zeileis and Hothorn, “Bias in random forest variable importance measures: illustrations, sources and a solution”, BMC Bioinformatics 8, 2007. Open access.',
+    href: 'https://doi.org/10.1186/1471-2105-8-25',
+  }}
+/>
+
+**Real definition:** a set of scores that indicates the relative importance of each feature to the model. [Google’s glossary: variable importances ↗](https://developers.google.com/machine-learning/glossary#variable-importances)
+
+---
+
+## Variational Autoencoder (VAE): Blur the Code, Get New Samples
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The autoencoder from Part A squeezes an image into a code and rebuilds it. Can I use it to make new images?' },
+    { who: 'sriku', text: 'That is what a variational autoencoder, a VAE, is for. Google describes it as a type of autoencoder that leverages the discrepancy between inputs and outputs to generate modified versions of the inputs. It is useful for generative AI and is based on variational inference, a technique for estimating the parameters of a probability model.' },
+    { who: 'sundu', text: 'What is different from a plain autoencoder?' },
+    { who: 'sriku', text: 'The encoder does not output a single code. It outputs a description of a small cloud of codes, a mean and a spread, and the decoder works from a random sample from that cloud.' },
+  ]}
+/>
+
+<Gif
+  name="vae"
+  alt="A toy digit 7 enters an encoder, which outputs a mean and a spread. Random samples scatter around the mean in a latent space panel. A decoder then rebuilds an image from one sample. A caption says the noise trick makes the sampling step trainable with ordinary stochastic gradient descent. The picture is a toy illustration."
+  caption="Fig. 138: Toy picture. Encode to a cloud, sample from it, decode."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did VAEs come from?' },
+    { who: 'sriku', text: 'Kingma and Welling, in Auto-Encoding Variational Bayes. They ask how to do efficient inference and learning in directed probabilistic models with continuous latent variables whose posteriors are intractable, on large datasets.' },
+    { who: 'cherry', text: 'What was their contribution?' },
+    { who: 'sriku', text: 'Two things. A reparameterization of the variational lower bound that yields an estimator you can optimize with standard stochastic gradient methods, and an approximate inference model, also called a recognition model, fitted to the intractable posterior using that estimator.' },
+    { who: 'sundu', text: 'The reparameterization is the noise trick?' },
+    { who: 'sriku', text: 'In practice, yes: write the sample as the mean plus the spread times random noise, so the randomness sits outside the network and gradients can flow through the rest. The abstract is theoretical, so I am not quoting a headline number for this one.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Auto-Encoding Variational Bayes (Kingma and Welling, 2013)"
+  stats={[
+    { value: '2', label: 'Contributions: a reparameterized lower bound and a recognition model' },
+    { value: 'Large datasets', label: 'The setting the algorithm is designed to scale to' },
+  ]}
+  winner="The abstract: “a reparameterization of the variational lower bound yields a lower bound estimator that can be straightforwardly optimized using standard stochastic gradient methods.”"
+  takeaway="Make the randomness an input rather than a step inside the network, and a generative model becomes trainable with the usual tools."
+  source={{
+    text: 'Kingma and Welling, “Auto-Encoding Variational Bayes”, 2013. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1312.6114',
+  }}
+/>
+
+**Real definition:** a type of autoencoder that leverages the discrepancy between inputs and outputs to generate modified versions of the inputs. Variational autoencoders are useful for generative AI. [Google’s glossary: variational autoencoder (VAE) ↗](https://developers.google.com/machine-learning/glossary#variational-autoencoder-vae)
+
+---
+
+## Vibe Coding: It Felt Fast. The Clock Disagreed.
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My teammate says they built the whole checkout page by describing it to a model and accepting everything.' },
+    { who: 'sriku', text: 'That is vibe coding. Google’s glossary defines it as prompting a generative AI model to create software: your prompts describe the software’s purpose and features, and the model translates them into source code. The generated code does not always match your intentions, so it usually takes iteration.' },
+    { who: 'sundu', text: 'Who named it?' },
+    { who: 'sriku', text: 'Andrej Karpathy, in an X post describing it as a new kind of coding where you fully give in to the vibes. The glossary says the term originally implied an intentionally loose approach where you might not even examine the generated code, and that it has since come to mean almost any AI-generated coding.' },
+  ]}
+/>
+
+<Gif
+  name="vibe-coding"
+  alt="A small terminal box shows a prompt asking a model to make a checkout page work, then a note that 214 lines were generated and accepted without review. Three bars compare speed: developers predicted AI would make them 24 percent faster, felt 20 percent faster afterwards, and were measured 19 percent slower. A caption names the METR trial. The terminal text is a toy illustration; the percentages are from the study."
+  caption="Fig. 139: The terminal is a cartoon. The three percentages are from the study."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there any real measurement of how this feels versus how it performs?' },
+    { who: 'sriku', text: 'The nearest thing is a randomized controlled trial by Becker, Rush, Barnes and Rein at METR. Sixteen experienced open-source developers completed 246 tasks in mature projects they had worked on for about five years on average. Each task was randomly assigned to allow or disallow early-2025 AI tools, mostly Cursor Pro with Claude 3.5 and 3.7 Sonnet.' },
+    { who: 'cherry', text: 'And what happened?' },
+    { who: 'sriku', text: 'Before starting, developers forecast that AI would reduce completion time by 24%. Afterwards they estimated it had reduced it by 20%. The measured result was that allowing AI increased completion time by 19%. Economics experts had predicted 39% shorter and machine learning experts 38% shorter.' },
+    { who: 'sundu', text: 'So vibe coding is slow.' },
+    { who: 'sriku', text: 'No, and I want to be precise. This trial studied experienced developers working on familiar code with AI assistance, not people vibe coding without review. It says nothing about novices or about prototypes, and tools have changed since early 2025. What it does show is that how fast something feels is not a measurement.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity (Becker, Rush, Barnes and Rein, METR, 2025)"
+  stats={[
+    { value: '24% / 20%', label: 'Faster, as forecast before and estimated after the tasks' },
+    { value: '19% slower', label: 'Measured completion time with AI allowed' },
+    { value: '246', label: 'Tasks across 16 experienced developers' },
+  ]}
+  winner="The abstract: “Surprisingly, we find that allowing AI actually increases completion time by 19%—AI tooling slowed developers down.”"
+  takeaway="Time your own work with and without the tool. Feeling productive and being productive are separate questions."
+  source={{
+    text: 'Becker, Rush, Barnes and Rein, METR, 2025. Free on arXiv. A study of AI-assisted coding by experienced developers, not of vibe coding specifically.',
+    href: 'https://arxiv.org/abs/2507.09089',
+  }}
+/>
+
+**Real definition:** prompting a generative AI model to create software. That is, your prompts describe the software’s purpose and features, which a generative AI model translates into source code. The generated code doesn’t always match your intentions, so vibe coding usually requires iteration. [Google’s glossary: vibe coding ↗](https://developers.google.com/machine-learning/glossary#vibe-coding)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Vanishing gradient problem | Give the signal a shortcut | Early layers get tiny gradients and barely learn |
+| Variable importances | Handle with care | Scores for how much each feature matters |
+| Variational autoencoder | Blur the code, get new samples | An autoencoder that samples a latent cloud |
+| Vibe coding | It felt fast, the clock disagreed | Describe software to a model and iterate |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty-two weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 4 more letters, from W to Z. Y is empty, so that is 3 more parts.' },
+    { who: 'sundu', text: 'W has Winograd schemas and a wise crowd.' },
+    { who: 'sriku', text: 'And Wasserstein loss, WALS and word embeddings. Bring the notebook.' },
+  ]}
+/>
+
+[← Part U: From Undersampling to Unsupervised Learning](/writing/ml-glossary-u) · [Part W: From Wasserstein Loss to Word Embeddings →](/writing/ml-glossary-w)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy gradients, importance scores, digit and terminal are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

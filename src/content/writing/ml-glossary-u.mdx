@@ -1,0 +1,194 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part U: From Undersampling to Unsupervised Learning',
+  subtitle: 'Week twenty-one at the chai stall: three machine learning terms, a sentence that needs the words on its right, and a network that found faces without being told what a face is.',
+  type: 'Meme Feast',
+  date: '2026-10-27',
+  excerpt:
+    'Three machine learning terms starting with U, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 21,
+}
+
+Twenty-first Saturday. U is a short section, so the flask lasted longer than the story.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part T](/writing/ml-glossary-t). The U section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) has 13 entries. I picked three: undersampling, unidirectional language model and unsupervised machine learning. The last is also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#unsupervised-machine-learning), as is underfitting, which I left out because I had no case for it I could verify.
+
+<Poster
+  badge="Part U · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Three terms. Two friends. No labels at all."
+  rating="10/10 · bench reserved"
+  stats={['3 terms', '3 animations', '3 real cases', '16,000 cores']}
+/>
+
+---
+
+## Undersampling: Let the Crowd Shrink
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Last time I oversampled the rare class. What if I go the other way?' },
+    { who: 'sriku', text: 'That is undersampling: removing examples from the majority class in a class-imbalanced dataset to create a more balanced training set. Google’s example has a 20:1 ratio. You keep all the minority examples and only a tenth of the majority, which gives a 2:1 ratio.' },
+    { who: 'sundu', text: 'Is that always an improvement?' },
+    { who: 'sriku', text: 'The glossary says it might produce a better model, or the balanced set might contain too few examples to train an effective one. If you do downsample, upweighting applies a weight to the downsampled class equal to the factor by which you downsampled.' },
+  ]}
+/>
+
+<Gif
+  name="undersampling"
+  alt="A scatter plot has many blue majority dots and a handful of red minority dots. The blue dots are removed at random until about as few remain as the red ones. A caption cites the SMOTE authors' note that under-sampling the majority raises sensitivity to the minority class. The data is a toy example."
+  caption="Fig. 133: Toy data. Remove common examples until the classes balance."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Do the SMOTE authors from Part O say anything about this?' },
+    { who: 'sriku', text: 'Yes, it is the other half of their paper. Chawla and colleagues note that under-sampling of the majority class has been proposed as a good means of increasing the sensitivity of a classifier to the minority class.' },
+    { who: 'cherry', text: 'And their own claim?' },
+    { who: 'sriku', text: 'That combining their over-sampling of the minority class with under-sampling of the majority class achieves better performance in ROC space than only under-sampling the majority class.' },
+    { who: 'sundu', text: 'So neither trick has to work alone.' },
+    { who: 'sriku', text: 'Right. Use whichever mix you can defend, and then check precision and recall as well as ROC, as in Part P.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Under-sampling and over-sampling together (Chawla, Bowyer, Hall and Kegelmeyer, 2002)"
+  stats={[
+    { value: '20:1 to 2:1', label: 'Class ratio in Google’s undersampling example' },
+    { value: 'Both', label: 'A mix of over-sampling and under-sampling beat under-sampling alone in ROC space' },
+  ]}
+  winner="The abstract: “Under-sampling of the majority (normal) class has been proposed as a good means of increasing the sensitivity of a classifier to the minority class.”"
+  takeaway="Shrinking the common class helps the rare one get noticed, but you pay in lost data. Combine it with other fixes and measure."
+  source={{
+    text: 'Chawla, Bowyer, Hall and Kegelmeyer, “SMOTE: Synthetic Minority Over-sampling Technique”, Journal of Artificial Intelligence Research 16, 2002. Free on arXiv. The same paper as Part O.',
+    href: 'https://arxiv.org/abs/1106.1813',
+  }}
+/>
+
+**Real definition:** removing examples from the majority class in a class-imbalanced dataset in order to create a more balanced training set. Contrast with oversampling. [Google’s glossary: undersampling ↗](https://developers.google.com/machine-learning/glossary#undersampling)
+
+---
+
+## Unidirectional Language Model: Only Looking Left
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I type I went to the, and my keyboard guesses the next word. It does not know how my sentence ends.' },
+    { who: 'sriku', text: 'A unidirectional language model bases its probabilities only on the tokens that appear before the target token, not after it. The glossary contrasts it with a bidirectional language model.' },
+    { who: 'sundu', text: 'In I went to the blank to withdraw some money, the end of the sentence is the clue.' },
+    { who: 'sriku', text: 'Right. A model that only looks left has to guess before it sees to withdraw some money.' },
+  ]}
+/>
+
+<Gif
+  name="unidirectional"
+  alt="The sentence I went to the MASK to withdraw some money is shown with the masked word highlighted. Lines from the words before it show what a unidirectional model sees. Lines from the words after it show what a bidirectional model also sees. Two bars then compare SQuAD F1 scores from the BERT paper: 88.5 for the bidirectional BERT-base and 77.8 for a left-to-right model."
+  caption="Fig. 134: A unidirectional model sees only the left. BERT sees both sides."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it matter in numbers?' },
+    { who: 'sriku', text: 'The BERT paper from Part M ran an ablation. With the same base architecture, a left-to-right model trained without next-sentence prediction scored 77.8 F1 on SQuAD, against 88.5 for BERT-base. On the MRPC task its accuracy was 77.5% against 86.7%.' },
+    { who: 'cherry', text: 'Could they patch the left-to-right model?' },
+    { who: 'sriku', text: 'They added a randomly initialized BiLSTM on top, which raised SQuAD to 84.9. They say the results are still far worse than those of the pre-trained bidirectional models.' },
+    { who: 'sundu', text: 'Why not train a left model and a right model and glue them together?' },
+    { who: 'sriku', text: 'They note you could, as ELMo does, but it is twice as expensive as a single bidirectional model, and unintuitive for tasks like question answering where the right-to-left model cannot condition on the question.' },
+  ]}
+/>
+
+<CaseStudy
+  title="BERT ablation: left-to-right versus bidirectional (Devlin et al., Google AI Language, 2018)"
+  stats={[
+    { value: '88.5 vs 77.8', label: 'SQuAD F1: BERT-base versus a left-to-right model without next-sentence prediction' },
+    { value: '86.7 vs 77.5', label: 'MRPC accuracy for the same two models' },
+    { value: '84.9', label: 'SQuAD F1 after adding a BiLSTM to the left-to-right model' },
+  ]}
+  winner="The paper: the left-to-right results with a BiLSTM “are still far worse than those of the pre-trained bidirectional models.”"
+  takeaway="For understanding tasks, the words after the blank are evidence too. For writing the next word, a left-to-right model is the natural fit."
+  source={{
+    text: 'Devlin et al., “BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding”, 2018, Table 5. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1810.04805',
+  }}
+/>
+
+**Real definition:** a language model that bases its probabilities only on the tokens appearing before, not after, the target token(s). Contrast with bidirectional language model. [Google’s glossary: unidirectional language model ↗](https://developers.google.com/machine-learning/glossary#unidirectional-language-model)
+
+---
+
+## Unsupervised Machine Learning: Nobody Told It What a Face Is
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'What can a model learn when there are no labels at all?' },
+    { who: 'sriku', text: 'Unsupervised machine learning trains a model to find patterns in a dataset, typically an unlabeled one. The most common use is to cluster data into groups of similar examples, which is what K-means did in Part K. The resulting clusters can feed other algorithms, for example a music recommendation service.' },
+    { who: 'sundu', text: 'So the model invents its own categories.' },
+    { who: 'sriku', text: 'It finds structure. Whether the structure means anything is your job to check.' },
+  ]}
+/>
+
+<Gif
+  name="unsupervised"
+  alt="Grey dots with no labels are scattered on a plot. They gradually take on three colours as three groups appear on their own. A box at the side lists the facts from Le and colleagues: 10 million unlabeled images, 1 billion connections, 16,000 cores for 3 days, and a face detector that emerged. The dots are a toy example."
+  caption="Fig. 135: Toy dots. Groups appear without anyone providing labels."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there a big real example?' },
+    { who: 'sriku', text: 'Le, Ranzato, Monga, Devin, Chen, Corrado, Dean and Ng asked whether you can learn a face detector using only unlabeled images. They trained a 9-layer locally connected sparse autoencoder with pooling and local contrast normalization, with 1 billion connections, on 10 million 200x200 pixel images downloaded from the Internet.' },
+    { who: 'cherry', text: 'How much hardware?' },
+    { who: 'sriku', text: 'A cluster of 1,000 machines, 16,000 cores, for three days, using model parallelism and asynchronous SGD.' },
+    { who: 'sundu', text: 'And did it find faces?' },
+    { who: 'sriku', text: 'Yes. Contrary to what they call a widely held intuition, a face detector emerged without any image being labeled as containing a face or not. It was robust to translation, scaling and out-of-plane rotation, and the same network was also sensitive to cat faces and human bodies. Starting from those learned features, they trained for ImageNet classification and report 15.8% accuracy, a 70% relative improvement over the previous state of the art.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Building high-level features using large scale unsupervised learning (Le et al., 2012)"
+  stats={[
+    { value: '10 million', label: 'Unlabeled 200x200 images' },
+    { value: '16,000 cores', label: 'For three days, on 1,000 machines' },
+    { value: '15.8%', label: 'ImageNet accuracy after using the learned features, a 70% relative improvement' },
+  ]}
+  winner="The abstract: “it is possible to train a face detector without having to label images as containing a face or not.”"
+  takeaway="With enough unlabeled data and compute, a network can discover concepts for itself. Then you can ask it to do a labeled task with a head start."
+  source={{
+    text: 'Le, Ranzato, Monga, Devin, Chen, Corrado, Dean and Ng, “Building high-level features using large scale unsupervised learning”, ICML 2012. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1112.6209',
+  }}
+/>
+
+**Real definition:** training a model to find patterns in a dataset, typically an unlabeled dataset. The most common use of unsupervised machine learning is to cluster data into groups of similar examples. [Google’s glossary (Fundamentals): unsupervised machine learning ↗](https://developers.google.com/machine-learning/glossary/fundamentals#unsupervised-machine-learning)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Undersampling | Let the crowd shrink | Remove majority-class examples to balance classes |
+| Unidirectional language model | Only looking left | Predict from the tokens before, not after |
+| Unsupervised machine learning | Nobody told it what a face is | Find patterns in unlabeled data |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty-one weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 5 more letters, from V to Z. Y is empty, so that is 4 more parts.' },
+    { who: 'sundu', text: 'V has vibe coding. I have been waiting for that one.' },
+    { who: 'sriku', text: 'And variational autoencoders, the vanishing gradient problem and variable importances. It has a stopwatch in it.' },
+  ]}
+/>
+
+[← Part T: From T5 to Tree of Thought](/writing/ml-glossary-t) · [Part V: From Vanishing Gradients to Vibe Coding →](/writing/ml-glossary-v)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); unsupervised machine learning is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy scatter plots and sentence are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

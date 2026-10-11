@@ -77,6 +77,8 @@ const posts = postFiles.map((file) => {
 const staticRoutes = [
   { loc: `${SITE_URL}/`, priority: '1.0' },
   { loc: `${SITE_URL}/writing`, priority: '0.8' },
+  { loc: `${SITE_URL}/series/ml-glossary-a-to-z`, priority: '0.7' },
+  { loc: `${SITE_URL}/tasks`, priority: '0.7' },
 ]
 const postRoutes = posts
   .filter((post) => !post.isDraft)

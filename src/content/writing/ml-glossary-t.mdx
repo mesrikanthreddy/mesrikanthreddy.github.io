@@ -1,0 +1,288 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part T: From T5 to Tree of Thought',
+  subtitle: 'Week twenty at the chai stall: five machine learning terms, a chip built for one kind of maths, and a puzzle where thinking in a tree beats thinking in a line.',
+  type: 'Meme Feast',
+  date: '2026-10-26',
+  excerpt:
+    'Five machine learning terms starting with T, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 20,
+}
+
+Twentieth Saturday. T has 59 entries, and a startling number of them are about TPUs, so I skipped most of those.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part S](/writing/ml-glossary-s). This round covers the T section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 59 entries. I picked five. Several T entries, like training, training set and true positive, are on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals), but none of my five are.
+
+<Poster
+  badge="Part T · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. One chip."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '65,536 multipliers']}
+/>
+
+---
+
+## T5: Everything Is Text In, Text Out
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My team keeps a separate model for translation, summaries and classification. Is that normal?' },
+    { who: 'sriku', text: 'It used to be. T5 is a text-to-text transfer learning model introduced by Google AI. It is an encoder-decoder model based on the Transformer architecture, trained on an extremely large dataset, and the name comes from the five Ts in Text-to-Text Transfer Transformer.' },
+    { who: 'sundu', text: 'What does text-to-text mean for a classifier?' },
+    { who: 'sriku', text: 'Every task becomes a string in and a string out. The paper’s examples start with a task prefix, like translate English to German, or summarize, or cola sentence for checking whether a sentence is acceptable.' },
+  ]}
+/>
+
+<Gif
+  name="t5"
+  alt="A box on the left holds a text input starting with a task prefix, such as summarize or cola sentence. It feeds a single box labelled one text-to-text model, which outputs a short piece of text on the right. Three dots show the model cycling through three different tasks. A caption notes the C4 corpus of about 750 GB and models up to 11 billion parameters. The inputs and outputs are illustrative."
+  caption="Fig. 128: One model, one format, many tasks."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who built it, and how big was it?' },
+    { who: 'sriku', text: 'Raffel, Shazeer, Roberts, Lee and colleagues at Google. They introduced a unified framework that converts all text-based language problems into a text-to-text format, then systematically compared pre-training objectives, architectures, unlabeled datasets and transfer approaches.' },
+    { who: 'cherry', text: 'What did they train on?' },
+    { who: 'sriku', text: 'A new corpus they call the Colossal Clean Crawled Corpus, C4, about 750 GB of reasonably clean and natural English text. They trained models up to 11 billion parameters.' },
+    { who: 'sundu', text: 'And the result?' },
+    { who: 'sriku', text: 'By combining their insights with scale and C4 they report state-of-the-art results on many benchmarks covering summarization, question answering and text classification. They also released the dataset, pre-trained models and code.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer (Raffel et al., Google, 2019)"
+  stats={[
+    { value: '~750 GB', label: 'Of text in the C4 pre-training corpus' },
+    { value: '11 billion', label: 'Parameters in the largest models' },
+  ]}
+  winner="The abstract: “we explore the landscape of transfer learning techniques for NLP by introducing a unified framework that converts all text-based language problems into a text-to-text format.”"
+  takeaway="One input format, one loss, one model. That simplicity is what let them compare everything else fairly."
+  source={{
+    text: 'Raffel et al., “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1910.10683',
+  }}
+/>
+
+**Real definition:** a text-to-text transfer learning model introduced by Google AI in 2020. T5 is an encoder-decoder model, based on the Transformer architecture, trained on an extremely large dataset. [Google’s glossary: T5 ↗](https://developers.google.com/machine-learning/glossary#t5)
+
+---
+
+## Temperature: A Knob for Randomness
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The same prompt gives me different answers every time. Can I turn that down?' },
+    { who: 'sriku', text: 'Turn down the temperature. It is a hyperparameter that controls the degree of randomness of a model’s output. Higher temperatures give more random output and lower temperatures give less random output. The best value depends on the application.' },
+    { who: 'sundu', text: 'Where does the number go?' },
+    { who: 'sriku', text: 'In the softmax. You divide the model’s raw scores, the logits, by the temperature t before turning them into probabilities.' },
+  ]}
+/>
+
+<Gif
+  name="temperature"
+  alt="Five candidate next words for the phrase I would like a cup of are shown as bars. At a low temperature the top word has most of the probability. As the temperature rises the bars flatten until all five words have similar odds. The probabilities are a toy example."
+  caption="Fig. 129: Toy odds. Low temperature sharpens, high temperature flattens."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who studied what that does to text?' },
+    { who: 'sriku', text: 'Holtzman, Buys, Du, Forbes and Choi, in The Curious Case of Neural Text Degeneration. They note that even though likelihood works as a training objective, using it as a decoding objective leads to text that is bland and strangely repetitive. They find that decoding strategies alone can dramatically affect the quality of machine text, even from exactly the same model.' },
+    { who: 'cherry', text: 'And temperature?' },
+    { who: 'sriku', text: 'They write the softmax with the logits divided by the temperature t. Setting t between 0 and 1 skews the distribution towards high-probability events, which implicitly lowers the mass in the tail. They also note earlier analysis showing that lowering the temperature improves generation quality, but at the cost of decreasing diversity.' },
+    { who: 'sundu', text: 'So there is a tradeoff.' },
+    { who: 'sriku', text: 'Yes, and their own fix was a different one, nucleus sampling: sample from the dynamic nucleus of the probability distribution, truncating the unreliable tail while keeping diversity.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The Curious Case of Neural Text Degeneration (Holtzman et al., 2019)"
+  stats={[
+    { value: 't below 1', label: 'Skews the distribution toward high-probability words' },
+    { value: 'Quality up, diversity down', label: 'The tradeoff the paper notes for lowering temperature' },
+  ]}
+  winner="The abstract: “decoding strategies alone can dramatically effect the quality of machine text, even when generated from exactly the same neural language model.”"
+  takeaway="Temperature is a decoding choice, not a model change. It trades safety for variety, and you choose the point on that dial."
+  source={{
+    text: 'Holtzman, Buys, Du, Forbes and Choi, “The Curious Case of Neural Text Degeneration”, 2019. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1904.09751',
+  }}
+/>
+
+**Real definition:** a hyperparameter that controls the degree of randomness of a model’s output. Higher temperatures result in more random output, while lower temperatures result in less random output. [Google’s glossary: temperature ↗](https://developers.google.com/machine-learning/glossary#temperature)
+
+---
+
+## TPU: A Chip Built for One Kind of Maths
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Why would anyone build a new chip just for machine learning?' },
+    { who: 'sriku', text: 'A TPU, or Tensor Processing Unit, is an application-specific integrated circuit, an ASIC, that optimizes the performance of machine learning workloads. The glossary says these ASICs are deployed as multiple TPU chips on a TPU device.' },
+    { who: 'sundu', text: 'And what does it do better than a CPU?' },
+    { who: 'sriku', text: 'Matrix multiplication, a lot of it, in parallel. Google’s team wrote a paper comparing the first TPU with a contemporary CPU and GPU.' },
+  ]}
+/>
+
+<Gif
+  name="tpu"
+  alt="A toy 8 by 8 grid of multiply cells lights up in a diagonal wave. Text beside it lists the real chip's figures: 65,536 8-bit multiply-accumulate units, 92 trillion operations per second, 28 MiB of on-chip memory. A caption says it was about 15 to 30 times faster than its contemporary CPU or GPU on inference. The grid is a toy picture."
+  caption="Fig. 130: A toy 8 by 8 grid. The real chip’s matrix unit has 65,536 cells."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What does the paper report?' },
+    { who: 'sriku', text: 'Jouppi, Young, Patil, Patterson and colleagues evaluated a TPU deployed in Google datacenters since 2015, for the inference phase of neural networks. Its heart is a matrix multiply unit with 65,536 8-bit multiply-accumulate units, offering a peak of 92 teraops per second, with 28 MiB of software-managed on-chip memory.' },
+    { who: 'cherry', text: 'Compared with what?' },
+    { who: 'sriku', text: 'A server-class Intel Haswell CPU and an Nvidia K80 GPU, deployed in the same datacenters. Their workloads were production neural-network applications, MLPs, CNNs and LSTMs, representing 95% of the datacenters’ inference demand.' },
+    { who: 'sundu', text: 'And the result?' },
+    { who: 'sriku', text: 'Despite low utilization for some applications, the TPU was on average about 15 to 30 times faster than its contemporary GPU or CPU, with TOPS per watt about 30 to 80 times higher. It is a 2017 result for a 2015 chip, and for inference only, so it says nothing about today’s hardware.' },
+  ]}
+/>
+
+<CaseStudy
+  title="In-Datacenter Performance Analysis of a Tensor Processing Unit (Jouppi et al., 2017)"
+  stats={[
+    { value: '65,536', label: '8-bit multiply-accumulate units in the matrix unit' },
+    { value: '15x to 30x', label: 'Faster on average than the contemporary CPU or GPU, for inference' },
+    { value: '30x to 80x', label: 'Higher TOPS per watt' },
+  ]}
+  winner="The abstract: “the TPU is on average about 15X - 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X - 80X higher.”"
+  takeaway="When you know the one job, you can drop everything the job does not need, and spend the silicon on the maths."
+  source={{
+    text: 'Jouppi et al., “In-Datacenter Performance Analysis of a Tensor Processing Unit”, ISCA 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1704.04760',
+  }}
+/>
+
+**Real definition:** an application-specific integrated circuit (ASIC) that optimizes the performance of machine learning workloads. These ASICs are deployed as multiple TPU chips on a TPU device. [Google’s glossary: Tensor Processing Unit (TPU) ↗](https://developers.google.com/machine-learning/glossary#tensor-processing-unit-tpu)
+
+---
+
+## Transfer Learning: Do Not Learn to See Twice
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have 2,000 labeled images of machine parts. A network needs millions to learn anything.' },
+    { who: 'sriku', text: 'Transfer learning is transferring information from one machine learning task to another. It can mean moving knowledge from a simpler task to a more complex one, or from a task with plenty of data to one with less.' },
+    { who: 'sundu', text: 'Which parts of the network carry over?' },
+    { who: 'sriku', text: 'A paper asked exactly that.' },
+  ]}
+/>
+
+<Gif
+  name="transfer-learning"
+  alt="A four-layer network trained on task A is shown with its early layers coloured green for general features and later layers coloured amber and red for specific ones. The first two layers are copied and locked into a new network for task B, and only its top two layers are retrained. A caption cites the paper's finding that transferring features from distant tasks beats random features."
+  caption="Fig. 131: Copy the general layers, retrain the specific ones."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who asked it?' },
+    { who: 'sriku', text: 'Yosinski, Clune, Bengio and Lipson, in How transferable are features in deep neural networks? They point out that many networks trained on natural images learn Gabor-like filters and color blobs in the first layer. Those features seem general rather than specific to a dataset or task.' },
+    { who: 'cherry', text: 'And later layers?' },
+    { who: 'sriku', text: 'Features must eventually become specific by the last layer. They find that transferability is hurt by two separate issues: higher-layer neurons specializing to their original task, which they expected, and optimization difficulties from splitting networks between co-adapted neurons, which they did not expect.' },
+    { who: 'sundu', text: 'Does it still help for a distant task?' },
+    { who: 'sriku', text: 'Transferability decreases as the distance between the tasks grows, but transferring features even from distant tasks can be better than using random features. They also find that initializing with transferred features can give a boost to generalization that lingers even after fine-tuning. Part F’s fine-tuning is this idea in daily use.' },
+  ]}
+/>
+
+<CaseStudy
+  title="How transferable are features in deep neural networks? (Yosinski et al., 2014)"
+  stats={[
+    { value: '2', label: 'Distinct issues that reduce transferability' },
+    { value: 'Better than random', label: 'Features transferred even from distant tasks' },
+  ]}
+  winner="The abstract: “transferring features even from distant tasks can be better than using random features.”"
+  takeaway="Early layers learn general edges and blobs, late layers learn specifics. Reuse the first, retrain the second."
+  source={{
+    text: 'Yosinski, Clune, Bengio and Lipson, “How transferable are features in deep neural networks?”, 2014. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1411.1792',
+  }}
+/>
+
+**Real definition:** transferring information from one machine learning task to another. [Google’s glossary: transfer learning ↗](https://developers.google.com/machine-learning/glossary#transfer-learning)
+
+---
+
+## Tree-of-Thought Prompting: Think, Backtrack, Think Again
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Chain of thought from Part C helps, but when the first step is wrong the whole answer is wrong.' },
+    { who: 'sriku', text: 'That is what tree-of-thought prompting addresses. Google describes it as a prompting strategy that encourages an LLM to pursue and refine the most promising intermediate solutions and abandon the rest. You divide a problem into branches, have the model evaluate each branch after each step, keep the promising ones, and backtrack if a promising branch fails.' },
+    { who: 'sundu', text: 'Like a person with a pencil crossing things out.' },
+    { who: 'sriku', text: 'Exactly like that.' },
+  ]}
+/>
+
+<Gif
+  name="tree-of-thought"
+  alt="A tree for the Game of 24 puzzle starts with the numbers 4, 9, 10 and 13. Three branches are shown. The branch taking 13 minus 9 and then 10 minus 4 leads to the numbers 4 and 6 and the answer 4 times 6 equals 24, shown in green. Two other branches are marked red because they cannot reach 24 and are pruned. A caption cites the paper's results of 4 percent for chain of thought and 74 percent for tree of thoughts."
+  caption="Fig. 132: A real Game of 24 instance. Prune the dead ends, keep the live branch."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who tested it?' },
+    { who: 'sriku', text: 'Yao, Yu, Zhao, Shafran, Griffiths, Cao and Narasimhan. Their Tree of Thoughts framework generalizes chain-of-thought prompting and lets a language model explore coherent units of text, called thoughts, as intermediate steps. The model considers multiple reasoning paths, self-evaluates its choices, and can look ahead or backtrack.' },
+    { who: 'cherry', text: 'On what tasks?' },
+    { who: 'sriku', text: 'Three new ones that need planning or search: Game of 24, Creative Writing and Mini Crosswords. In Game of 24 you combine four numbers with arithmetic to make 24.' },
+    { who: 'sundu', text: 'And the numbers?' },
+    { who: 'sriku', text: 'GPT-4 with chain-of-thought prompting solved only 4% of the Game of 24 tasks, while their method achieved a success rate of 74%. The branches in the animation are a real instance I checked by brute force: 4, 9, 10 and 13 can make 24 as 13 minus 9 is 4, 10 minus 4 is 6, and 4 times 6 is 24.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Tree of Thoughts: Deliberate Problem Solving with Large Language Models (Yao et al., 2023)"
+  stats={[
+    { value: '4%', label: 'Game of 24 tasks solved by GPT-4 with chain-of-thought prompting' },
+    { value: '74%', label: 'Solved with Tree of Thoughts' },
+    { value: '3', label: 'Tasks tested: Game of 24, Creative Writing, Mini Crosswords' },
+  ]}
+  winner="The abstract: “in Game of 24, while GPT-4 with chain-of-thought prompting only solved 4% of tasks, our method achieved a success rate of 74%.”"
+  takeaway="When a problem needs search, let the model explore and score several paths instead of committing to one."
+  source={{
+    text: 'Yao et al., “Tree of Thoughts: Deliberate Problem Solving with Large Language Models”, 2023. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2305.10601',
+  }}
+/>
+
+**Real definition:** a sophisticated prompting strategy that encourages an LLM to pursue and refine the most promising intermediate solutions and to abandon the rest. [Google’s glossary: tree-of-thought prompting (ToT) ↗](https://developers.google.com/machine-learning/glossary#tree-of-thought-prompting-tot)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| T5 | Everything is text in, text out | One Transformer model for many text tasks |
+| Temperature | A knob for randomness | Divide logits to sharpen or flatten the odds |
+| TPU | A chip built for one kind of maths | An ASIC for machine learning workloads |
+| Transfer learning | Do not learn to see twice | Reuse knowledge from one task on another |
+| Tree-of-thought prompting | Think, backtrack, think again | Explore and prune several reasoning paths |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 6 more letters, from U to Z. Y is empty, so that is 5 more parts.' },
+    { who: 'sundu', text: 'U is small. Underfitting, undersampling, unsupervised.' },
+    { who: 'sriku', text: 'U has 13 entries. Bring the notebook.' },
+  ]}
+/>
+
+[← Part S: From Self-Supervised Learning to SuperGLUE](/writing/ml-glossary-s) · [Part U: From Undersampling to Unsupervised Learning →](/writing/ml-glossary-u)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy task examples, word odds, chip grid and network pictures are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

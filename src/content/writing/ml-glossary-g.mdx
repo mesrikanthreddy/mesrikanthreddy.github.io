@@ -1,0 +1,489 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part G: From GAN to Guardrails',
+  subtitle: 'Week seven at the chai stall: nine machine learning terms, a forger and a detective, and a Valentine’s Day party that planned itself.',
+  type: 'Meme Feast',
+  date: '2026-10-13',
+  excerpt:
+    'Nine machine learning terms starting with G, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 7,
+}
+
+Seventh Saturday. The notebook is full, so Cherry has started a second one. Sundu has started handing out gold stars for good sources.
+
+New here? The earlier parts are [A](/writing/ml-glossary-a), [B](/writing/ml-glossary-b), [C](/writing/ml-glossary-c), [D](/writing/ml-glossary-d), [E](/writing/ml-glossary-e) and [F](/writing/ml-glossary-f). This round covers the G section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 33 entries. I picked nine. Two of them, generalization and ground truth, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals).
+
+<Poster
+  badge="Part G · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Nine terms. Two friends. A second notebook."
+  rating="10/10 · bench reserved"
+  stats={['9 terms', '9 animations', '9 real cases', '1 party that planned itself']}
+/>
+
+---
+
+## GAN: The Forger and the Detective
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do you teach a model to draw faces that do not exist?' },
+    { who: 'sriku', text: 'With a generative adversarial network, a GAN. Two models train against each other: a generator that makes fakes and a discriminator that tries to tell fakes from real examples.' },
+    { who: 'sundu', text: 'A forger and a detective.' },
+    { who: 'sriku', text: 'Each improves because of the other. The forger gets better fakes past the detective, and the detective gets better at spotting them.' },
+  ]}
+/>
+
+<Gif
+  name="gan"
+  alt="A generator box draws a picture that starts as colourful noise and slowly turns into a clear cat. A discriminator box first says fake, then says it cannot tell. A bar shows the detective's accuracy falling from 100 percent to 50 percent. The numbers are a toy example."
+  caption="Fig. 59: Toy numbers. The better the forger, the closer the detective gets to guessing."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who came up with it?' },
+    { who: 'sriku', text: 'Ian Goodfellow and colleagues, in 2014. They describe it as a minimax two-player game. The generator is trained to maximize the discriminator’s chance of making a mistake.' },
+    { who: 'cherry', text: 'What is the perfect ending?' },
+    { who: 'sriku', text: 'In theory, the generator recovers the training data distribution and the discriminator outputs 1/2 everywhere. It cannot tell, so it guesses.' },
+    { who: 'sundu', text: 'Did it get good at faces?' },
+    { who: 'sriku', text: 'Three years later, researchers at NVIDIA and Aalto University grew both networks progressively, starting at low resolution and adding layers. They produced CelebA face images at 1024 by 1024 and a record inception score of 8.80 on unsupervised CIFAR10.' },
+  ]}
+/>
+
+<CaseStudy
+  title="GANs, from idea to 1024×1024 faces (2014 to 2017)"
+  stats={[
+    { value: '1/2', label: 'What the discriminator outputs at the theoretical optimum' },
+    { value: '1024²', label: 'Resolution of generated CelebA images (ProGAN)' },
+    { value: '8.80', label: 'Record inception score, unsupervised CIFAR10 (2017)' },
+  ]}
+  winner="Goodfellow et al.: “The training procedure for G is to maximize the probability of D making a mistake.”"
+  takeaway="Competition made both networks better. Real data stayed on one side of the fence, fakes on the other."
+  source={[
+    {
+      text: 'Goodfellow et al., “Generative Adversarial Networks”, 2014. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1406.2661',
+    },
+    {
+      text: 'Karras, Aila, Laine and Lehtinen, “Progressive Growing of GANs for Improved Quality, Stability, and Variation”, 2017. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1710.10196',
+    },
+  ]}
+/>
+
+**Real definition:** a GAN is a system to create new data in which a generator creates data and a discriminator determines whether that created data is valid or invalid. [Google’s glossary: GAN ↗](https://developers.google.com/machine-learning/glossary#gan)
+
+---
+
+## Generalization: Learning, Not Memorising
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My model got 99% on the training set and a miserable score on new customers.' },
+    { who: 'sriku', text: 'It did not generalize. Generalization is a model’s ability to make correct predictions on new, previously unseen data, the opposite of overfitting.' },
+    { who: 'sundu', text: 'So the model that memorises is the worst student.' },
+    { who: 'sriku', text: 'Which makes this next result awkward. Big neural networks can memorise almost anything.' },
+  ]}
+/>
+
+<Gif
+  name="generalization"
+  alt="A graph with two lines over training time. The blue training accuracy climbs to 100 percent. The red accuracy on new data stays flat at the level of chance for ten classes. The curves are a toy sketch of the finding in the paper."
+  caption="Fig. 60: Toy sketch of a real finding. Perfect on training data, hopeless on new data."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Memorise how?' },
+    { who: 'sriku', text: 'Zhang and colleagues, with Google researchers among them, replaced the true labels of CIFAR10 and ImageNet with completely random ones. The networks still reached zero training error.' },
+    { who: 'cherry', text: 'And on new data?' },
+    { who: 'sriku', text: 'No better than random chance, which is the only possible outcome when labels carry no signal. The strange parts are that training time rose only by a small constant factor, and that the nets also fit images of pure random noise.' },
+    { who: 'sundu', text: 'So why do real models generalize at all?' },
+    { who: 'sriku', text: 'That is exactly the question the paper’s title raises. It says the old explanations do not account for it, and that rethinking is needed.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Understanding deep learning requires rethinking generalization (2017)"
+  stats={[
+    { value: '0', label: 'Training error on completely random labels' },
+    { value: 'Chance', label: 'Test accuracy on those random labels' },
+    { value: 'Small factor', label: 'Extra training time vs true labels' },
+  ]}
+  winner="The paper’s central finding: “Deep neural networks easily fit random labels.”"
+  takeaway="Fitting the training set is no proof of learning. Always judge a model on data it has not seen."
+  source={{
+    text: 'Zhang, Bengio, Hardt, Recht and Vinyals, “Understanding deep learning requires rethinking generalization”, ICLR 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1611.03530',
+  }}
+/>
+
+**Real definition:** a model’s ability to make correct predictions on new, previously unseen data. A model that can generalize is the opposite of a model that is overfitting. [Google’s glossary (Fundamentals): generalization ↗](https://developers.google.com/machine-learning/glossary/fundamentals#generalization)
+
+---
+
+## Generative Model: Make New Examples
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The GAN is one kind of generative model. What is the general idea?' },
+    { who: 'sriku', text: 'Practically speaking, a generative model does one of two things. It creates new examples that look like its training data, or it estimates how likely a new example is to have come from that data.' },
+    { who: 'sundu', text: 'Like writing poetry after reading a lot of poems.' },
+    { who: 'sriku', text: 'That is the first kind. The generator inside a GAN counts. So do diffusion models, which learn to turn noise into a picture one small step at a time.' },
+  ]}
+/>
+
+<Gif
+  name="generative-model"
+  alt="A grid of coloured noise gradually turns into a clear yellow smiley face as random squares settle one by one. A caption says it is a brand-new picture, not in the training set. The picture is a toy illustration of the idea."
+  caption="Fig. 61: A toy illustration of denoising, not a real model."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Any numbers?' },
+    { who: 'sriku', text: 'Ho, Jain and Abbeel’s 2020 paper on denoising diffusion probabilistic models. On the unconditional CIFAR10 benchmark they got an Inception score of 9.46 and a then state-of-the-art FID of 3.17. Lower FID is better.' },
+    { who: 'cherry', text: 'And bigger pictures?' },
+    { who: 'sriku', text: 'On 256 by 256 LSUN images they report sample quality similar to ProgressiveGAN. That is the GAN from the last case, so diffusion caught up with GANs.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Denoising diffusion models (Ho, Jain and Abbeel, 2020)"
+  stats={[
+    { value: '9.46', label: 'Inception score, unconditional CIFAR10' },
+    { value: '3.17', label: 'FID, state of the art at the time (lower is better)' },
+    { value: '256×256', label: 'LSUN images with quality similar to ProgressiveGAN' },
+  ]}
+  winner="From the abstract: “On the unconditional CIFAR10 dataset, we obtain an Inception score of 9.46 and a state-of-the-art FID score of 3.17.”"
+  takeaway="Start from pure noise, remove a little at a time, and you get something new."
+  source={{
+    text: 'Ho, Jain and Abbeel, “Denoising Diffusion Probabilistic Models”, NeurIPS 2020. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2006.11239',
+  }}
+/>
+
+**Real definition:** practically speaking, a model that either creates (generates) new examples from the training dataset, or determines the probability that a new example comes from the training set. [Google’s glossary: generative model ↗](https://developers.google.com/machine-learning/glossary#generative-model)
+
+---
+
+## Gemma: Google’s Open Models
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is Gemma the same as Gemini?' },
+    { who: 'sriku', text: 'Related. Google’s glossary says Gemma is a family of lightweight open models built from the same research and technology used to create the Gemini models.' },
+    { who: 'sundu', text: 'Open meaning I can download it.' },
+    { who: 'sriku', text: 'The report says they released both pretrained and fine-tuned checkpoints. Several Gemma models exist now, with different features such as vision, code and instruction following.' },
+  ]}
+/>
+
+<Gif
+  name="gemma"
+  alt="Eighteen boxes appear, one per text-based task from the Gemma report. Eleven turn green to show tasks where Gemma is ahead of similarly sized open models and seven stay marked with a dash. The ordering of tasks is illustrative."
+  caption="Fig. 62: 11 of 18 tasks. The order of the boxes is only for show."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is it any good?' },
+    { who: 'sriku', text: 'The first release came in two sizes, 2 billion and 7 billion parameters. The report says Gemma outperforms similarly sized open models on 11 out of 18 text-based tasks.' },
+    { who: 'cherry', text: 'Only 11 of 18?' },
+    { who: 'sriku', text: 'Which is the honest way to say it. Not every task, and the claim is only against similarly sized open models. It also describes safety and responsibility evaluations alongside the benchmark scores.' },
+    { who: 'sundu', text: 'Credit for not saying "best in class".' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gemma (Google DeepMind, 2024)"
+  stats={[
+    { value: '2B and 7B', label: 'Parameter sizes in the first release' },
+    { value: '11 of 18', label: 'Text tasks where it beat similarly sized open models' },
+    { value: '2', label: 'Kinds of checkpoint: pretrained and fine-tuned' },
+  ]}
+  winner="The abstract: “Gemma outperforms similarly sized open models on 11 out of 18 text-based tasks.”"
+  takeaway="A precise claim, “11 of 18, against similar open models”, is more useful than a vague one."
+  source={{
+    text: 'Gemma Team (Google DeepMind), “Gemma: Open Models Based on Gemini Research and Technology”, 2024. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2403.08295',
+  }}
+/>
+
+**Real definition:** a family of lightweight open models built from the same research and technology used to create the Gemini models. [Google’s glossary: Gemma ↗](https://developers.google.com/machine-learning/glossary#gemma)
+
+---
+
+## Gradient Boosted Trees: The Spreadsheet Champion
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Every trendy model is a deep neural network. What do people use on ordinary tables of data?' },
+    { who: 'sriku', text: 'Gradient boosted (decision) trees, GBT. It is a kind of decision forest, from Part D, where training relies on gradient boosting and each weak model is a decision tree.' },
+    { who: 'sundu', text: 'Boosting is from Part B.' },
+    { who: 'sriku', text: 'Right: each new tree fixes the mistakes of the trees before it, and the pile of small trees becomes one strong model.' },
+  ]}
+/>
+
+<Gif
+  name="gradient-boosted-trees"
+  alt="Twenty-nine circles appear, one for each winning Kaggle solution published in 2015. Seventeen are gold and labelled XG, for XGBoost. The remaining twelve are grey. The positions are only for illustration."
+  caption="Fig. 63: 17 of the 29 Kaggle winners of 2015 used XGBoost."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Sounds like an old trick. Does it still win?' },
+    { who: 'sriku', text: 'The XGBoost paper, by Tianqi Chen and Carlos Guestrin, looked at the 29 challenge-winning solutions published on Kaggle’s blog in 2015. Seventeen used XGBoost.' },
+    { who: 'cherry', text: 'Only XGBoost?' },
+    { who: 'sriku', text: 'Eight used it alone. Most of the others combined it with neural nets in ensembles. The second most popular method, deep neural nets, was used in 11 solutions.' },
+    { who: 'sundu', text: 'Other contests?' },
+    { who: 'sriku', text: 'KDDCup 2015: every one of the top-10 winning teams used XGBoost.' },
+  ]}
+/>
+
+<CaseStudy
+  title="XGBoost on Kaggle and KDDCup (Chen and Guestrin, 2016)"
+  stats={[
+    { value: '17 of 29', label: 'Kaggle winning solutions in 2015 used XGBoost' },
+    { value: '8', label: 'Used XGBoost alone' },
+    { value: '11', label: 'Used deep neural nets, the second most popular' },
+    { value: 'Top 10', label: 'KDDCup 2015: every winning team used XGBoost' },
+  ]}
+  winner="The authors: “Among the 29 challenge winning solutions published at Kaggle’s blog during 2015, 17 solutions used XGBoost.”"
+  takeaway="For tables of numbers and categories, boosted trees are still very hard to beat."
+  source={{
+    text: 'Chen and Guestrin, “XGBoost: A Scalable Tree Boosting System”, KDD 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1603.02754',
+  }}
+/>
+
+**Real definition:** a type of decision forest in which training relies on gradient boosting and the weak model is a decision tree. [Google’s glossary: gradient boosted (decision) trees ↗](https://developers.google.com/machine-learning/glossary#gradient-boosted-decision-trees-gbt)
+
+---
+
+## Generative Agents: The Party That Planned Itself
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Agents again? We did agents in Part A.' },
+    { who: 'sriku', text: 'These are a different kind. Generative agents are agents endowed with unique personas, memories and routines that simulate realistic human behavior.' },
+    { who: 'sundu', text: 'Like The Sims.' },
+    { who: 'sriku', text: 'That is exactly what the researchers built: a small town inspired by The Sims, populated by 25 agents, each driven by a large language model.' },
+  ]}
+/>
+
+<Gif
+  name="generative-agents"
+  alt="Twenty-five dots represent townspeople. One dot lights up gold, and then gold spreads from person to person until everyone has it. A final scene shows five smiling figures at a cafe at 5 pm with balloons. The picture is a toy sketch of the story in the paper."
+  caption="Fig. 64: Toy sketch of the paper’s story: one idea spreads through the town."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What did the agents do?' },
+    { who: 'sriku', text: 'The researchers set just two things: Isabella intends to throw a Valentine’s Day party at the cafe, and Maria has a crush on Klaus. Everything else was up to the agents.' },
+    { who: 'cherry', text: 'Such as?' },
+    { who: 'sriku', text: 'They spread invitations over the next two days, made new acquaintances, asked each other out to the party, and coordinated to arrive together. Isabella decorated the cafe, Maria invited Klaus, and on the day five agents showed up at 5 pm.' },
+    { who: 'sundu', text: 'Is that real behavior or a lucky run?' },
+    { who: 'sriku', text: 'The authors ran an ablation, like Part A. Removing observation, planning or reflection each made the agents’ behavior less believable. Each part contributes critically.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Generative Agents: a town of 25 (Park et al., 2023)"
+  stats={[
+    { value: '25', label: 'Agents in the Sims-style town' },
+    { value: '2 days', label: 'For the party invitations to spread' },
+    { value: '5', label: 'Agents who showed up at 5 pm in the paper’s story' },
+    { value: '3', label: 'Components tested by ablation: observation, planning, reflection' },
+  ]}
+  winner="The abstract: starting from a single user-specified idea, “the agents autonomously spread invitations to the party over the next two days, make new acquaintances, ask each other out on dates to the party, and coordinate to show up for the party together at the right time.”"
+  takeaway="Give a language model memory, reflection and planning, and small societies start to behave like small societies."
+  source={{
+    text: 'Park et al., “Generative Agents: Interactive Simulacra of Human Behavior”, UIST 2023. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2304.03442',
+  }}
+/>
+
+**Real definition:** agents endowed with unique personas, memories and routines that simulate realistic human behavior. [Google’s glossary: generative agents (simulacra) ↗](https://developers.google.com/machine-learning/glossary#generative-agents-simulacra)
+
+---
+
+## Grounding: Show Your Source
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The chatbot told me confidently that it is sunny in Berlin. It was raining.' },
+    { who: 'sriku', text: 'It was recalling and guessing. Grounding is basing all or part of an LLM’s response on information retrieved from one or more trusted sources.' },
+    { who: 'sundu', text: 'Like asking it to look up the forecast first.' },
+    { who: 'sriku', text: 'Google’s own example is the Berlin forecast from the European Centre for Medium-Range Weather Forecasts. Retrieval-augmented generation, RAG, is the common technique.' },
+  ]}
+/>
+
+<Gif
+  name="grounding"
+  alt="A question about Berlin's weather forecast goes to a trusted source box that supplies retrieved information. An LLM answer box then writes an answer that cites the retrieved report. A caption says the answer rests on a trusted source and not only on what the model remembers."
+  caption="Fig. 65: Retrieve first, then answer from what was retrieved."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did RAG start?' },
+    { who: 'sriku', text: 'Lewis and colleagues, in 2020. Their models combine a pre-trained seq2seq model, with its knowledge in its parameters, and a dense vector index of Wikipedia that a neural retriever searches.' },
+    { who: 'cherry', text: 'Why bother?' },
+    { who: 'sriku', text: 'The paper says language models struggle to access and precisely manipulate knowledge, and that giving provenance for decisions and updating world knowledge are open problems. Retrieval helps with both.' },
+    { who: 'sundu', text: 'Results?' },
+    { who: 'sriku', text: 'They set the state of the art on three open-domain question answering tasks. For text generation, RAG produced more specific, diverse and factual language than a parametric-only baseline.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Retrieval-Augmented Generation (Lewis et al., 2020)"
+  stats={[
+    { value: '3', label: 'Open-domain QA tasks set to state of the art' },
+    { value: 'Wikipedia', label: 'Dense vector index the model searches' },
+    { value: 'More factual', label: 'Generated text vs a parametric-only baseline' },
+  ]}
+  winner="From the paper: RAG models “generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.”"
+  takeaway="Let the model look things up. Knowledge can be updated by changing the index, not retraining the model."
+  source={{
+    text: 'Lewis et al., “Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks”, NeurIPS 2020. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2005.11401',
+  }}
+/>
+
+**Real definition:** the process of basing all or part of an LLM’s response on information retrieved from one or more trusted sources. Retrieval-augmented generation (RAG) is a common grounding technique, and is also covered on Google’s [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#retrieval-augmented-generation-rag). [Google’s glossary: grounding ↗](https://developers.google.com/machine-learning/glossary#grounding)
+
+---
+
+## Ground Truth: What Actually Happened
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The model says this photo is a wolf. Is it?' },
+    { who: 'sriku', text: 'You only know if you have the ground truth: reality, the thing that actually happened. The glossary’s example is whether a student really graduated within six years.' },
+    { who: 'sundu', text: 'So accuracy needs a ground truth to be compared with.' },
+    { who: 'sriku', text: 'Always. A prediction is only right or wrong relative to it. And somebody had to produce those answers.' },
+  ]}
+/>
+
+<Gif
+  name="ground-truth"
+  alt="Three pictures, a dog, a cat and a fish, each show a ground truth label, then the model's prediction and then a tick or a cross. The model gets the dog and the fish right and calls the cat a dog, so two of three match. The example is a toy."
+  caption="Fig. 66: Toy example. A prediction is graded against the ground truth."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who produces them at scale?' },
+    { who: 'sriku', text: 'For ImageNet, crowds of people. The ILSVRC challenge used Amazon Mechanical Turk, an online marketplace for paid tasks, to label and verify images. A team led by Olga Russakovsky wrote up how it was made.' },
+    { who: 'cherry', text: 'How big was it?' },
+    { who: 'sriku', text: 'The classification task has 1,000 object classes with about 1.2 million training images, 50 thousand validation images and 100 thousand test images. Each image has one ground truth label.' },
+    { who: 'sundu', text: 'And the score?' },
+    { who: 'sriku', text: 'A prediction counts as correct if the ground truth label matches. The paper’s abstract lists the challenges of collecting large-scale ground truth annotation as one of its main topics. That work is the reason the AlexNet numbers in Part D mean anything.' },
+  ]}
+/>
+
+<CaseStudy
+  title="ImageNet challenge labels (Russakovsky et al., 2015)"
+  stats={[
+    { value: '1,000', label: 'Object classes' },
+    { value: '~1.2M', label: 'Training images' },
+    { value: '50K / 100K', label: 'Validation / test images' },
+    { value: 'AMT', label: 'Amazon Mechanical Turk used for annotation' },
+  ]}
+  winner="The abstract: “We discuss the challenges of collecting large-scale ground truth annotation, highlight key breakthroughs in categorical object recognition…”"
+  takeaway="Every leaderboard rests on someone’s labels. Check how they were made."
+  source={{
+    text: 'Russakovsky et al., “ImageNet Large Scale Visual Recognition Challenge”, International Journal of Computer Vision, 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1409.0575',
+  }}
+/>
+
+**Real definition:** reality. The thing that actually happened. [Google’s glossary (Fundamentals): ground truth ↗](https://developers.google.com/machine-learning/glossary/fundamentals#ground-truth)
+
+---
+
+## Guardrails: A Bouncer on Both Doors
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I stop my chatbot from leaking data or saying something awful?' },
+    { who: 'sriku', text: 'Guardrails: any software or process that prevents harm to humans or systems. Harm can mean data leaks, unauthorized access or an LLM’s responses containing offensive material.' },
+    { who: 'sundu', text: 'So not just the model, everything around it too.' },
+    { who: 'sriku', text: 'A common pattern checks the prompt on the way in and the response on the way out.' },
+  ]}
+/>
+
+<Gif
+  name="guardrails"
+  alt="A prompt moves through an input check, a language model and an output check. A harmless question passes both checks. A harmful request is stopped at the input check and marked blocked, so it never reaches the model."
+  caption="Fig. 67: Check going in, check coming out."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there a real one?' },
+    { who: 'sriku', text: 'Meta’s Llama Guard, a Llama 2 7B model instruction-tuned to classify both prompts and responses against a safety risk taxonomy. Its weights are public.' },
+    { who: 'cherry', text: 'How does it score?' },
+    { who: 'sriku', text: 'On the area under the precision-recall curve, on Meta’s own test set, it scored 0.945 for prompts against 0.764 for OpenAI’s moderation API and 0.728 for Perspective API. For responses it was 0.953 against 0.769 and 0.699.' },
+    { who: 'sundu', text: 'Does it always win?' },
+    { who: 'sriku', text: 'No. On the OpenAI moderation dataset, OpenAI’s own API scored 0.856 and Llama Guard 0.847. On ToxicChat Llama Guard led with 0.626 against 0.588. The abstract says it matches or exceeds existing tools.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Llama Guard (Meta, 2023)"
+  stats={[
+    { value: '0.945', label: 'AUPRC, prompts, Meta’s test set (OpenAI API 0.764)' },
+    { value: '0.953', label: 'AUPRC, responses, Meta’s test set (OpenAI API 0.769)' },
+    { value: '0.847 vs 0.856', label: 'AUPRC on OpenAI’s own moderation set: Llama Guard vs OpenAI API' },
+    { value: '0.626 vs 0.588', label: 'AUPRC on ToxicChat: Llama Guard vs OpenAI API' },
+  ]}
+  winner="The abstract: its performance “matches or exceeds that of currently available content moderation tools.”"
+  takeaway="A guardrail is a model too. Measure it on benchmarks you did not write."
+  source={{
+    text: 'Inan et al. (Meta), “Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations”, 2023. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2312.06674',
+  }}
+/>
+
+**Real definition:** any software or process that prevents harm to humans or systems. [Google’s glossary: guardrails ↗](https://developers.google.com/machine-learning/glossary#guardrails)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| GAN | The forger and the detective | A generator and a discriminator train against each other |
+| Generalization | Learning, not memorising | Doing well on data it has not seen |
+| Generative model | Make new examples | Creates new data like its training data |
+| Gemma | Google’s open models | Lightweight open models from Gemini research |
+| Gradient boosted trees | The spreadsheet champion | Trees that fix the previous trees’ mistakes |
+| Generative agents | The party that planned itself | LLM agents with personas, memory and routines |
+| Grounding | Show your source | Base the answer on trusted retrieved information |
+| Ground truth | What actually happened | The real answer a prediction is compared with |
+| Guardrails | A bouncer on both doors | Checks that prevent harm |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Seven weeks. How many letters now?' },
+    { who: 'sriku', text: 'There are 19 more letters.' },
+    { who: 'sundu', text: 'Then I will bring a third notebook.' },
+  ]}
+/>
+
+[← Part F: Feature Cross to Forget Gate](/writing/ml-glossary-f)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); generalization, ground truth and retrieval-augmented generation are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the town of dots and the toy neural-network pictures are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

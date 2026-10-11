@@ -1,0 +1,490 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part E: From Early Stopping to Experience Replay',
+  subtitle: 'Week five at the chai stall: nine machine learning terms, a million-dollar prize, and a king who minus a man plus a woman becomes a queen.',
+  type: 'Meme Feast',
+  date: '2026-10-11',
+  excerpt:
+    'Nine machine learning terms starting with E, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 5,
+}
+
+Fifth Saturday. Cherry brought a notebook this time, and every source gets a tick when its link opens.
+
+New here? Start with [Part A](/writing/ml-glossary-a), then [B](/writing/ml-glossary-b), [C](/writing/ml-glossary-c) and [D](/writing/ml-glossary-d). This round covers the E section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 33 entries. I picked nine. One of them, early stopping, is also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#early-stopping).
+
+<Poster
+  badge="Part E · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Nine terms. Two friends. Cherry's notebook."
+  rating="10/10 · bench reserved"
+  stats={['9 terms', '9 animations', '9 real cases', '1 queen']}
+/>
+
+---
+
+## Early Stopping: Leave Before the Party Turns
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My training loss keeps going down, but the model got worse on new data an hour ago.' },
+    { who: 'sriku', text: 'Then you should have stopped an hour ago. Early stopping means ending training before the training loss finishes decreasing.' },
+    { who: 'sundu', text: 'How do you know when?' },
+    { who: 'sriku', text: 'Watch the loss on a validation set. When it starts to increase, generalization is getting worse, and you stop.' },
+  ]}
+/>
+
+<Gif
+  name="early-stopping"
+  alt="Two curves over training time. The blue training loss keeps falling. The red validation loss falls, reaches a minimum and then rises. A yellow line marks the minimum with the words stop here. The curves are a toy example."
+  caption="Fig. 42: Toy curves. Training loss lies; validation loss tells the truth."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Surely people tune that rule properly.' },
+    { who: 'sriku', text: 'Lutz Prechelt noticed the opposite. The exact stopping rule is usually chosen in an ad-hoc fashion, or training is stopped by hand. So he tested rules systematically.' },
+    { who: 'cherry', text: 'How many runs?' },
+    { who: 'sriku', text: '1,296 training runs, using 12 different problems and 24 network architectures.' },
+    { who: 'sundu', text: 'And the answer?' },
+    { who: 'sriku', text: 'A trade-off. Slower stopping rules gave small improvements in generalization, about 4% on average, but took much longer: about four times as long on average.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Early Stopping, But When? (Prechelt, 1998)"
+  stats={[
+    { value: '1,296', label: 'Training runs compared' },
+    { value: '12 / 24', label: 'Problems / network architectures' },
+    { value: '~4%', label: 'Average generalization gain from slower rules' },
+    { value: '~4×', label: 'Average training time of slower rules' },
+  ]}
+  winner="His conclusion: slower stopping criteria allow for small improvements in generalization, but “cost much more training time.”"
+  takeaway="Stopping is a dial between speed and quality. Pick the setting on purpose."
+  source={{
+    text: 'Prechelt, “Early Stopping, But When?”, in Neural Networks: Tricks of the Trade, 1998. Free PDF of the earlier technical report.',
+    href: 'https://page.mi.fu-berlin.de/prechelt/Biblio/stop_tricks1997.pdf',
+  }}
+/>
+
+**Real definition:** a method for regularization that involves ending training before training loss finishes decreasing, when the loss on a validation dataset starts to increase. [Google’s glossary (Fundamentals): early stopping ↗](https://developers.google.com/machine-learning/glossary/fundamentals#early-stopping)
+
+---
+
+## Embedding Space: The Map of Meaning
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a computer know "king" and "queen" are related?' },
+    { who: 'sriku', text: 'It maps each word to a point in an embedding space: a smaller, d-dimensional space trained to capture structure that is meaningful for the application.' },
+    { who: 'sundu', text: 'And closeness means similar?' },
+    { who: 'sriku', text: 'Google’s glossary says the dot product of two embeddings is a measure of their similarity. And directions in the space can mean things too.' },
+  ]}
+/>
+
+<Gif
+  name="embedding-space"
+  alt="A toy two-dimensional map shows the words man, woman, king and queen. An arrow from man to king and a parallel arrow from woman to queen show the same shift. The caption reads king minus man plus woman is about queen. Real embeddings have many more dimensions."
+  caption="Fig. 43: A toy 2-D map. Real embedding spaces have many more dimensions."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'The king and queen trick. Is it real?' },
+    { who: 'sriku', text: 'It comes from word vectors in the word2vec line of work. The paper recalls that vector("King") minus vector("Man") plus vector("Woman") gives a vector closest to the vector for "Queen".' },
+    { who: 'cherry', text: 'Was it expensive to build?' },
+    { who: 'sriku', text: 'Not very. The Google authors report learning high-quality word vectors from a 1.6 billion word dataset in less than a day.' },
+  ]}
+/>
+
+<CaseStudy
+  title="word2vec (Mikolov et al., Google, 2013)"
+  stats={[
+    { value: '1.6 billion', label: 'Words in the training data' },
+    { value: '< 1 day', label: 'To learn high-quality word vectors' },
+    { value: 'King − Man + Woman', label: 'Lands closest to “Queen”' },
+  ]}
+  winner="From the abstract: “it takes less than a day to learn high quality word vectors from a 1.6 billion words data set.”"
+  takeaway="Meaning became geometry: similar words sit close, and relationships become directions."
+  source={{
+    text: 'Mikolov, Chen, Corrado and Dean, “Efficient Estimation of Word Representations in Vector Space”, 2013. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1301.3781',
+  }}
+/>
+
+**Real definition:** the d-dimensional vector space that features from a higher-dimensional vector space are mapped to, trained to capture structure that is meaningful for the intended application. [Google’s glossary: embedding space ↗](https://developers.google.com/machine-learning/glossary#embedding-space)
+
+---
+
+## Encoder: Squeeze It Into a Vector
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How does a translation model read a sentence?' },
+    { who: 'sriku', text: 'An encoder converts a raw, sparse or external representation into a more processed, denser, internal one. For a sentence, that is a vector.' },
+    { who: 'sundu', text: 'And then?' },
+    { who: 'sriku', text: 'A decoder takes that internal state and writes the output sequence, one piece at a time. Encoder in, decoder out.' },
+  ]}
+/>
+
+<Gif
+  name="encoder"
+  alt="The words How are you question mark enter a box labelled encoder, which produces a row of bars labelled internal state, a vector. A box labelled decoder reads the vector and writes Comment vas tu question mark."
+  caption="Fig. 44: Sequence in, vector in the middle, sequence out."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Did that really translate well?' },
+    { who: 'sriku', text: 'In 2014, Sutskever, Vinyals and Le from Google used one deep LSTM to map the English sentence to a fixed-size vector and another to decode the French.' },
+    { who: 'cherry', text: 'Score?' },
+    { who: 'sriku', text: 'A BLEU score of 34.8 on the WMT’14 English to French test set. A phrase-based system scored 33.3.' },
+    { who: 'sundu', text: 'Any odd tricks?' },
+    { who: 'sriku', text: 'One. Reversing the order of the words in the source sentences, but not the target, improved performance markedly. It made the optimization problem easier.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Sequence to sequence learning (Google, 2014)"
+  stats={[
+    { value: '34.8', label: 'BLEU, LSTM encoder-decoder, English to French' },
+    { value: '33.3', label: 'BLEU, phrase-based system' },
+    { value: '36.5', label: 'BLEU, when the LSTM reranked its 1,000 hypotheses' },
+  ]}
+  winner="The method uses “a multilayered Long Short-Term Memory (LSTM) to map the input sequence to a vector of a fixed dimensionality, and then another deep LSTM to decode the target sequence from the vector.”"
+  takeaway="Compress the whole input into one vector, then expand it into the output."
+  source={{
+    text: 'Sutskever, Vinyals and Le (Google), “Sequence to Sequence Learning with Neural Networks”, NeurIPS 2014. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1409.3215',
+  }}
+/>
+
+**Real definition:** in general, any ML system that converts from a raw, sparse or external representation into a more processed, denser or more internal representation. Encoders are often paired with a decoder. [Google’s glossary: encoder ↗](https://developers.google.com/machine-learning/glossary#encoder)
+
+---
+
+## Ensemble: Ask the Whole Bench
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Every model I train is wrong in a different way.' },
+    { who: 'sriku', text: 'Good, because an ensemble is a collection of models trained independently, with their predictions averaged or aggregated. In many cases it beats any single model.' },
+    { who: 'sundu', text: 'The wrongness cancels out.' },
+    { who: 'sriku', text: 'Often, yes. A random forest is an ensemble of decision trees, like the one from last week.' },
+  ]}
+/>
+
+<Gif
+  name="ensemble"
+  alt="Four models place their guesses on a number line around a true value of 4.0. They land at 3.1, 4.9, 3.7 and 4.4. Their average, 4.03, is much closer to the truth than most individual guesses. The numbers are a toy example."
+  caption="Fig. 45: Toy numbers. Four different mistakes, one good average."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Ensembles in a contest?' },
+    { who: 'sriku', text: 'The Netflix Prize. Netflix released more than 100 million ratings from 480,189 users on 17,770 movies and set a goal: beat its own recommender by 10%.' },
+    { who: 'cherry', text: 'Who won?' },
+    { who: 'sriku', text: 'BellKor’s Pragmatic Chaos, a merged team. Yehuda Koren’s write-up of his part lists 106 predictors in the blend, and that is only the newer ones. The earlier ones from the 2008 prize are included too.' },
+    { who: 'sundu', text: 'So many models.' },
+    { who: 'sriku', text: 'He says that near the end they realized individual predictors, even novel and accurate ones, were unlikely to make a difference to the blend. Better blending was the quicker way to improve.' },
+  ]}
+/>
+
+<CaseStudy
+  title="The Netflix Grand Prize (BellKor’s Pragmatic Chaos, 2009)"
+  stats={[
+    { value: '100M+', label: 'Ratings in the dataset' },
+    { value: '480,189', label: 'Users' },
+    { value: '17,770', label: 'Movies' },
+    { value: '106', label: 'Predictors indexed in this one write-up' },
+  ]}
+  winner="Koren on the endgame: “individual predictors, even if novel and accurate, are unlikely to make a difference to the blend.”"
+  takeaway="When models are good and different, combining them can beat polishing any single one."
+  source={{
+    text: 'Koren, “The BellKor Solution to the Netflix Grand Prize”, August 2009. Free PDF (hosted on an Ohio State University course page).',
+    href: 'https://www.asc.ohio-state.edu/statistics/dmsl/GrandPrize2009_BPC_BellKor.pdf',
+  }}
+/>
+
+**Real definition:** a collection of models trained independently whose predictions are averaged or aggregated. In many cases, an ensemble produces better predictions than a single model. [Google’s glossary: ensemble ↗](https://developers.google.com/machine-learning/glossary#ensemble)
+
+---
+
+## Emergent Behavior: Nothing, Nothing, Then Suddenly
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'We made the model ten times bigger and it can suddenly do something it could not do before.' },
+    { who: 'sriku', text: 'That is what people call emergent behavior. Google’s glossary describes it as an LLM’s ability to generate responses for prompts it was not explicitly trained on.' },
+    { who: 'sundu', text: 'Suddenly?' },
+    { who: 'sriku', text: 'That is the claim: performance sits near zero as the model grows, then jumps once the model is big enough.' },
+  ]}
+/>
+
+<Gif
+  name="emergent-behavior"
+  alt="A curve sits flat at the level of random guessing as the model gets larger, then rises sharply to a high level. The curve is a toy sketch of the shape described in the paper, not real data."
+  caption="Fig. 46: A sketch of the shape, not real data."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who measured it?' },
+    { who: 'sriku', text: 'Wei and colleagues, in 2022. They define an emergent ability as one not present in smaller models but present in larger ones, so you cannot predict it by extrapolating from the small ones.' },
+    { who: 'cherry', text: 'An example with numbers?' },
+    { who: 'sriku', text: 'A benchmark of 3-digit addition and subtraction and 2-digit multiplication. GPT-3 and LaMDA scored close to zero over several orders of magnitude of training compute. GPT-3 jumped at about 2×10²² training FLOPs, 13 billion parameters, and LaMDA at 10²³, 68 billion.' },
+    { who: 'sundu', text: 'Didn’t last week’s chain-of-thought trick do the same?' },
+    { who: 'sriku', text: 'Yes. Chain-of-thought prompting only beat standard prompting at around 10²³ training FLOPs, roughly 100 billion parameters.' },
+    { who: 'cherry', text: 'Is it settled?' },
+    { who: 'sriku', text: 'No. A 2023 paper argues the sharp jumps come from the metric, with all-or-nothing scoring, and not from the model. It says the abilities fade with different metrics.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Emergent abilities of large language models (Wei et al., 2022)"
+  stats={[
+    { value: '13B', label: 'GPT-3 parameters at the jump, arithmetic task' },
+    { value: '68B', label: 'LaMDA parameters at the jump, same task' },
+    { value: '~100B', label: 'Parameters where chain of thought starts to help' },
+  ]}
+  winner="Their definition: an ability is emergent “if it is not present in smaller models but is present in larger models.” A 2023 paper replies that such abilities “may not be a fundamental property of scaling AI models.”"
+  takeaway="Bigger models can surprise you. Whether the surprise is sudden or an artifact of the scoreboard is still being argued."
+  source={[
+    {
+      text: 'Wei et al., “Emergent Abilities of Large Language Models”, 2022. Free on arXiv.',
+      href: 'https://arxiv.org/abs/2206.07682',
+    },
+    {
+      text: 'Schaeffer, Miranda and Koyejo, “Are Emergent Abilities of Large Language Models a Mirage?”, 2023. Free on arXiv.',
+      href: 'https://arxiv.org/abs/2304.15004',
+    },
+  ]}
+/>
+
+**Real definition:** an LLM’s ability to generate responses for prompts that it was not explicitly trained on. [Google’s glossary: emergent behavior ↗](https://developers.google.com/machine-learning/glossary#emergent-behavior)
+
+---
+
+## Equalized Odds: The Same Mistakes for Everyone
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'How do I check that a loan model treats two groups fairly?' },
+    { who: 'sriku', text: 'One fairness metric is equalized odds. It asks whether the model predicts outcomes equally well for every value of a sensitive attribute, for both the positive class and the negative class.' },
+    { who: 'sundu', text: 'Both classes?' },
+    { who: 'sriku', text: 'The true positive rate and the false positive rate should each be the same for all groups. Equality of opportunity is the lighter version that checks only one of them.' },
+  ]}
+/>
+
+<Gif
+  name="equalized-odds"
+  alt="Two panels for group A and group B each show a true positive rate bar and a false positive rate bar. At first the bars differ. They then move until both groups show an 80 percent true positive rate and a 10 percent false positive rate. The numbers are a toy example."
+  caption="Fig. 47: Toy numbers. Same rates for both groups."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Someone tried it on real credit data?' },
+    { who: 'sriku', text: 'Hardt, Price and Srebro. They used 301,536 FICO credit scores from 2003 and four groups: Asian, white, Hispanic and black. A score of 620 is a commonly used cutoff for prime-rate loans.' },
+    { who: 'cherry', text: 'What did one cutoff for everyone do?' },
+    { who: 'sriku', text: 'With that race-blind threshold, black people who would not default were much less likely to qualify for a loan than white or Asian ones. So it breaks their fairness definitions.' },
+    { who: 'sundu', text: 'What does fairness cost?' },
+    { who: 'sriku', text: 'They measured profit for the lender. A race-blind threshold keeps 99.3% of the maximum profit, equal opportunity 92.8%, equalized odds 80.2% and demographic parity 69.8%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Equality of opportunity on FICO scores (Hardt, Price and Srebro, 2016)"
+  stats={[
+    { value: '99.3%', label: 'Of max profit: race-blind threshold' },
+    { value: '92.8%', label: 'Equal opportunity' },
+    { value: '80.2%', label: 'Equalized odds' },
+    { value: '69.8%', label: 'Demographic parity' },
+  ]}
+  winner="Their summary: “equal opportunity fairness costs less than a quarter what demographic parity costs.”"
+  takeaway="Fairness has a price, and the price depends on which definition you pick."
+  source={{
+    text: 'Hardt, Price and Srebro, “Equality of Opportunity in Supervised Learning”, NeurIPS 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1610.02413',
+  }}
+/>
+
+**Real definition:** a fairness metric to assess whether a model predicts outcomes equally well for all values of a sensitive attribute, with respect to both the positive class and the negative class. [Google’s glossary: equalized odds ↗](https://developers.google.com/machine-learning/glossary#equalized-odds)
+
+---
+
+## Evals: One Number Is Never Enough
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The new model scored 90 on the benchmark. Ship it?' },
+    { who: 'sriku', text: 'On what? "Evals" is short for LLM evaluations, and more broadly for any form of evaluation.' },
+    { who: 'sundu', text: 'So one score is not enough.' },
+    { who: 'sriku', text: 'It hides trade-offs. A model can be accurate and also be toxic, biased or slow. You need to measure all of that.' },
+  ]}
+/>
+
+<Gif
+  name="evals"
+  alt="A list of seven metrics ticks off one by one: accuracy, calibration, robustness, fairness, bias, toxicity and efficiency."
+  caption="Fig. 48: The seven metrics Stanford’s HELM measures."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who does that properly?' },
+    { who: 'sriku', text: 'A Stanford team built HELM, the Holistic Evaluation of Language Models. It measures seven metrics for each of 16 core scenarios, when possible: accuracy, calibration, robustness, fairness, bias, toxicity and efficiency.' },
+    { who: 'cherry', text: 'How big was the exercise?' },
+    { who: 'sriku', text: '30 prominent models on 42 scenarios in total. Before HELM, models had on average been evaluated on just 17.9% of the core scenarios, and some prominent models shared not a single one.' },
+    { who: 'sundu', text: 'After?' },
+    { who: 'sriku', text: 'They raised it to 96.0%: all 30 models measured on the same core scenarios and metrics under standard conditions. They also released every raw prompt and completion.' },
+  ]}
+/>
+
+<CaseStudy
+  title="HELM (Stanford, 2022): evaluating 30 models the same way"
+  stats={[
+    { value: '7', label: 'Metrics per scenario' },
+    { value: '30', label: 'Language models' },
+    { value: '17.9% → 96.0%', label: 'Core scenarios covered per model, before and after' },
+    { value: '25', label: 'Top-level findings' },
+  ]}
+  winner="The authors: “This ensures metrics beyond accuracy don’t fall to the wayside, and that trade-offs are clearly exposed.”"
+  takeaway="Test every model on the same things, and look at more than accuracy."
+  source={{
+    text: 'Liang et al., “Holistic Evaluation of Language Models”, 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2211.09110',
+  }}
+/>
+
+**Real definition:** primarily an abbreviation for LLM evaluations. More broadly, evals is an abbreviation for any form of evaluation. [Google’s glossary: evals ↗](https://developers.google.com/machine-learning/glossary#evals)
+
+---
+
+## Exploding Gradient Problem: The Cliff
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My loss went to NaN overnight.' },
+    { who: 'sriku', text: 'Classic. The exploding gradient problem is when gradients in deep networks, especially recurrent ones, become surprisingly steep, which causes enormous updates to the weights.' },
+    { who: 'sundu', text: 'The model jumps off the map.' },
+    { who: 'sriku', text: 'Models suffering from it become difficult or impossible to train. The usual fix is gradient clipping.' },
+  ]}
+/>
+
+<Gif
+  name="exploding-gradient"
+  alt="A flat path ends at a steep wall. A red arrow from the model, which stands at the foot of the wall, shoots far off the map. A short green arrow in the same direction shows the clipped step. The picture is a toy illustration."
+  caption="Fig. 49: Toy picture. Same direction, but the step is capped."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who explained it?' },
+    { who: 'sriku', text: 'Pascanu, Mikolov and Bengio, in 2013. They analyzed why recurrent networks are hard to train, with a geometric picture of high-curvature walls in the error surface.' },
+    { who: 'cherry', text: 'And the cure?' },
+    { who: 'sriku', text: 'Rescale the gradient whenever its norm goes above a threshold. In their experiments training was not very sensitive to the threshold, and it worked even with rather small ones.' },
+    { who: 'sundu', text: 'Is it a regularizer?' },
+    { who: 'sriku', text: 'They say it solves an optimization issue, because both training and test error improve. On Penn Treebank language modelling it reached the state of the art achieved by Mikolov et al.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gradient norm clipping (Pascanu, Mikolov and Bengio, 2013)"
+  stats={[
+    { value: '1', label: 'Extra hyperparameter: the threshold' },
+    { value: 'Both', label: 'Training and test error improve' },
+  ]}
+  winner="In their words: “We propose a gradient norm clipping strategy to deal with exploding gradients.”"
+  takeaway="You do not have to change the model. Limit how far one bad step can take it."
+  source={{
+    text: 'Pascanu, Mikolov and Bengio, “On the difficulty of training Recurrent Neural Networks”, ICML 2013. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1211.5063',
+  }}
+/>
+
+**Real definition:** the tendency for gradients in deep neural networks (especially recurrent neural networks) to become surprisingly steep, which often causes very large weight updates. Gradient clipping can mitigate it. [Google’s glossary: exploding gradient problem ↗](https://developers.google.com/machine-learning/glossary#exploding-gradient-problem)
+
+---
+
+## Experience Replay: Shuffle the Memories
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My game-playing agent only learns from what it did a second ago.' },
+    { who: 'sriku', text: 'Which is nearly identical to what it did two seconds ago. Experience replay is a DQN technique that reduces temporal correlations in training data.' },
+    { who: 'sundu', text: 'How?' },
+    { who: 'sriku', text: 'The agent stores state transitions in a replay buffer, then samples transitions from the buffer at random to build training data.' },
+  ]}
+/>
+
+<Gif
+  name="experience-replay"
+  alt="Twelve numbered cards in a row fill up in order, representing stored experiences. Then four cards are picked at random from the row and used for training, instead of the latest ones in order."
+  caption="Fig. 50: Store everything in order, learn from a random handful."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'It was in last week’s Atari agent, wasn’t it?' },
+    { who: 'sriku', text: 'The DeepMind DQN. The replay memory held the 1 million most recent frames.' },
+    { who: 'cherry', text: 'Was it optional?' },
+    { who: 'sriku', text: 'The paper says combining reinforcement learning with deep networks was critically dependent on the replay algorithm. It also says the brain’s hippocampus may support a similar process.' },
+    { who: 'sundu', text: 'So the agent dreams about its day.' },
+    { who: 'sriku', text: 'That is a nice way to put it. The paper’s way is less poetic, but yes.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Replay inside the Atari DQN (DeepMind, 2015)"
+  stats={[
+    { value: '1 million', label: 'Most recent frames in the replay memory' },
+    { value: '49', label: 'Atari games the agent played' },
+  ]}
+  winner="The paper: integrating reinforcement learning with deep networks “was critically dependent on our incorporation of a replay algorithm involving the storage and representation of recently experienced transitions.”"
+  takeaway="Learning from shuffled memories was a key ingredient, not a decoration."
+  source={{
+    text: 'Mnih et al. (DeepMind), “Human-level control through deep reinforcement learning”, Nature 2015. Free PDF hosted by DeepMind.',
+    href: 'https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf',
+  }}
+/>
+
+**Real definition:** in reinforcement learning, a DQN technique used to reduce temporal correlations in training data. The agent stores state transitions in a replay buffer, then samples transitions from it to create training data. [Google’s glossary: experience replay ↗](https://developers.google.com/machine-learning/glossary#experience-replay)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Early stopping | Leave before the party turns | Stop when validation loss starts rising |
+| Embedding space | The map of meaning | Points whose closeness means similarity |
+| Encoder | Squeeze it into a vector | Turns input into a denser internal form |
+| Ensemble | Ask the whole bench | Average many models’ predictions |
+| Emergent behavior | Nothing, nothing, then suddenly | An ability that appears in bigger models |
+| Equalized odds | The same mistakes for everyone | Equal error rates across groups |
+| Evals | One number is never enough | Evaluations of a model |
+| Exploding gradient problem | The cliff | Gradients grow so large training breaks |
+| Experience replay | Shuffle the memories | Train on random stored experiences |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Five weeks. Is it F next?' },
+    { who: 'sriku', text: 'F is next, and there are 21 more letters after this one.' },
+    { who: 'sundu', text: 'Then same bench. Bring the notebook.' },
+  ]}
+/>
+
+[← Part D: Data Augmentation to Dropout](/writing/ml-glossary-d) · [Part F: From Feature Cross to Forget Gate →](/writing/ml-glossary-f)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); early stopping is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the queen is a toy coordinate on a toy map, and Cherry and Sundu are very real.*
+
+<Reactions />

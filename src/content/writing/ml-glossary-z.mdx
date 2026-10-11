@@ -1,0 +1,199 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part Z: From Zero-Shot Learning to Goodbye',
+  subtitle: 'The last Saturday at the chai stall: two machine learning terms that need no examples, the whole class of 2026, and the cake nobody brought.',
+  type: 'Meme Feast',
+  date: '2026-11-01',
+  excerpt:
+    'The final part of the series: two machine learning terms starting with Z, a full A to Z index of 147 terms, and a goodbye from the chai stall.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 26,
+}
+
+Twenty-fifth Saturday, and the last. The Y section of Google's glossary has no entries, so there is no Part Y and this is the final part of the series.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part X](/writing/ml-glossary-x). The Z section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) has 3 entries: zero-shot learning, zero-shot prompting and Z-score normalization. I tell the first two. Z-score normalization is on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#z-score-normalization), and it is the Z-scores, roughly -3 to +3, that already showed up in [Part N](/writing/ml-glossary-n) under normalization.
+
+<Poster
+  badge="Part Z · Final Edition"
+  title="ML Glossary A to Z"
+  tagline="Zero examples. Two friends. One last flask."
+  rating="10/10 · bench reserved"
+  stats={['2 terms', '3 animations', '2 real cases', '25 parts']}
+/>
+
+---
+
+## Zero-Shot Learning: Recognize What You Have Never Seen
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Can a model recognize something it was never trained on?' },
+    { who: 'sriku', text: 'That is zero-shot learning: a type of machine learning training where the model infers a prediction for a task it was not specifically trained on. It is given zero task-specific training examples but asked to do inference for that task.' },
+    { who: 'sundu', text: 'How can that possibly work?' },
+    { who: 'sriku', text: 'By leaning on a description instead of examples. If I tell you a zebra is a striped, four-legged animal with hooves, you can spot one without ever having seen a photo.' },
+  ]}
+/>
+
+<Gif
+  name="zero-shot-learning"
+  alt="A table of toy animals, horse, tiger and dog, shows attributes such as stripes, four legs, hooves and eats meat. A new animal, zebra, which was never seen in training, has the attribute pattern striped, four legs, hooves and no meat, and is matched to the nearest known attribute pattern. A caption cites the paper's brain-decoding result. The animals and attributes are a toy example."
+  caption="Fig. 147: Toy attributes. Match the description, not a photo."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there a research version?' },
+    { who: 'sriku', text: 'Palatucci, Pomerleau, Hinton and Mitchell, in Zero-Shot Learning with Semantic Output Codes, in 2009. They define the problem as learning a classifier that must predict novel values of the label that were omitted from the training set.' },
+    { who: 'cherry', text: 'And the trick?' },
+    { who: 'sriku', text: 'A semantic output code classifier, which uses a knowledge base of semantic properties of the labels to extrapolate to novel classes. They give a formalism for it and study it in a PAC framework, showing conditions under which it can accurately predict new classes.' },
+    { who: 'sundu', text: 'What was the real test?' },
+    { who: 'sriku', text: 'Neural decoding. They built a classifier that can often predict the words people are thinking about from functional magnetic resonance images of their brain activity, even without any training examples for those words.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Zero-Shot Learning with Semantic Output Codes (Palatucci, Pomerleau, Hinton and Mitchell, 2009)"
+  stats={[
+    { value: 'Zero', label: 'Training examples for the words it had to predict' },
+    { value: 'fMRI', label: 'Brain images used to predict the words people were thinking of' },
+  ]}
+  winner="The abstract: it “can often predict words that people are thinking about from functional magnetic resonance images (fMRI) of their neural activity, even without training examples for those words.”"
+  takeaway="Describe the classes with shared properties, and the model can place a class it has never seen."
+  source={{
+    text: 'Palatucci, Pomerleau, Hinton and Mitchell, “Zero-Shot Learning with Semantic Output Codes”, NIPS 2009. Free PDF.',
+    href: 'https://papers.nips.cc/paper_files/paper/2009/file/1543843a4723ed2ab08e18053ae6dc5b-Paper.pdf',
+  }}
+/>
+
+**Real definition:** a type of machine learning training where the model infers a prediction for a task that it was not specifically already trained on. In other words, the model is given zero task-specific training examples but asked to do inference for that task. [Google’s glossary: zero-shot learning ↗](https://developers.google.com/machine-learning/glossary#zero-shot-learning)
+
+---
+
+## Zero-Shot Prompting: One Magic Sentence
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Few-shot prompting from Part F means I have to write good examples. What if I just ask?' },
+    { who: 'sriku', text: 'Then you are zero-shot prompting: a prompt that does not provide an example of how you want the large language model to respond. Google’s example asks for the official currency of a country, and the model might answer rupee, INR or the Indian rupee. All are right, but you might prefer one format.' },
+    { who: 'sundu', text: 'So it is the cheapest prompt, and the least controlled.' },
+    { who: 'sriku', text: 'Yes. Though one small addition turns out to matter a lot for reasoning problems.' },
+  ]}
+/>
+
+<Gif
+  name="zero-shot-prompting"
+  alt="A juggler arithmetic question is answered wrongly with a plain prompt, then correctly after the sentence Let's think step by step is added. Below, bars show the paper's accuracy: 17.7 percent rising to 78.7 percent on MultiArith, and 10.4 percent rising to 40.7 percent on GSM8K, with a large InstructGPT model."
+  caption="Fig. 148: The paper’s juggler question, and its accuracy numbers."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where is that from?' },
+    { who: 'sriku', text: 'Kojima, Gu, Reid, Matsuo and Iwasawa, in Large Language Models are Zero-Shot Reasoners. Chain-of-thought prompting from Part C normally uses step-by-step example answers. They show that language models are decent zero-shot reasoners by simply adding Let’s think step by step before each answer.' },
+    { who: 'cherry', text: 'How much does it help?' },
+    { who: 'sriku', text: 'Using the same single prompt template across tasks, with no hand-crafted examples, accuracy on MultiArith rose from 17.7% to 78.7%, and on GSM8K from 10.4% to 40.7%, with a large InstructGPT model. They tested arithmetic, symbolic and other logical reasoning tasks.' },
+    { who: 'sundu', text: 'The question in their first figure is about a juggler.' },
+    { who: 'sriku', text: 'A juggler can juggle 16 balls, half are golf balls, half of the golf balls are blue. A plain zero-shot answer in the figure says 8. With the extra sentence the model reasons its way to 4.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Large Language Models are Zero-Shot Reasoners (Kojima et al., 2022)"
+  stats={[
+    { value: '17.7% to 78.7%', label: 'MultiArith accuracy with Let’s think step by step' },
+    { value: '10.4% to 40.7%', label: 'GSM8K accuracy, same model and prompt' },
+  ]}
+  winner="The abstract: “we show that LLMs are decent zero-shot reasoners by simply adding ‘Let’s think step by step’ before each answer.”"
+  takeaway="Sometimes the best prompt engineering is one sentence that asks the model to show its work."
+  source={{
+    text: 'Kojima, Gu, Reid, Matsuo and Iwasawa, “Large Language Models are Zero-Shot Reasoners”, 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2205.11916',
+  }}
+/>
+
+**Real definition:** a prompt that does not provide an example of how you want the large language model to respond. [Google’s glossary: zero-shot prompting ↗](https://developers.google.com/machine-learning/glossary#zero-shot-prompting)
+
+---
+
+## The Whole Class of 2026
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty-five parts. Did we finish?' },
+    { who: 'sriku', text: 'We finished A to Z, and the glossary is bigger than what we covered. We retold 147 terms, and each has a source you can open. The rest of the glossary is still there for you to read.' },
+    { who: 'sundu', text: 'My favourite was overfitting. The ox was a close second.' },
+    { who: 'sriku', text: 'The reason for the notebook was that every claim should have a tick next to it. So here is the whole list.' },
+  ]}
+/>
+
+<Gif
+  name="a-to-z"
+  alt="Twenty-six lettered tiles from A to Z fill in one by one in two rows. The tile for Y is dark because that section of the glossary has no entries. Text says 25 parts, 147 terms retold with a source for each, and two friends, one flask and zero stack traces."
+  caption="Fig. 149: The whole class of 2026. Y is dark because Google’s glossary has no Y entries."
+/>
+
+| Part | Title |
+| --- | --- |
+| A | [From A/B Testing to AI Slop](/writing/ml-glossary-a) |
+| B | [From Backprop to Broadcasting](/writing/ml-glossary-b) |
+| C | [From Candidate Generation to Convolution](/writing/ml-glossary-c) |
+| D | [From Data Augmentation to Dropout](/writing/ml-glossary-d) |
+| E | [From Early Stopping to Experience Replay](/writing/ml-glossary-e) |
+| F | [From Feature Cross to Forget Gate](/writing/ml-glossary-f) |
+| G | [From GAN to Guardrails](/writing/ml-glossary-g) |
+| H | [From Hallucination to Hyperparameter](/writing/ml-glossary-h) |
+| I | [From Image Recognition to I.I.D.](/writing/ml-glossary-i) |
+| J | [JAX](/writing/ml-glossary-j) |
+| K | [From Keras to K-Means](/writing/ml-glossary-k) |
+| L | [From L1 Regularization to Lost in the Middle](/writing/ml-glossary-l) |
+| M | [From Machine Translation to MNIST](/writing/ml-glossary-m) |
+| N | [From N-Grams to Normalization](/writing/ml-glossary-n) |
+| O | [From One-Shot Learning to Oversampling](/writing/ml-glossary-o) |
+| P | [From Pass at k to Prompt Tuning](/writing/ml-glossary-p) |
+| Q | [From Q-Learning to Quantization](/writing/ml-glossary-q) |
+| R | [From Random Forests to ROUGE](/writing/ml-glossary-r) |
+| S | [From Self-Supervised Learning to SuperGLUE](/writing/ml-glossary-s) |
+| T | [From T5 to Tree of Thought](/writing/ml-glossary-t) |
+| U | [From Undersampling to Unsupervised Learning](/writing/ml-glossary-u) |
+| V | [From Vanishing Gradients to Vibe Coding](/writing/ml-glossary-v) |
+| W | [From Wasserstein Loss to Word Embeddings](/writing/ml-glossary-w) |
+| X | [From XL-Sum to XSum](/writing/ml-glossary-x) |
+| Y | No entries in Google’s glossary |
+| Z | You are here |
+
+---
+
+## How These Were Made
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Before we close, tell them how you did it, so they know what to trust.' },
+    { who: 'sriku', text: 'Definitions follow Google’s Machine Learning Glossary, and each part links to the entry. Each case comes from a paper, a dataset page or a news article I opened, with the source linked underneath it. Where the only open copy was a secondary summary, or a paywalled abstract, the source note says so.' },
+    { who: 'sundu', text: 'And the animations?' },
+    { who: 'sriku', text: 'They are original and drawn by script. Anything with invented numbers is labelled toy in the title or the caption, and the real numbers are attributed to the paper. Where I explain something in my own words, I try to say so.' },
+    { who: 'cherry', text: 'And if one of them is wrong?' },
+    { who: 'sriku', text: 'Then the source link is how you will find out, and I would like to hear about it.' },
+  ]}
+/>
+
+---
+
+## Goodbye From the Chai Stall
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'No next Saturday, then.' },
+    { who: 'sriku', text: 'Not for this series. The glossary has several hundred entries we did not tell, and the field will not stop moving.' },
+    { who: 'sundu', text: 'Same bench, though.' },
+    { who: 'sriku', text: 'Same bench. Thanks for reading. The chai is on the house.' },
+  ]}
+/>
+
+[← Part X: From XL-Sum to XSum](/writing/ml-glossary-x) · [Start again at Part A →](/writing/ml-glossary-a)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); Z-score normalization is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy animals, juggler pictures and tiles are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

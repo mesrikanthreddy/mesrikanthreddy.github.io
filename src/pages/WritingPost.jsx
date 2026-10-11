@@ -23,6 +23,11 @@ export default function WritingPost() {
         <Link className="post-back" to="/writing">
           ← All writing
         </Link>
+        {meta.series === 'ML Glossary A to Z' && (
+          <Link className="post-back post-back-series" to="/series/ml-glossary-a-to-z">
+            All parts of {meta.series}
+          </Link>
+        )}
         {meta.type && (
           <span className="post-type" data-type={meta.type}>
             {meta.type}

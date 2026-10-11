@@ -1,0 +1,146 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part X: From XL-Sum to XSum',
+  subtitle: 'Week twenty-four at the chai stall: two machine learning terms, a million summaries in 44 languages, and an article squeezed into one sentence.',
+  type: 'Meme Feast',
+  date: '2026-10-30',
+  excerpt:
+    'Two machine learning terms starting with X, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 24,
+}
+
+Twenty-fourth Saturday. X is the shortest section, and the only one where both stories are about the same news organization.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part W](/writing/ml-glossary-w). The X section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary) has 3 entries: XLA, XL-Sum and XSum. I tell the stories of the two summarization datasets and leave XLA out, because I could not find a number about it that I could verify. None of the X terms are on Google's Fundamentals page.
+
+<Poster
+  badge="Part X · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Two terms. Two friends. One news desk."
+  rating="10/10 · bench reserved"
+  stats={['2 terms', '2 animations', '2 real cases', '44 languages']}
+/>
+
+---
+
+## XL-Sum: One Dataset, 44 Languages
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Every summarization demo I see is in English. What about everyone else?' },
+    { who: 'sriku', text: 'That is the gap XL-Sum fills. Google describes it as a dataset for evaluating an LLM’s proficiency in summarizing text, with entries in many languages. Each entry has an article taken from the BBC and a summary of the article. The summary can contain words or phrases that are not in the article.' },
+    { who: 'sundu', text: 'So the summaries are abstractive, not copied.' },
+    { who: 'sriku', text: 'Yes, and the paper behind it is XL-Sum: Large-Scale Multilingual Abstractive Summarization for 44 Languages.' },
+  ]}
+/>
+
+<Gif
+  name="xl-sum"
+  alt="Forty-four numbered circles fill a grid one by one, each standing for a language. Captions say each language has BBC articles paired with professional summaries and that the dataset has about one million article and summary pairs in all. The circles are a counting aid, not real language data."
+  caption="Fig. 145: Forty-four circles, one per language. They are a counting aid only."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who built it, and how big is it?' },
+    { who: 'sriku', text: 'Hasan, Bhattacharjee and colleagues at Bangladesh University of Engineering and Technology, with collaborators at Rochester, Monash and Swinburne. XL-Sum has 1 million professionally annotated article-summary pairs from the BBC, covering 44 languages from low-resource to high-resource, many of which had no public dataset before.' },
+    { who: 'cherry', text: 'How well does a model do on it?' },
+    { who: 'sriku', text: 'They fine-tuned mT5, a multilingual pretrained model. They report ROUGE-2 scores higher than 11 on the 10 languages they benchmarked, with some above 15, using multilingual training. Training on low-resource languages individually also gave competitive performance.' },
+    { who: 'sundu', text: 'ROUGE is from Part R.' },
+    { who: 'sriku', text: 'Yes. To the best of their knowledge, it is the largest abstractive summarization dataset in terms of the number of samples from a single source and the number of languages covered. That is their claim, as of when they wrote it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="XL-Sum: Large-Scale Multilingual Abstractive Summarization for 44 Languages (Hasan et al., 2021)"
+  stats={[
+    { value: '~1 million', label: 'Professionally annotated article-summary pairs' },
+    { value: '44', label: 'Languages, from low-resource to high-resource' },
+    { value: '11+', label: 'ROUGE-2 on the 10 languages benchmarked, some above 15' },
+  ]}
+  winner="The abstract: “The dataset covers 44 languages ranging from low to high-resource, for many of which no public dataset is currently available.”"
+  takeaway="A benchmark only measures the languages it includes. Adding 44 of them is how you find out who the models were quietly leaving behind."
+  source={{
+    text: 'Hasan et al., “XL-Sum: Large-Scale Multilingual Abstractive Summarization for 44 Languages”, Findings of ACL 2021. Free PDF on the ACL Anthology.',
+    href: 'https://aclanthology.org/2021.findings-acl.413.pdf',
+  }}
+/>
+
+**Real definition:** a dataset for evaluating an LLM’s proficiency in summarizing text. XL-Sum provides entries in many languages; each contains an article from the BBC and a summary of the article. [Google’s glossary: XL-Sum (xlsum) ↗](https://developers.google.com/machine-learning/glossary#xl-sum-xlsum)
+
+---
+
+## XSum: The Article in One Sentence
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'XSum looks like a typo. What is it?' },
+    { who: 'sriku', text: 'Google lists it as an abbreviation for Extreme Summarization. The idea comes from a 2018 paper by Narayan, Cohen and Lapata.' },
+    { who: 'sundu', text: 'What is extreme about it?' },
+    { who: 'sriku', text: 'The summary is a single sentence that answers the question: what is the article about?' },
+  ]}
+/>
+
+<Gif
+  name="xsum"
+  alt="A toy news article of five lines fades as it is condensed into a single green box reading Old bridge to close for repairs. Captions say the dataset has 226,711 BBC articles, each paired with a one-sentence summary, built so that copying a sentence from the article is not enough. The article is a toy example."
+  caption="Fig. 146: A toy article, squeezed into one sentence."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Why a new task?' },
+    { who: 'sriku', text: 'They introduce extreme summarization as a single-document task that does not favor extractive strategies and calls for an abstractive approach. The summary cannot be built by copying a sentence from the article.' },
+    { who: 'cherry', text: 'Where did the data come from?' },
+    { who: 'sriku', text: 'They collected 226,711 Wayback-archived BBC articles from 2010 to 2017, across domains like news, politics and sport.' },
+    { who: 'sundu', text: 'And the model?' },
+    { who: 'sriku', text: 'A novel abstractive model, conditioned on the article’s topics and based entirely on convolutional neural networks. They report it outperforms an oracle extractive system and state-of-the-art abstractive approaches, when evaluated automatically and by humans.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Extreme summarization (Narayan, Cohen and Lapata, 2018)"
+  stats={[
+    { value: '226,711', label: 'BBC articles in the dataset' },
+    { value: '1 sentence', label: 'Length of each summary' },
+  ]}
+  winner="The abstract: a “single-document summarization task which does not favor extractive strategies and calls for an abstractive modeling approach.”"
+  takeaway="If the answer can be copied from the input, the benchmark is too easy. Make the task need real rewriting."
+  source={{
+    text: 'Narayan, Cohen and Lapata, “Don’t Give Me the Details, Just the Summary! Topic-Aware Convolutional Neural Networks for Extreme Summarization”, 2018. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1808.08745',
+  }}
+/>
+
+**Real definition:** an abbreviation for Extreme Summarization. [Google’s glossary: XSum ↗](https://developers.google.com/machine-learning/glossary#xsum)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| XL-Sum | One dataset, 44 languages | BBC articles and summaries in many languages |
+| XSum | The article in one sentence | A dataset of one-sentence BBC summaries |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twenty-four weeks. Only Y and Z are left?' },
+    { who: 'sriku', text: 'Y has no entries in the glossary, so there is just one part to go: Z.' },
+    { who: 'sundu', text: 'Does that mean we close the feast?' },
+    { who: 'sriku', text: 'It does. Z has zero-shot learning, zero-shot prompting and a goodbye. Bring the notebook, and maybe a cake.' },
+  ]}
+/>
+
+[← Part W: From Wasserstein Loss to Word Embeddings](/writing/ml-glossary-w) · [Part Z: From Zero-Shot Learning to Goodbye →](/writing/ml-glossary-z)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the numbered circles and the toy article are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

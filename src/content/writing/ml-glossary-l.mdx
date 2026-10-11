@@ -1,0 +1,289 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part L: From L1 Regularization to Lost in the Middle',
+  subtitle: 'Week twelve at the chai stall: five machine learning terms, a marble in a bowl, and a model that remembers the start and the end of everything you tell it.',
+  type: 'Meme Feast',
+  date: '2026-10-18',
+  excerpt:
+    'Five machine learning terms starting with L, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 12,
+}
+
+Twelfth Saturday. L is a big section, so Cherry brought a bigger notebook and Sriku brought a bigger flask.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part K](/writing/ml-glossary-k). This round covers the L section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 43 entries. I picked five and left the loss entries on the shelf. Three of the entries, L1 regularization, L2 regularization and learning rate, are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals), and I tell L1 and L2 as one story.
+
+<Poster
+  badge="Part L · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. Zero weights."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '1 padlock']}
+/>
+
+---
+
+## L1 and L2 Regularization: Delete or Shrink
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I have a thousand features and I suspect most are noise. How do I stop the model leaning on them?' },
+    { who: 'sriku', text: 'Regularization. There are two flavours. L1 penalizes the weights in proportion to the sum of their absolute values, and that drives the weights of irrelevant or barely relevant features to exactly 0.' },
+    { who: 'sundu', text: 'Exactly zero, so the feature is gone.' },
+    { who: 'sriku', text: 'Effectively removed. L2 penalizes the sum of the squares instead. It pulls outlier weights closer to 0 but not quite to 0, so those features stay in the model with very little influence.' },
+  ]}
+/>
+
+<Gif
+  name="l1-l2"
+  alt="Two bar charts of six weights each. In the L1 chart the small bars fall to exactly zero one after another. In the L2 chart every bar shrinks but none reaches zero. The weights are a toy example."
+  caption="Fig. 91: Toy weights. L1 deletes the small ones, L2 only shrinks them."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is there evidence that L1 wins when most features are junk?' },
+    { who: 'sriku', text: 'Andrew Ng studied it at Stanford for ICML 2004, using logistic regression with very many irrelevant features. With L1, the number of training examples needed to learn well grows only logarithmically in the number of irrelevant features.' },
+    { who: 'cherry', text: 'And with L2?' },
+    { who: 'sriku', text: 'He gives a lower bound for any rotationally invariant algorithm. The paper lists logistic regression with L2 regularization, SVMs and neural networks trained by backpropagation as examples. Their worst-case sample complexity grows at least linearly in the number of irrelevant features.' },
+    { who: 'sundu', text: 'So junk features cost L2 far more.' },
+    { who: 'sriku', text: 'In the worst case, yes. The abstract says L1-regularized logistic regression can be effective even if there are exponentially many irrelevant features as there are training examples. That is a theory result about worst cases, not a promise for every dataset.' },
+  ]}
+/>
+
+<CaseStudy
+  title="L1 versus L2 with many irrelevant features (Ng, 2004)"
+  stats={[
+    { value: 'Logarithmic', label: 'Growth in examples needed with L1 as irrelevant features are added' },
+    { value: 'At least linear', label: 'Worst-case growth for L2 and other rotationally invariant methods' },
+  ]}
+  winner="The abstract: “using L1 regularization of the parameters, the sample complexity … grows only logarithmically in the number of irrelevant features.”"
+  takeaway="If you expect most features to be noise, L1 has theory on its side. If you want every feature to keep a small say, L2 is the gentle option."
+  source={{
+    text: 'Ng, “Feature selection, L1 vs. L2 regularization, and rotational invariance”, ICML 2004. Free PDF from Stanford.',
+    href: 'https://ai.stanford.edu/~ang/papers/icml04-l1l2.pdf',
+  }}
+/>
+
+**Real definition:** L1 regularization penalizes weights in proportion to the sum of the absolute value of the weights, which helps drive the weights of irrelevant or barely relevant features to exactly 0. L2 regularization penalizes weights in proportion to the sum of the squares of the weights, which drives outlier weights closer to 0 but not quite to 0. [Google’s glossary (Fundamentals): L1 regularization ↗](https://developers.google.com/machine-learning/glossary/fundamentals#l1-regularization) · [L2 regularization ↗](https://developers.google.com/machine-learning/glossary/fundamentals#l2-regularization)
+
+---
+
+## Learning Rate: Not Too Small, Not Too Big
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My training loss either crawls or explodes. What am I doing wrong?' },
+    { who: 'sriku', text: 'Check your learning rate. It is a number that tells gradient descent how strongly to adjust the weights and biases on each iteration. Google’s example: a rate of 0.3 adjusts them three times more powerfully than 0.1.' },
+    { who: 'sundu', text: 'And the wrong value?' },
+    { who: 'sriku', text: 'Set it too low and training takes too long. Set it too high and gradient descent often has trouble reaching convergence.' },
+  ]}
+/>
+
+<Gif
+  name="learning-rate"
+  alt="Three panels each show a ball rolling down a bowl-shaped curve. With a low learning rate the ball takes tiny steps and crawls. With a middle rate it reaches the bottom in a few steps. With a high rate it overshoots, bounces from side to side and ends up farther away. The curve is a toy example."
+  caption="Fig. 92: Toy bowl, three step sizes. Only the middle one arrives."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does it ever need to change on a big job?' },
+    { who: 'sriku', text: 'Yes. A Facebook team, Goyal, Dollár, Girshick, He and colleagues, wanted to cut ImageNet training time by splitting each minibatch across many GPUs. That forces a much larger minibatch, and they found that large minibatches cause optimization difficulties.' },
+    { who: 'cherry', text: 'What was the fix?' },
+    { who: 'sriku', text: 'A rule for the learning rate: when the minibatch size is multiplied by k, multiply the learning rate by k. They call it the linear scaling rule, and they add a warmup phase for the first few epochs of training.' },
+    { who: 'sundu', text: 'Did accuracy hold?' },
+    { who: 'sriku', text: 'They report no loss of accuracy with minibatches up to 8192 images. ResNet-50 trained on 256 GPUs in one hour, matching small-minibatch accuracy, with about 90% scaling efficiency moving from 8 to 256 GPUs.' },
+  ]}
+/>
+
+<CaseStudy
+  title="ImageNet in one hour (Goyal et al., Facebook, 2017)"
+  stats={[
+    { value: '8,192', label: 'Images per minibatch with no loss of accuracy' },
+    { value: '256 GPUs', label: 'Training ResNet-50 in one hour' },
+    { value: '~90%', label: 'Scaling efficiency from 8 to 256 GPUs' },
+  ]}
+  winner="The linear scaling rule: “When the minibatch size is multiplied by k, multiply the learning rate by k.” All other hyper-parameters are kept unchanged."
+  takeaway="The learning rate is not a fixed setting. When the batch grows, it has to grow with it, and a warmup keeps the first steps from blowing up."
+  source={{
+    text: 'Goyal et al., “Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour”, 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.02677',
+  }}
+/>
+
+**Real definition:** a floating-point number that tells the gradient descent algorithm how strongly to adjust weights and biases on each iteration. Too low and training takes too long; too high and gradient descent often has trouble reaching convergence. [Google’s glossary (Fundamentals): learning rate ↗](https://developers.google.com/machine-learning/glossary/fundamentals#learning-rate)
+
+---
+
+## LSTM: A Memory With Doors
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My recurrent network forgets the start of a long sentence by the time it reaches the end.' },
+    { who: 'sriku', text: 'That is the vanishing gradient problem. A long short-term memory cell, an LSTM, addresses it by keeping history in an internal memory state, updated from the new input and the context from previous cells.' },
+    { who: 'sundu', text: 'What do people use it for?' },
+    { who: 'sriku', text: 'Google’s glossary lists handwriting recognition, machine translation and image captioning.' },
+  ]}
+/>
+
+<Gif
+  name="lstm"
+  alt="Two rows of circles over nine time steps carry a signal that starts at step zero. In the plain RNN row the circles shrink until the signal has almost faded. In the LSTM row, with small gold gates between steps, the circles stay large. The fade is a toy illustration."
+  caption="Fig. 93: Toy picture of one signal passed along nine steps."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who came up with it?' },
+    { who: 'sriku', text: 'Sepp Hochreiter and Jürgen Schmidhuber, in Neural Computation in 1997. Their abstract says that learning to store information over long intervals by recurrent backpropagation takes a very long time, mostly because the error signal decays.' },
+    { who: 'cherry', text: 'And their fix?' },
+    { who: 'sriku', text: 'Constant error flow through what they call constant error carrousels, inside special units. Multiplicative gate units learn to open and close access to that flow.' },
+    { who: 'sundu', text: 'How long a gap can it bridge?' },
+    { who: 'sriku', text: 'Time lags in excess of 1000 discrete time steps, on artificial tasks. Compared with methods like RTRL and BPTT, it had many more successful runs and learned much faster. Part M has a famous user: Google’s translation system stacks eight LSTM layers in its encoder and eight in its decoder.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Long Short-Term Memory (Hochreiter and Schmidhuber, 1997)"
+  stats={[
+    { value: '1,000+', label: 'Time steps of lag bridged on artificial tasks' },
+    { value: 'O(1)', label: 'Computation per time step and weight' },
+  ]}
+  winner="The abstract: “LSTM can learn to bridge minimal time lags in excess of 1000 discrete time steps by enforcing constant error flow through ‘constant error carrousels’ within special units.”"
+  takeaway="Gates let a network choose what to keep, instead of hoping the signal survives."
+  source={{
+    text: 'Hochreiter and Schmidhuber, “Long Short-Term Memory”, Neural Computation 9(8), 1997. Free PDF.',
+    href: 'https://www.bioinf.jku.at/publications/older/2604.pdf',
+  }}
+/>
+
+**Real definition:** a type of cell in a recurrent neural network used to process sequences of data in applications such as handwriting recognition, machine translation and image captioning. LSTMs address the vanishing gradient problem by maintaining history in an internal memory state. [Google’s glossary: Long Short-Term Memory (LSTM) ↗](https://developers.google.com/machine-learning/glossary#long-short-term-memory-lstm)
+
+---
+
+## LoRA: Teach the Giant a Trick Without Retraining It
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fine-tuning a giant model means updating every weight. My GPU is crying.' },
+    { who: 'sriku', text: 'LoRA, low-rank adaptability, freezes the pre-trained weights so they can no longer change, then inserts a small set of trainable weights. Google calls them update matrixes, and they are far smaller than the base model, so they train much faster.' },
+    { who: 'sundu', text: 'Any other benefit?' },
+    { who: 'sriku', text: 'The glossary lists better predictions for the domain you tune on, faster fine-tuning than updating everything, and cheaper inference, because several specialized models can be served together while sharing the same base model.' },
+  ]}
+/>
+
+<Gif
+  name="lora"
+  alt="A grid labelled pre-trained weights W carries a padlock and the word frozen. Beside it, two thin gold matrices, one tall and one wide, are labelled B and A and described as a small trainable update. A caption quotes the paper: 10,000 times fewer trainable parameters and 3 times less GPU memory for GPT-3 175B."
+  caption="Fig. 94: Freeze W, train only the thin matrices."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'How small is small?' },
+    { who: 'sriku', text: 'The LoRA paper, from a Microsoft team led by Edward Hu, uses GPT-3 175B as its example. Keeping a separate fully fine-tuned copy for every task, each with 175 billion parameters, is prohibitively expensive.' },
+    { who: 'cherry', text: 'And LoRA?' },
+    { who: 'sriku', text: 'It injects trainable rank decomposition matrices into each layer of the Transformer. Compared with GPT-3 175B fine-tuned with Adam, they report 10,000 times fewer trainable parameters and 3 times less GPU memory.' },
+    { who: 'sundu', text: 'At a cost in quality?' },
+    { who: 'sriku', text: 'The paper says LoRA performs on par or better than fine-tuning on RoBERTa, DeBERTa, GPT-2 and GPT-3, with a higher training throughput and, unlike adapters, no additional inference latency.' },
+  ]}
+/>
+
+<CaseStudy
+  title="LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., Microsoft, 2021)"
+  stats={[
+    { value: '10,000x', label: 'Fewer trainable parameters than fine-tuning GPT-3 175B with Adam' },
+    { value: '3x', label: 'Less GPU memory required' },
+    { value: 'None', label: 'Additional inference latency, unlike adapters' },
+  ]}
+  winner="The abstract: “Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times.”"
+  takeaway="Freeze the giant, train a sliver, and keep one shared copy of the base model."
+  source={{
+    text: 'Hu et al., “LoRA: Low-Rank Adaptation of Large Language Models”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2106.09685',
+  }}
+/>
+
+**Real definition:** a parameter-efficient technique for fine tuning that “freezes” the model’s pre-trained weights and then inserts a small set of trainable weights, which is considerably smaller than the base model and therefore much faster to train. [Google’s glossary: Low-Rank Adaptability (LoRA) ↗](https://developers.google.com/machine-learning/glossary#low-rank-adaptability-lora)
+
+---
+
+## Lost in the Middle: The Start and the End Win
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I pasted twenty documents into the prompt and the answer was in document ten. The model missed it.' },
+    { who: 'sriku', text: 'That is the lost-in-the-middle effect. An LLM tends to use information from the start and end of a long context more effectively than information from the middle. Accuracy is relatively high when the relevant text is near the beginning or end, and relatively low when it sits in the middle.' },
+    { who: 'sundu', text: 'Whose term is that?' },
+    { who: 'sriku', text: 'The glossary says it comes from a paper called Lost in the Middle: How Language Models Use Long Contexts. We can read it.' },
+  ]}
+/>
+
+<Gif
+  name="lost-in-the-middle"
+  alt="A row of fifteen document blocks with one highlighted in gold moves from the start of the context to the end. Below it a curve of accuracy follows along: high at the start, falling to a low in the middle, and rising again at the end. The curve shape is a toy illustration."
+  caption="Fig. 95: Toy curve. The shape is the point, the numbers are not data."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What did they test?' },
+    { who: 'sriku', text: 'Nelson Liu and colleagues at Stanford, UC Berkeley and Samaya AI used two tasks that need finding relevant information in the input: multi-document question answering and key-value retrieval.' },
+    { who: 'cherry', text: 'And the result?' },
+    { who: 'sriku', text: 'Performance can degrade significantly when the position of the relevant information changes. It is often highest when that information is at the beginning or end of the input, and it drops when the model must use something from the middle of a long context, even for models built for long contexts.' },
+    { who: 'sundu', text: 'So what do I do about it?' },
+    { who: 'sriku', text: 'The abstract offers new evaluation protocols rather than a fix. My own habit, not the paper’s advice: test a prompt with the answer in different positions, and put the key material at the edges.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Lost in the Middle (Liu et al., 2023)"
+  stats={[
+    { value: '2', label: 'Tasks: multi-document question answering and key-value retrieval' },
+    { value: 'Start and end', label: 'Where performance is often highest' },
+    { value: 'Middle', label: 'Where it degrades significantly' },
+  ]}
+  winner="The abstract: “performance is often highest when relevant information occurs at the beginning or end of the input context, and significantly degrades when models must access relevant information in the middle of long contexts, even for explicitly long-context models.”"
+  takeaway="A long context window is not the same as a context the model uses evenly. Check where your answer sits."
+  source={{
+    text: 'Liu et al., “Lost in the Middle: How Language Models Use Long Contexts”, 2023. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2307.03172',
+  }}
+/>
+
+**Real definition:** an LLM’s tendency to use information from the start and end of a long context window more effectively than information from the middle. [Google’s glossary: lost-in-the-middle effect ↗](https://developers.google.com/machine-learning/glossary#lost-in-the-middle-effect)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| L1 and L2 regularization | Delete or shrink | Penalize weights, to zero (L1) or toward zero (L2) |
+| Learning rate | Not too small, not too big | How strongly each step adjusts the weights |
+| LSTM | A memory with doors | A recurrent cell with gates that keep history |
+| LoRA | Teach the giant a trick | Freeze the model, train a small update |
+| Lost in the middle | The start and the end win | Models use the middle of a long context less well |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Twelve weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 14 more letters, from M to Z.' },
+    { who: 'sundu', text: 'M has machine translation, and I heard something about MNIST.' },
+    { who: 'sriku', text: 'Both. There is a mixture of experts too. Bring the notebook.' },
+  ]}
+/>
+
+[← Part K: From Keras to K-Means](/writing/ml-glossary-k) · [Part M: From Machine Translation to MNIST →](/writing/ml-glossary-m)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); L1 regularization, L2 regularization and learning rate are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy bowl, weights and fading signal are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />

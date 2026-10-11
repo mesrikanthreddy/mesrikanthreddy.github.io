@@ -1,0 +1,446 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part F: From Feature Cross to Forget Gate',
+  subtitle: 'Week six at the chai stall: eight machine learning terms, a keyboard that learns without reading your messages, and a cell that knows when to forget.',
+  type: 'Meme Feast',
+  date: '2026-10-12',
+  excerpt:
+    'Eight machine learning terms starting with F, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 6,
+}
+
+Sixth Saturday, and the notebook is nearly full. Sundu has started asking "what's the source?" before I finish a sentence.
+
+Catching up? [Part A](/writing/ml-glossary-a), [B](/writing/ml-glossary-b), [C](/writing/ml-glossary-c), [D](/writing/ml-glossary-d) and [E](/writing/ml-glossary-e) are all on the bench. This round covers the F section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 35 entries. I picked eight. Three of them are also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals): feature cross, false positive rate and feedback loop.
+
+<Poster
+  badge="Part F · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Eight terms. Two friends. One very forgetful cell."
+  rating="10/10 · bench reserved"
+  stats={['8 terms', '8 animations', '8 real cases', '1 keyboard']}
+/>
+
+---
+
+## Feature Cross: Freezing and Windy Is Its Own Thing
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My mood forecast model has temperature and wind speed. It treats them separately and it is rubbish.' },
+    { who: 'sriku', text: 'Because "freezing" and "windy" are worse together than apart. A feature cross is a synthetic feature made by crossing categorical or bucketed features.' },
+    { who: 'sundu', text: 'How many values does that make?' },
+    { who: 'sriku', text: 'Google’s glossary example: four temperature buckets and three wind buckets. Without a cross the model learns seven buckets independently. With one it gets 12 combinations, like freezing-windy, each learned on its own.' },
+  ]}
+/>
+
+<Gif
+  name="feature-cross"
+  alt="A grid with four temperature columns, freezing, chilly, temperate and warm, and three wind rows, still, light and windy. The twelve cells light up one by one, each a combined value such as freezing-windy. A caption says four times three is twelve combined values."
+  caption="Fig. 51: The glossary’s own example: 4 × 3 = 12 combinations."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who uses crosses at real scale?' },
+    { who: 'sriku', text: 'Google Play. The Wide & Deep paper describes a cross-product feature that is 1 only if the user installed Netflix and is later shown Pandora.' },
+    { who: 'cherry', text: 'Why is that useful?' },
+    { who: 'sriku', text: 'It captures a co-occurrence that correlates with the label. The authors call this memorization. The catch is that a cross cannot generalize to pairs it never saw in training, so they added a deep network next to it.' },
+    { who: 'sundu', text: 'Did that pay off?' },
+    { who: 'sriku', text: 'In a three-week live A/B test, each group was 1% of users. The old model was a wide-only logistic regression with rich crosses. Wide & Deep improved app acquisitions on the main landing page by 3.9%. Deep-only managed 2.9%.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Google Play: Wide & Deep (Google, 2016)"
+  stats={[
+    { value: '+3.9%', label: 'App acquisitions, Wide & Deep vs control' },
+    { value: '+2.9%', label: 'App acquisitions, deep-only vs control' },
+    { value: '3 weeks', label: 'Live A/B test, 1% of users per group' },
+    { value: '1B+ / 1M+', label: 'Active users / apps in Google Play' },
+  ]}
+  winner="The authors: “Memorization of feature interactions through a wide set of cross-product feature transformations are effective and interpretable.”"
+  takeaway="A cross remembers specific combinations. Pair it with a model that generalizes."
+  source={{
+    text: 'Cheng et al. (Google), “Wide & Deep Learning for Recommender Systems”, 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1606.07792',
+  }}
+/>
+
+**Real definition:** a synthetic feature formed by “crossing” categorical or bucketed features. [Google’s glossary (Fundamentals): feature cross ↗](https://developers.google.com/machine-learning/glossary/fundamentals#feature-cross)
+
+---
+
+## Federated Learning: The Model Travels, the Data Stays
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My keyboard app should learn from how I type, but I do not want my messages on a server.' },
+    { who: 'sriku', text: 'Federated learning: a distributed approach that trains models on decentralized examples that stay on devices like smartphones.' },
+    { who: 'sundu', text: 'How does a model learn from data it never sees?' },
+    { who: 'sriku', text: 'A subset of phones downloads the current model and improves it using their own data. They upload only the improvements, never the examples, and the server aggregates them.' },
+  ]}
+/>
+
+<Gif
+  name="federated-learning"
+  alt="Four phones surround a server. In four steps, the phones download the model, train on their own data locally, upload only updates, and the server averages them into a better model. A caption says the model travels and the data stays."
+  caption="Fig. 52: Updates travel to the server. Examples do not."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Real product?' },
+    { who: 'sriku', text: 'Gboard, Google’s keyboard. A Google team trained its next-word prediction model with federated learning and compared it with server training.' },
+    { who: 'cherry', text: 'How big was the run?' },
+    { who: 'sriku', text: 'It converged after 3,000 training rounds, over which 600 million sentences were processed by 1.5 million clients. Training typically took 4 to 5 days. The model shipped to phones is 1.4 megabytes.' },
+    { who: 'sundu', text: 'And the quality?' },
+    { who: 'sriku', text: 'Top-1 recall was 13.0% for the old n-gram model, 16.5% for the server-trained model and 16.4% for the federated one. Basically a tie with the server, without the messages leaving the phones.' },
+    { who: 'cherry', text: 'Did people notice?' },
+    { who: 'sriku', text: 'In live traffic, the new model’s predictions were 10% more likely to be clicked than the n-gram model’s.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Gboard next-word prediction (Google, 2018)"
+  stats={[
+    { value: '1.5 million', label: 'Clients, 3,000 rounds, 600M sentences' },
+    { value: '16.4%', label: 'Top-1 recall, federated model' },
+    { value: '16.5%', label: 'Server-trained model' },
+    { value: '13.0%', label: 'Old n-gram baseline' },
+  ]}
+  winner="The paper “demonstrates the feasibility and benefit of training language models on client devices without exporting sensitive user data to servers.”"
+  takeaway="You can match server training without collecting the data in one place."
+  source={{
+    text: 'Hard et al. (Google), “Federated Learning for Mobile Keyboard Prediction”, 2018. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1811.03604',
+  }}
+/>
+
+**Real definition:** a distributed machine learning approach that trains models using decentralized examples residing on devices such as smartphones. [Google’s glossary: federated learning ↗](https://developers.google.com/machine-learning/glossary#federated-learning)
+
+---
+
+## Feedback Loop: The Model Feeds Itself
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A movie app recommends action films, so people watch action films, so it recommends more action films.' },
+    { who: 'sriku', text: 'That is a feedback loop: a situation in which a model’s predictions influence the training data for the same model or another model.' },
+    { who: 'sundu', text: 'Harmless for films.' },
+    { who: 'sriku', text: 'Less harmless when the model decides where police go, because the places it sends them to are where it will find crime to record.' },
+  ]}
+/>
+
+<Gif
+  name="feedback-loop"
+  alt="A four-step loop reads: the model predicts more crime in area A, police are sent to A, more crime is found in A, and the data says A is worse. Beside it, bars for recorded incidents drift from nearly equal to sixty percent in area A and forty percent in area B, even though true crime is the same. This is a toy simulation."
+  caption="Fig. 53: A toy simulation. True crime is equal; the records are not."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Has anyone studied this properly?' },
+    { who: 'sriku', text: 'Ensign and colleagues, in a paper on predictive policing. Such systems use discovered crime data, such as arrest counts, to update the model, and the process repeats.' },
+    { who: 'cherry', text: 'What went wrong?' },
+    { who: 'sriku', text: 'The systems have been shown empirically to be susceptible to runaway feedback loops: police are repeatedly sent back to the same neighbourhoods regardless of the true crime rate. The authors build a mathematical model and prove why it happens.' },
+    { who: 'sundu', text: 'Is there a fix?' },
+    { who: 'sriku', text: 'They show how to change the inputs, in a black-box manner, so the runaway loop does not occur and the true crime rate can be learned. They also separate incidents reported by residents from those discovered by police. Reported ones soften the loop but cannot remove it.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Runaway feedback loops in predictive policing (Ensign et al., 2018)"
+  stats={[
+    { value: 'Runaway', label: 'Police repeatedly sent to the same neighbourhoods' },
+    { value: 'Regardless', label: 'Of the true crime rate' },
+    { value: '2 kinds', label: 'Of incident data: reported and discovered' },
+  ]}
+  winner="The authors prove why such a loop occurs in their model, and show how to change the inputs “so the runaway feedback loop does not occur, allowing the true crime rate to be learned.”"
+  takeaway="If a model chooses where to look, it will mostly see what it expected to see."
+  source={{
+    text: 'Ensign, Friedler, Neville, Scheidegger and Venkatasubramanian, “Runaway Feedback Loops in Predictive Policing”, FAT* 2018. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1706.09847',
+  }}
+/>
+
+**Real definition:** in machine learning, a situation in which a model’s predictions influence the training data for the same model or another model. [Google’s glossary (Fundamentals): feedback loop ↗](https://developers.google.com/machine-learning/glossary/fundamentals#feedback-loop)
+
+---
+
+## Few-Shot Prompting: Show, Then Ask
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'I asked the model for a country’s currency and it wrote an essay.' },
+    { who: 'sriku', text: 'Show it what you want first. Few-shot prompting is a prompt with more than one example of how the model should answer.' },
+    { who: 'sundu', text: 'Like: "France: EUR, United Kingdom: GBP, India:"' },
+    { who: 'sriku', text: 'And it continues the pattern with INR. Google’s glossary says this usually beats zero-shot and one-shot prompting, at the price of a longer prompt.' },
+  ]}
+/>
+
+<Gif
+  name="few-shot-prompting"
+  alt="A prompt shows a question about official currencies, then the examples France: EUR and United Kingdom: GBP, then India: and the model completes it with INR."
+  caption="Fig. 54: The glossary’s own example, completed by the model."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did this get famous?' },
+    { who: 'sriku', text: 'GPT-3. OpenAI’s 2020 paper trained a 175-billion-parameter model, 10 times more than any previous non-sparse language model, and tested it with no gradient updates and no fine-tuning at all.' },
+    { who: 'cherry', text: 'So the examples live only in the prompt.' },
+    { who: 'sriku', text: 'The tasks and the demonstrations are specified purely through text. It did well on translation, question answering and word puzzles, and even on 3-digit arithmetic.' },
+    { who: 'sundu', text: 'Anything go wrong?' },
+    { who: 'sriku', text: 'Plenty. On the WiC word-sense task its few-shot score was 49.4%, which is random chance. And humans could barely tell its ~200-word news articles from real ones: about 52% accuracy, where 50% is guessing.' },
+  ]}
+/>
+
+<CaseStudy
+  title="GPT-3 (OpenAI, 2020): learning from the prompt alone"
+  stats={[
+    { value: '175B', label: 'Parameters' },
+    { value: '0', label: 'Gradient updates used for each task' },
+    { value: '~52%', label: 'Human accuracy spotting its news articles (50% = chance)' },
+    { value: '49.4%', label: 'Few-shot score on WiC, equal to random chance' },
+  ]}
+  winner="The authors: “scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches.”"
+  takeaway="With enough scale, a handful of examples in the prompt can replace a training run. Not for every task."
+  source={{
+    text: 'Brown et al. (OpenAI), “Language Models are Few-Shot Learners”, NeurIPS 2020. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2005.14165',
+  }}
+/>
+
+**Real definition:** a prompt that contains more than one (a “few”) example demonstrating how the large language model should respond. [Google’s glossary: few-shot prompting ↗](https://developers.google.com/machine-learning/glossary#few-shot-prompting)
+
+---
+
+## Fine-Tuning: Pre-Train Wide, Then Specialise
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Few-shot works, but I want the model to do one job really well.' },
+    { who: 'sriku', text: 'Then fine-tune it: a second, task-specific training pass on a pre-trained model, to refine its parameters for your use case.' },
+    { who: 'sundu', text: 'So the model has two schools.' },
+    { who: 'sriku', text: 'Pre-training is a vast general dataset. Fine-tuning is typically hundreds or thousands of examples for the specific task, like answering medical queries.' },
+  ]}
+/>
+
+<Gif
+  name="fine-tuning"
+  alt="Two boxes joined by an arrow. The first, pre-training, fills a bar on a huge general dataset. The second, fine-tuning, fills a short bar on a few hundred or thousand examples and ends with a model that has a stethoscope, specialised for one job."
+  caption="Fig. 55: A short second pass turns a generalist into a specialist."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Does the second pass really matter that much?' },
+    { who: 'sriku', text: 'OpenAI’s InstructGPT paper. They hired 40 contractors to write demonstrations and rank outputs, then fine-tuned GPT-3 on that human data.' },
+    { who: 'cherry', text: 'And?' },
+    { who: 'sriku', text: 'Labelers preferred outputs from the 1.3-billion-parameter InstructGPT to those of the 175-billion-parameter GPT-3, despite 100 times fewer parameters.' },
+    { who: 'sundu', text: 'Same architecture?' },
+    { who: 'sriku', text: 'Same architecture. The only difference was the fine-tuning on human data. It held even when GPT-3 got a few-shot prompt to help it follow instructions.' },
+  ]}
+/>
+
+<CaseStudy
+  title="InstructGPT (OpenAI, 2022): a small model beats a giant"
+  stats={[
+    { value: '1.3B', label: 'InstructGPT parameters (preferred)' },
+    { value: '175B', label: 'GPT-3 parameters' },
+    { value: '100×', label: 'Fewer parameters' },
+    { value: '40', label: 'Contractors who labeled the data' },
+  ]}
+  winner="“Outputs from the 1.3B parameter InstructGPT model are preferred to outputs from the 175B GPT-3, despite having over 100x fewer parameters.”"
+  takeaway="A small amount of the right data in a second pass can beat a lot of extra size."
+  source={{
+    text: 'Ouyang et al. (OpenAI), “Training language models to follow instructions with human feedback”, 2022. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2203.02155',
+  }}
+/>
+
+**Real definition:** a second, task-specific training pass performed on a pre-trained model to refine its parameters for a specific use case. [Google’s glossary: fine-tuning ↗](https://developers.google.com/machine-learning/glossary#fine-tuning)
+
+---
+
+## Foundation Model: One Base, Many Buildings
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Everyone keeps saying "foundation model". Is that just a big model?' },
+    { who: 'sriku', text: 'A very large pre-trained model, trained on an enormous and diverse training set, that does two things: it responds well to a wide range of requests, and it serves as a base for fine-tuning or other customization.' },
+    { who: 'sundu', text: 'Why "foundation"?' },
+    { who: 'sriku', text: 'Because other things get built on top of it. The model itself is already capable, but it is the starting point rather than the finished product.' },
+  ]}
+/>
+
+<Gif
+  name="foundation-model"
+  alt="One wide block labelled one very large pre-trained model sits at the bottom. Five columns rise from it, each ending in a use: translate, summarise, write code, answer and caption images. A caption says build once, adapt many times."
+  caption="Fig. 56: One base, many uses."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who coined it?' },
+    { who: 'sriku', text: 'A Stanford team, in 2021. They named BERT, DALL-E and GPT-3 as examples: models trained on broad data at scale that can be adapted to a wide range of tasks.' },
+    { who: 'cherry', text: 'Why that word?' },
+    { who: 'sriku', text: 'The report says a foundation model is itself incomplete but serves as the common basis from which many task-specific models are built through adaptation.' },
+    { who: 'sundu', text: 'Any downside?' },
+    { who: 'sriku', text: 'Yes, and they flag it. Everything built on one model shares its flaws. They call the shared base homogenization, which gives powerful leverage but demands caution because defects are inherited by all the adapted models.' },
+  ]}
+/>
+
+<CaseStudy
+  title="On the Opportunities and Risks of Foundation Models (Stanford, 2021)"
+  stats={[
+    { value: '3', label: 'Named examples: BERT, DALL-E, GPT-3' },
+    { value: '1 base', label: 'Many adapted models built on top' },
+  ]}
+  winner="The report: “a foundation model is itself incomplete but serves as the common basis from which many task-specific models are built via adaptation.”"
+  takeaway="One strong base saves everyone work, and passes its mistakes to everyone too."
+  source={{
+    text: 'Bommasani et al. (Stanford CRFM), “On the Opportunities and Risks of Foundation Models”, 2021. Free on arXiv.',
+    href: 'https://arxiv.org/abs/2108.07258',
+  }}
+/>
+
+**Real definition:** a very large pre-trained model trained on an enormous and diverse training set, which can respond well to a wide range of requests and serve as a base model for additional fine-tuning or other customization. [Google’s glossary: foundation model ↗](https://developers.google.com/machine-learning/glossary#foundation-model)
+
+---
+
+## False Positive Rate: Healthy People Wrongly Flagged
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'The screening model caught most of the sick patients. Why is the hospital still unhappy?' },
+    { who: 'sriku', text: 'Because of the healthy people it flagged. The false positive rate is the proportion of actual negatives that the model mistakenly predicted as positive.' },
+    { who: 'sundu', text: 'The formula?' },
+    { who: 'sriku', text: 'False positives divided by false positives plus true negatives. It is also the x-axis of an ROC curve, from the AUC chapter.' },
+  ]}
+/>
+
+<Gif
+  name="false-positive-rate"
+  alt="Ten healthy people and five sick people are shown as dots. Two of the healthy people are flagged by the model with red rings. The caption works out the false positive rate as 2 divided by 10, which is 20 percent. The example is a toy."
+  caption="Fig. 57: Toy example. 2 false alarms out of 10 healthy people is 20%."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What does bringing it down look like for real?' },
+    { who: 'sriku', text: 'A breast cancer screening study published in Nature, led by Google Health researchers. The AI system was tested on a large representative UK dataset and a large enriched US dataset.' },
+    { who: 'cherry', text: 'Versus the radiologists?' },
+    { who: 'sriku', text: 'Against the human readers’ decisions, it showed an absolute reduction of 5.7% (US) and 1.2% (UK) in false positives, and 9.4% and 2.7% in false negatives.' },
+    { who: 'sundu', text: 'Both mistakes down at once?' },
+    { who: 'sriku', text: 'Yes. In an independent six-radiologist study it beat every human reader, and in a simulated UK double-reading process it cut the second reader’s workload by 88%. The authors say it paves the way for clinical trials, not that it is ready to replace anyone.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Breast cancer screening (McKinney et al., Nature 2020)"
+  stats={[
+    { value: '−5.7% / −1.2%', label: 'Absolute false positives, US / UK' },
+    { value: '−9.4% / −2.7%', label: 'Absolute false negatives, US / UK' },
+    { value: '+11.5%', label: 'AUC-ROC margin over the average of 6 radiologists' },
+    { value: '88%', label: 'Reduction in the second reader’s workload (simulation)' },
+  ]}
+  winner="From the paper: “We show an absolute reduction of 5.7% and 1.2% (USA and UK) in false positives and 9.4% and 2.7% in false negatives.”"
+  takeaway="Fewer false alarms and fewer misses, measured against real radiologists. Next step: clinical trials."
+  source={{
+    text: 'McKinney et al., “International evaluation of an AI system for breast cancer screening”, Nature 2020.',
+    href: 'https://www.nature.com/articles/s41586-019-1799-6',
+  }}
+/>
+
+**Real definition:** the proportion of actual negative examples for which the model mistakenly predicted the positive class: false positives divided by false positives plus true negatives. [Google’s glossary (Fundamentals): false positive rate ↗](https://developers.google.com/machine-learning/glossary/fundamentals#false-positive-rate-fpr)
+
+---
+
+## Forget Gate: Remember What Matters
+
+<Convo
+  lines={[
+    { who: 'cherry', text: '"The cat, which ate quickly, was hungry." How does a model keep "cat" in mind until it reaches "was"?' },
+    { who: 'sriku', text: 'With an LSTM, a type of recurrent network with a memory cell. The forget gate is the part of the cell that regulates the flow of information, deciding which information to discard from the cell state.' },
+    { who: 'sundu', text: 'So it forgets on purpose.' },
+    { who: 'sriku', text: 'To keep the context that matters. Without that, the cell would just hoard everything.' },
+  ]}
+/>
+
+<Gif
+  name="forget-gate"
+  alt="The sentence The cat, which ate quickly, was hungry is shown with five memory cells: cat, which, ate, quickly and was. The cells for which, ate and quickly are crossed out by the forget gate, while cat and was stay lit. This is a toy sketch."
+  caption="Fig. 58: Toy sketch. Keep the subject, drop the filler."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Was the gate always in LSTMs?' },
+    { who: 'sriku', text: 'No. The first LSTM had a weakness with continual input streams that are not split into marked sequences. Without resets, Gers, Schmidhuber and Cummins say the cell’s state may grow indefinitely and eventually cause the network to break down.' },
+    { who: 'cherry', text: 'And their fix?' },
+    { who: 'sriku', text: 'A novel, adaptive "forget gate" that lets an LSTM cell learn to reset itself at appropriate times. On continual versions of benchmark problems, every algorithm failed, including the plain LSTM. LSTM with forget gates solved them.' },
+    { who: 'sundu', text: 'Used in anything big?' },
+    { who: 'sriku', text: 'Google researchers used LSTM networks to train acoustic models for large-vocabulary speech recognition, and reported state-of-the-art performance from relatively small models.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Learning to forget (Gers, Schmidhuber and Cummins, 2000)"
+  stats={[
+    { value: 'Unbounded', label: 'State growth without resets, until breakdown' },
+    { value: 'All failed', label: 'Continual benchmarks, including plain LSTM' },
+    { value: 'Solved', label: 'Same benchmarks, LSTM with forget gates' },
+  ]}
+  winner="The authors’ remedy: “a novel, adaptive ‘forget gate’ that enables an LSTM cell to learn to reset itself at appropriate times, thus releasing internal resources.”"
+  takeaway="A memory that cannot let go eventually breaks. Good memory includes deciding what to drop."
+  source={[
+    {
+      text: 'Gers, Schmidhuber and Cummins, “Learning to Forget: Continual Prediction with LSTM”, Neural Computation, 2000.',
+      href: 'https://doi.org/10.1162/089976600300015015',
+    },
+    {
+      text: 'Sak, Senior and Beaufays (Google), “Long Short-Term Memory Based Recurrent Neural Network Architectures for Large Vocabulary Speech Recognition”, 2014. Free on arXiv.',
+      href: 'https://arxiv.org/abs/1402.1128',
+    },
+  ]}
+/>
+
+**Real definition:** the portion of a Long Short-Term Memory cell that regulates the flow of information through the cell. Forget gates maintain context by deciding which information to discard from the cell state. [Google’s glossary: forget gate ↗](https://developers.google.com/machine-learning/glossary#forget-gate)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Feature cross | Freezing and windy is its own thing | Combine features into one new feature |
+| Federated learning | The model travels, the data stays | Train on devices, share only updates |
+| Feedback loop | The model feeds itself | Predictions shape the next training data |
+| Few-shot prompting | Show, then ask | Put several examples in the prompt |
+| Fine-tuning | Pre-train wide, then specialise | A second training pass for one task |
+| Foundation model | One base, many buildings | A big pre-trained base for many uses |
+| False positive rate | Healthy people wrongly flagged | Share of negatives called positive |
+| Forget gate | Remember what matters | The LSTM part that discards old context |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Six weeks. How many letters left?' },
+    { who: 'sriku', text: 'There are 20 more letters.' },
+    { who: 'sundu', text: 'Then G next, same bench. Sources, please.' },
+  ]}
+/>
+
+[← Part E: Early Stopping to Experience Replay](/writing/ml-glossary-e) · [Part G: From GAN to Guardrails →](/writing/ml-glossary-g)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); feature cross, false positive rate and feedback loop are also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the crime data in the feedback loop animation is a toy, and Cherry and Sundu are very real.*
+
+<Reactions />

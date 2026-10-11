@@ -1,0 +1,292 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part M: From Machine Translation to MNIST',
+  subtitle: 'Week thirteen at the chai stall: five machine learning terms, a million-dollar movie puzzle, and a model with 137 billion parameters that only wakes a few of them at a time.',
+  type: 'Meme Feast',
+  date: '2026-10-19',
+  excerpt:
+    'Five machine learning terms starting with M, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 13,
+}
+
+Thirteenth Saturday. Cherry says thirteen is lucky, because M has more famous names than any letter so far.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part L](/writing/ml-glossary-l). This round covers the M section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 47 entries. I picked five. None of the M terms are on Google's Fundamentals page.
+
+<Poster
+  badge="Part M · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. Mostly asleep."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '137B parameters']}
+/>
+
+---
+
+## Machine Translation: Words In, Meaning Out
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My phone translates whole sentences now, not word by word. What changed?' },
+    { who: 'sriku', text: 'Machine translation is software, typically a machine learning model, that converts text from one human language to another, for example from English to Japanese. In 2016 Google described GNMT, its neural machine translation system.' },
+    { who: 'sundu', text: 'What is inside it?' },
+    { who: 'sriku', text: 'A deep LSTM network with 8 encoder layers and 8 decoder layers, using attention and residual connections. Remember the LSTM from Part L.' },
+  ]}
+/>
+
+<Gif
+  name="machine-translation"
+  alt="The English words Good morning, dear friends enter a box labelled encoder with 8 stacked LSTM layers. An arrow labelled attention links it to a box labelled decoder, also 8 layers, which writes the French words Bonjour, chers amis one at a time. A caption cites the paper's 60 percent error reduction on simple sentences. The sentence is a toy example."
+  caption="Fig. 96: A toy sentence through an encoder, attention and a decoder."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What about rare words?' },
+    { who: 'sriku', text: 'The system divides words into a limited set of common sub-word units called wordpieces, a balance between character models and word models. The paper says this naturally handles rare words and improves overall accuracy.' },
+    { who: 'cherry', text: 'Did it beat the old system?' },
+    { who: 'sriku', text: 'On the WMT’14 English-to-French and English-to-German benchmarks it got results competitive with the state of the art. Then, in a human side-by-side evaluation on a set of isolated simple sentences, they report it reduces translation errors by an average of 60% compared with Google’s phrase-based production system.' },
+    { who: 'sundu', text: 'Only simple sentences?' },
+    { who: 'sriku', text: 'That is the limit of that number: isolated simple sentences, judged by people. It does not claim every kind of text.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Google’s Neural Machine Translation System (Wu et al., 2016)"
+  stats={[
+    { value: '8 + 8', label: 'LSTM layers in the encoder and the decoder' },
+    { value: '60%', label: 'Average fewer translation errors than the phrase-based system, in a human evaluation on simple sentences' },
+  ]}
+  winner="The abstract: “Using a human side-by-side evaluation on a set of isolated simple sentences, it reduces translation errors by an average of 60% compared to Google’s phrase-based production system.”"
+  takeaway="Read the evaluation as carefully as the headline. The 60% is real, and it is for simple sentences."
+  source={{
+    text: 'Wu et al., “Google’s Neural Machine Translation System: Bridging the Gap between Human and Machine Translation”, 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1609.08144',
+  }}
+/>
+
+**Real definition:** using software (typically, a machine learning model) to convert text from one human language to another human language, for example, from English to Japanese. [Google’s glossary: machine translation ↗](https://developers.google.com/machine-learning/glossary#machine-translation)
+
+---
+
+## Masked Language Model: Fill In the Blank From Both Sides
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My autocomplete only looks at the words before the cursor. Can a model look both ways?' },
+    { who: 'sriku', text: 'A masked language model predicts the probability of candidate tokens to fill in blanks in a sequence. Google’s example is The "MASK" in the hat came back. Most modern masked language models are bidirectional.' },
+    { who: 'sundu', text: 'So it uses the words on both sides of the blank.' },
+    { who: 'sriku', text: 'Yes. The words before and after the blank are both evidence.' },
+  ]}
+/>
+
+<Gif
+  name="masked-language-model"
+  alt="The sentence The MASK in the hat came back appears, with lines connecting the other words on both sides to the gold MASK token. Bars then show toy probabilities for candidate words: cat 62 percent, man 18 percent, dog 9 percent and girl 4 percent. A caption says BERT hides 15 percent of tokens."
+  caption="Fig. 97: Toy probabilities. The blank is filled using both sides."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did this become famous?' },
+    { who: 'sriku', text: 'BERT, from Devlin, Chang, Lee and Toutanova at Google AI Language. It pre-trains deep bidirectional representations from unlabeled text by conditioning on both left and right context in all layers.' },
+    { who: 'cherry', text: 'How much gets hidden?' },
+    { who: 'sriku', text: 'In all their experiments, 15% of the WordPiece tokens in each sequence, at random. Of the chosen tokens, 80% become the MASK token, 10% become a random token and 10% stay unchanged. The model then predicts the original token.' },
+    { who: 'sundu', text: 'Why not always use MASK?' },
+    { who: 'sriku', text: 'The MASK token does not appear when you fine-tune, so always using it would create a mismatch between pre-training and fine-tuning. The paper says the mixed 80-10-10 recipe mitigates that.' },
+    { who: 'cherry', text: 'And the scores?' },
+    { who: 'sriku', text: 'New state-of-the-art results on eleven natural language processing tasks, including a GLUE score of 80.5%, a 7.7 point absolute improvement, and SQuAD v1.1 Test F1 of 93.2, up 1.5 points.' },
+  ]}
+/>
+
+<CaseStudy
+  title="BERT: masked pre-training (Devlin et al., Google AI Language, 2018)"
+  stats={[
+    { value: '15%', label: 'Of WordPiece tokens masked in each sequence' },
+    { value: '11', label: 'NLP tasks with new state-of-the-art results' },
+    { value: '80.5%', label: 'GLUE score, a 7.7 point absolute improvement' },
+  ]}
+  winner="The abstract: “It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5% (7.7% point absolute improvement).”"
+  takeaway="Hide a few words and ask the model to guess them, and unlabeled text becomes a training set."
+  source={{
+    text: 'Devlin et al., “BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding”, 2018. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1810.04805',
+  }}
+/>
+
+**Real definition:** a language model that predicts the probability of candidate tokens to fill in blanks in a sequence. Most modern masked language models are bidirectional. [Google’s glossary: masked language model ↗](https://developers.google.com/machine-learning/glossary#masked-language-model)
+
+---
+
+## Matrix Factorization: Two Thin Matrices Fill the Gaps
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A streaming app has thousands of users and movies, and most people have rated almost nothing. How does it guess my taste?' },
+    { who: 'sriku', text: 'With matrix factorization: finding matrixes whose dot product approximates a target matrix. In a recommendation system the target matrix holds users’ ratings of items, with 0 where nobody rated. The aim is to predict ratings for the empty cells.' },
+    { who: 'sundu', text: 'Google’s example asks whether User 1 will like Black Panther.' },
+    { who: 'sriku', text: 'Yes. You learn a short list of numbers for each user and for each movie, and a prediction is their dot product.' },
+  ]}
+/>
+
+<Gif
+  name="matrix-factorization"
+  alt="A 5 by 5 grid of toy ratings has gaps marked with question marks. Next to it a tall user factor matrix and a wide movie factor matrix appear with a multiplication sign. Multiplying them fills the gaps with gold predicted ratings. A caption mentions the Netflix Prize."
+  caption="Fig. 98: Toy ratings. Two thin matrices, multiplied, fill the blanks."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'The Netflix Prize was in Part E. Where does factorization fit?' },
+    { who: 'sriku', text: 'Koren, Bell and Volinsky wrote an IEEE Computer article about it in 2009. Its summary says that, as the Netflix Prize competition has demonstrated, matrix factorization models are superior to classic nearest-neighbor techniques for producing product recommendations.' },
+    { who: 'cherry', text: 'How big was the data?' },
+    { who: 'sriku', text: 'Netflix released a training set of more than 100 million ratings from about 500,000 anonymous customers on more than 17,000 movies. A team that improved Netflix’s algorithm by 10% or more in RMSE would win $1 million.' },
+    { who: 'sundu', text: 'Can it use anything besides ratings?' },
+    { who: 'sriku', text: 'The article says the models allow extra information such as implicit feedback, temporal effects and confidence levels.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Matrix factorization for recommender systems (Koren, Bell and Volinsky, 2009)"
+  stats={[
+    { value: '100 million+', label: 'Ratings in the Netflix training set' },
+    { value: '17,000+', label: 'Movies rated' },
+    { value: '10%', label: 'RMSE improvement needed to win the $1 million prize' },
+  ]}
+  winner="The article: “matrix factorization models are superior to classic nearest-neighbor techniques for producing product recommendations.”"
+  takeaway="Describe every user and every item with a few hidden numbers, and the empty cells become predictions."
+  source={{
+    text: 'Koren, Bell and Volinsky, “Matrix Factorization Techniques for Recommender Systems”, IEEE Computer, 2009. Free PDF (a copy hosted on datajobs.com).',
+    href: 'https://datajobs.com/data-science-repo/Recommender-Systems-%5BNetflix%5D.pdf',
+  }}
+/>
+
+**Real definition:** in math, a mechanism for finding the matrixes whose dot product approximates a target matrix. In recommendation systems, the target matrix often holds users’ ratings on items. [Google’s glossary: matrix factorization ↗](https://developers.google.com/machine-learning/glossary#matrix-factorization)
+
+---
+
+## Mixture of Experts: Most of the Model Sleeps
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Bigger models are smarter, but my bill grows with them.' },
+    { who: 'sriku', text: 'A mixture of experts is a scheme to increase efficiency by using only a subset of the network’s parameters, called experts, to process each input token or example. A gating network routes each input to the proper expert or experts.' },
+    { who: 'sundu', text: 'So most of the model is asleep for any given token.' },
+    { who: 'sriku', text: 'That is the trick. Capacity can grow much faster than the compute spent on each token.' },
+  ]}
+/>
+
+<Gif
+  name="mixture-of-experts"
+  alt="A token labelled chai enters a gating network, which lights up two of eight expert boxes. Four tokens in turn are sent to different pairs of experts. A caption cites the paper's mixture of up to 137 billion parameters. The routing is a toy example."
+  caption="Fig. 99: Toy routing. Two of eight experts wake up for each token."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who built it at scale?' },
+    { who: 'sriku', text: 'Noam Shazeer and colleagues at Google Brain, including Geoffrey Hinton and Jeff Dean, in a paper called Outrageously Large Neural Networks. Their sparsely-gated mixture-of-experts layer has up to thousands of feed-forward sub-networks, and a trainable gating network picks a sparse combination of them for each example.' },
+    { who: 'cherry', text: 'How outrageous?' },
+    { who: 'sriku', text: 'They report greater than 1000x improvements in model capacity with only minor losses in computational efficiency on modern GPU clusters. The largest had up to 137 billion parameters, applied between stacked LSTM layers.' },
+    { who: 'sundu', text: 'And the quality?' },
+    { who: 'sriku', text: 'On large language modeling and machine translation benchmarks, they say these models achieve significantly better results than the state of the art at lower computational cost.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Outrageously Large Neural Networks (Shazeer et al., Google Brain, 2017)"
+  stats={[
+    { value: '1000x+', label: 'Improvement in model capacity, with minor losses in efficiency' },
+    { value: '137 billion', label: 'Parameters in the largest mixture-of-experts layer' },
+    { value: 'Thousands', label: 'Of feed-forward experts in one layer' },
+  ]}
+  winner="The abstract: “achieving greater than 1000x improvements in model capacity with only minor losses in computational efficiency on modern GPU clusters.”"
+  takeaway="You can own a huge model and still pay for only a small part of it on each token."
+  source={{
+    text: 'Shazeer et al., “Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer”, ICLR 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1701.06538',
+  }}
+/>
+
+**Real definition:** a scheme to increase neural network efficiency by using only a subset of its parameters (known as an expert) to process a given input token or example. A gating network routes each input token or example to the proper expert(s). [Google’s glossary: mixture of experts ↗](https://developers.google.com/machine-learning/glossary#mixture-of-experts)
+
+---
+
+## MNIST: The Hello World of Vision
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Every tutorial starts with handwritten digits. Why?' },
+    { who: 'sriku', text: 'That is MNIST, a public-domain dataset compiled by LeCun, Cortes and Burges. It holds 60,000 images, each showing a handwritten digit from 0 to 9, stored as a 28x28 array of integers between 0 and 255.' },
+    { who: 'sundu', text: 'Is it used for real work?' },
+    { who: 'sriku', text: 'Google calls it a canonical dataset, often used to test new machine learning approaches.' },
+  ]}
+/>
+
+<Gif
+  name="mnist"
+  alt="A large grey-pixel digit 7 on a 28 by 28 grid fills in row by row. Beside it the digits 0 to 9 appear in a grid. Text says 60,000 training images, 10,000 test images and labels 0 to 9. The digits are drawn from a computer font, not real MNIST samples."
+  caption="Fig. 100: Stand-in digits drawn from a font, not real MNIST samples."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Is the 60,000 the whole set?' },
+    { who: 'sriku', text: 'Yann LeCun’s MNIST page says a training set of 60,000 examples and a test set of 10,000, a subset of a larger set from NIST. The digits are size-normalized and centered in a fixed-size image.' },
+    { who: 'cherry', text: 'How well does a simple model do?' },
+    { who: 'sriku', text: 'The page’s results table lists a plain linear classifier, a one-layer network with no preprocessing, at 12.0% test error, from the 1998 paper by LeCun and colleagues. The lowest error in the table is a committee of 35 convolutional nets by Ciresan and colleagues at CVPR 2012, at 0.23%.' },
+    { who: 'sundu', text: 'Twelve percent down to a quarter of a percent, on the same ten digits.' },
+    { who: 'sriku', text: 'Over fourteen years. My own take: it is now easy enough that a good MNIST score proves little. Treat it as a smoke test for your code, not a measure of real difficulty.' },
+  ]}
+/>
+
+<CaseStudy
+  title="MNIST and its results table (LeCun’s MNIST page)"
+  stats={[
+    { value: '60,000 + 10,000', label: 'Training and test examples' },
+    { value: '12.0%', label: 'Test error of a linear classifier with no preprocessing (LeCun et al., 1998)' },
+    { value: '0.23%', label: 'Test error of a committee of 35 convolutional nets (Ciresan et al., 2012)' },
+  ]}
+  winner="The page: “a training set of 60,000 examples, and a test set of 10,000 examples. It is a subset of a larger set available from NIST.”"
+  takeaway="A small, clean dataset is a great way to check that your pipeline works. It is not a promise about your own messy data."
+  source={{
+    text: 'Yann LeCun, Corinna Cortes and Christopher Burges, “The MNIST database of handwritten digits”. Read via an Internet Archive copy, because the original page was not loading when I checked.',
+    href: 'https://web.archive.org/web/2023/http://yann.lecun.com/exdb/mnist/',
+  }}
+/>
+
+**Real definition:** a public-domain dataset compiled by LeCun, Cortes, and Burges containing 60,000 images, each image showing how a human manually wrote a particular digit from 0–9. [Google’s glossary: MNIST ↗](https://developers.google.com/machine-learning/glossary#mnist)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| Machine translation | Words in, meaning out | Software that converts text between languages |
+| Masked language model | Fill in the blank from both sides | Predict hidden tokens using their context |
+| Matrix factorization | Two thin matrices fill the gaps | Approximate a matrix, such as ratings, by a dot product |
+| Mixture of experts | Most of the model sleeps | A gate sends each token to a few experts |
+| MNIST | The hello world of vision | A classic set of handwritten digits |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Thirteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 13 more letters, from N to Z.' },
+    { who: 'sundu', text: 'N has normalization, and I saw non-response bias.' },
+    { who: 'sriku', text: 'There is a bias for everyone. See you next Saturday.' },
+  ]}
+/>
+
+[← Part L: From L1 Regularization to Lost in the Middle](/writing/ml-glossary-l) · [Part N: From N-Grams to Normalization →](/writing/ml-glossary-n)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary). The jokes are mine, the toy sentence, ratings and routing are cartoons, the digits are drawn from a font, and Cherry and Sundu are very real.*
+
+<Reactions />

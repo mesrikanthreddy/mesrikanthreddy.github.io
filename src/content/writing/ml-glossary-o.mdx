@@ -1,0 +1,289 @@
+import { Gif, Convo, CaseStudy, Poster, Reactions } from '../../components/Memes'
+
+export const meta = {
+  title: 'ML Glossary A to Z, Part O: From One-Shot Learning to Oversampling',
+  subtitle: 'Week fifteen at the chai stall: five machine learning terms, a network that memorizes random labels, and a free test set hiding inside every forest.',
+  type: 'Meme Feast',
+  date: '2026-10-21',
+  excerpt:
+    'Five machine learning terms starting with O, explained to two friends over chai, with animated memes and a real-world case for each.',
+  tags: ['machine-learning', 'glossary', 'memes', 'beginners'],
+  series: 'ML Glossary A to Z',
+  part: 15,
+}
+
+Fifteenth Saturday. Sundu has been waiting for this one, because overfitting is the term she says she lives with at work.
+
+Catching up? The series starts at [Part A](/writing/ml-glossary-a); the last round was [Part N](/writing/ml-glossary-n). This round covers the O section of [Google's machine learning glossary](https://developers.google.com/machine-learning/glossary), which has 24 entries. I picked five. One of them, overfitting, is also on Google's [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals#overfitting).
+
+<Poster
+  badge="Part O · Chai Edition"
+  title="ML Glossary A to Z"
+  tagline="Five terms. Two friends. One very lucky guess."
+  rating="10/10 · bench reserved"
+  stats={['5 terms', '5 animations', '5 real cases', '37% left out']}
+/>
+
+---
+
+## One-Shot Learning: See It Once, Recognize It Again
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A child sees one picture of a giraffe and knows giraffes forever. My model needs ten thousand.' },
+    { who: 'sriku', text: 'One-shot learning is an approach, often used for object classification, designed to learn an effective classification model from a single training example. Google’s glossary points to its cousins, few-shot and zero-shot learning.' },
+    { who: 'sundu', text: 'How can you learn from one?' },
+    { who: 'sriku', text: 'In the Matching Networks paper, the network learns to map a small labelled support set and an unlabelled example to its label. That means new classes need no fine-tuning.' },
+  ]}
+/>
+
+<Gif
+  name="one-shot"
+  alt="Five boxes each show one hand-drawn glyph, one example per class. A new, unseen drawing arrives and a line connects it to the closest class, which turns green. A caption cites the paper's Omniglot result for 20 classes with one example each: 88.0 percent to 93.8 percent. The glyphs are toy shapes, not real Omniglot characters."
+  caption="Fig. 106: Toy glyphs. One example per class, then find the closest."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'What did they test on?' },
+    { who: 'sriku', text: 'Omniglot, which has 1623 characters from 50 different alphabets, each hand drawn by 20 different people. Lots of classes, few examples per class. They also built one-shot tasks on ImageNet, and a language task on Penn Treebank.' },
+    { who: 'cherry', text: 'And the score?' },
+    { who: 'sriku', text: 'The authors, Vinyals and colleagues at Google DeepMind, say their algorithm improves one-shot accuracy on Omniglot from 88.0% to 93.8% compared with competing approaches. In their results table that is the 20-class task with one example per class.' },
+    { who: 'sundu', text: 'So one example each, twenty classes, and it still picks right about nine times in ten.' },
+    { who: 'sriku', text: 'On that benchmark, yes. Omniglot is hand-drawn characters, so your own data may behave differently.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Matching Networks for One Shot Learning (Vinyals et al., Google DeepMind, 2016)"
+  stats={[
+    { value: '1623', label: 'Characters from 50 alphabets, 20 drawings each, in Omniglot' },
+    { value: '88.0% to 93.8%', label: 'One-shot accuracy on Omniglot against competing approaches' },
+  ]}
+  winner="The abstract: “Our algorithm improves one-shot accuracy on ImageNet from 87.6% to 93.2% and from 88.0% to 93.8% on Omniglot compared to competing approaches.”"
+  takeaway="If a model has learned how to compare, a single labelled example can be enough to recognize a new class."
+  source={{
+    text: 'Vinyals, Blundell, Lillicrap, Kavukcuoglu and Wierstra, “Matching Networks for One Shot Learning”, 2016. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1606.04080',
+  }}
+/>
+
+**Real definition:** a machine learning approach, often used for object classification, designed to learn effective classification model from a single training example. [Google’s glossary: one-shot learning ↗](https://developers.google.com/machine-learning/glossary#one-shot-learning)
+
+---
+
+## Optimizer: Same Hill, Smarter Steps
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Is gradient descent the optimizer, or is there more than one?' },
+    { who: 'sriku', text: 'An optimizer is a specific implementation of the gradient descent algorithm. Google lists two popular ones: AdaGrad, which stands for ADAptive GRADient descent, and Adam, which stands for ADAptive with Momentum.' },
+    { who: 'sundu', text: 'What is Adam adding?' },
+    { who: 'sriku', text: 'It keeps running estimates of the gradient’s first and second moments and uses them to scale the steps. Think of it as a walker that remembers which way it has been heading and how bumpy each direction is.' },
+  ]}
+/>
+
+<Gif
+  name="optimizer"
+  alt="Two panels show contour lines of a long narrow valley with a gold dot at the bottom. Plain gradient descent zig-zags across the valley in red. Adam, in green, glides along it. The hill and the paths are a toy example."
+  caption="Fig. 107: Toy valley. The same hill, two walkers."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Where did Adam come from?' },
+    { who: 'sriku', text: 'Kingma and Ba, ICLR 2015. It is a first-order, gradient-based method for stochastic objective functions, built on adaptive estimates of lower-order moments. They say it is straightforward to implement, computationally efficient and light on memory.' },
+    { who: 'cherry', text: 'Do I have to tune it for hours?' },
+    { who: 'sriku', text: 'They say its hyper-parameters have intuitive interpretations and typically require little tuning. Their good default settings for the problems they tested are a step size of 0.001, β1 of 0.9, β2 of 0.999 and ε of 10 to the power minus 8.' },
+    { who: 'sundu', text: 'Where does it shine?' },
+    { who: 'sriku', text: 'The abstract says it is appropriate for non-stationary objectives and for problems with very noisy or sparse gradients, and that it compares favorably to other stochastic optimization methods. It also shows up in Part L: the LoRA comparison was against GPT-3 fine-tuned with Adam.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Adam: A Method for Stochastic Optimization (Kingma and Ba, 2015)"
+  stats={[
+    { value: '0.001', label: 'Suggested default step size' },
+    { value: '0.9 / 0.999', label: 'Suggested default decay rates, β1 and β2' },
+  ]}
+  winner="The abstract: “The hyper-parameters have intuitive interpretations and typically require little tuning.”"
+  takeaway="A good optimizer is partly good defaults. You can start with the paper’s settings, then tune only if you must."
+  source={{
+    text: 'Kingma and Ba, “Adam: A Method for Stochastic Optimization”, ICLR 2015. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1412.6980',
+  }}
+/>
+
+**Real definition:** a specific implementation of the gradient descent algorithm. Popular optimizers include AdaGrad and Adam. [Google’s glossary: optimizer ↗](https://developers.google.com/machine-learning/glossary#optimizer)
+
+---
+
+## Out-of-Bag Evaluation: A Free Test Set Inside Every Forest
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'A random forest trains hundreds of trees. Do I still need a separate validation set?' },
+    { who: 'sriku', text: 'You can use out-of-bag evaluation: test each decision tree against the examples that were not used to train that tree. Google’s picture has each tree trained on about two-thirds of the examples and evaluated on the remaining third.' },
+    { who: 'sundu', text: 'Does that replace cross-validation?' },
+    { who: 'sriku', text: 'The glossary calls it a computationally efficient and conservative approximation of cross-validation. Cross-validation trains one model per round, 10 models for 10-fold, which we met in Part K. Out-of-bag evaluation trains a single model.' },
+  ]}
+/>
+
+<Gif
+  name="oob"
+  alt="Three trees each draw a bootstrap sample from twelve numbered examples. Blue boxes are the examples a tree trained on, with a multiplier where an example was drawn more than once. Gold boxes marked out are the examples that tree never saw. A caption says each bootstrap sample leaves out about 37 percent of the examples. The draws are a toy example."
+  caption="Fig. 108: Toy bootstrap. Gold means left out, so it can test that tree."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Who worked out the leftover share?' },
+    { who: 'sriku', text: 'Leo Breiman at Berkeley, in a paper called Out-of-Bag Estimation. In bagging, each predictor is built on a bootstrap sample, and he notes that each bootstrap sample leaves out about 37% of the examples.' },
+    { who: 'cherry', text: 'What are the leftovers good for?' },
+    { who: 'sriku', text: 'His abstract says they can give much improved estimates of node probabilities and node error rates in decision trees, and nearly optimal estimates of generalization error for bagged predictors.' },
+    { who: 'sundu', text: 'So the leftovers are a free validation set.' },
+    { who: 'sriku', text: 'For each example, you score it using only the trees that never saw it. No second dataset and no extra training run.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Out-of-Bag Estimation (Breiman)"
+  stats={[
+    { value: '37%', label: 'Of examples left out of each bootstrap sample' },
+    { value: 'Nearly optimal', label: 'Estimates of generalization error for bagged predictors' },
+  ]}
+  winner="The abstract: “These left-out examples can be used to form accurate estimates of important quantities.”"
+  takeaway="Bagging throws away a bit of data for every tree. Out-of-bag evaluation puts it to work."
+  source={{
+    text: 'Breiman, “Out-of-Bag Estimation”, Statistics Department, University of California, Berkeley. Free PDF.',
+    href: 'https://www.stat.berkeley.edu/~breiman/OOBestimation.pdf',
+  }}
+/>
+
+**Real definition:** a mechanism for evaluating the quality of a decision forest by testing each decision tree against the examples not used during training of that decision tree. It is a computationally efficient and conservative approximation of the cross-validation mechanism. [Google’s glossary: out-of-bag evaluation (OOB evaluation) ↗](https://developers.google.com/machine-learning/glossary#out-of-bag-evaluation-oob-evaluation)
+
+---
+
+## Overfitting: A Perfect Score on the Wrong Thing
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'My training accuracy is 100 percent and my test accuracy is a disaster.' },
+    { who: 'sriku', text: 'That is overfitting: creating a model that matches the training data so closely that it fails to make correct predictions on new data. Regularization can reduce it, and so can training on a large and diverse training set.' },
+    { who: 'sundu', text: 'Can a network really memorize that much?' },
+    { who: 'sriku', text: 'A famous paper tried the most extreme version of the question: replace the labels with random ones.' },
+  ]}
+/>
+
+<Gif
+  name="overfitting"
+  alt="Two charts of training and test error over time. With true labels both curves fall. With random labels the training error still falls toward zero while the test error stays flat at the level of random guessing. The curves are toy illustrations of the paper's finding."
+  caption="Fig. 109: Toy curves. With random labels the training error still reaches zero."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Random labels means there is nothing to learn.' },
+    { who: 'sriku', text: 'Exactly, and Zhang, Bengio, Hardt, Recht and Vinyals found that state-of-the-art convolutional networks trained with stochastic gradient methods easily fit a random labeling of the training data. On CIFAR10 the networks reached 0 training error, and the test error was no better than random chance.' },
+    { who: 'cherry', text: 'Even on ImageNet?' },
+    { who: 'sriku', text: 'They tried it. With a million random labels from 1000 categories, the network did not reach a perfect training score, but it got 95.20% top-1 accuracy, which the authors call very surprising.' },
+    { who: 'sundu', text: 'Did regularization stop it?' },
+    { who: 'sriku', text: 'They say the phenomenon is qualitatively unaffected by explicit regularization, and it even happens if you replace the true images with completely unstructured random noise.' },
+    { who: 'cherry', text: 'So a big network can memorize anything.' },
+    { who: 'sriku', text: 'The paper says the effective capacity of the networks is sufficient for memorizing the entire dataset, and that fitting random labels takes only a small constant factor more training time. That is why a low training error alone tells you very little.' },
+  ]}
+/>
+
+<CaseStudy
+  title="Understanding deep learning requires rethinking generalization (Zhang et al., 2016)"
+  stats={[
+    { value: '0', label: 'Training error on CIFAR10 with random labels' },
+    { value: '95.20%', label: 'Top-1 training accuracy on ImageNet with random labels' },
+    { value: 'Chance', label: 'Test error after fitting random labels' },
+  ]}
+  winner="The paper: “Deep neural networks easily fit random labels.”"
+  takeaway="Training error says what a model can memorize. Only held-out data says what it learned."
+  source={{
+    text: 'Zhang, Bengio, Hardt, Recht and Vinyals, “Understanding deep learning requires rethinking generalization”, ICLR 2017. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1611.03530',
+  }}
+/>
+
+**Real definition:** creating a model that matches the training data so closely that the model fails to make correct predictions on new data. [Google’s glossary (Fundamentals): overfitting ↗](https://developers.google.com/machine-learning/glossary/fundamentals#overfitting)
+
+---
+
+## Oversampling: Make the Rare Class Less Rare
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'One in five thousand of my transactions is fraud. The model just says "not fraud" every time.' },
+    { who: 'sriku', text: 'Oversampling reuses the examples of a minority class in a class-imbalanced dataset to create a more balanced training set. Google’s example is a ratio of 5,000 to 1 in a million examples, which leaves only about 200 minority examples, so you reuse those 200 several times. That is the imbalance problem from Part I.' },
+    { who: 'sundu', text: 'Any catch?' },
+    { who: 'sriku', text: 'You need to be careful about overfitting, because you are showing the model the same few examples again and again.' },
+  ]}
+/>
+
+<Gif
+  name="oversampling"
+  alt="Many blue majority dots fill a scatter plot, with seven red minority dots in one corner. New gold dots appear one at a time on the lines between neighbouring red dots until the rare class has fourteen extra synthetic points. The data is a toy example."
+  caption="Fig. 110: Toy data. SMOTE adds new points between real rare examples."
+/>
+
+<Convo
+  lines={[
+    { who: 'sundu', text: 'Copying is the simple way. Is there a smarter way?' },
+    { who: 'sriku', text: 'SMOTE, the Synthetic Minority Over-sampling Technique, from Chawla, Bowyer, Hall and Kegelmeyer in the Journal of Artificial Intelligence Research, 2002. Instead of copies it creates synthetic minority examples along the line segments joining a minority example to its k nearest minority neighbors. Their implementation used five.' },
+    { who: 'cherry', text: 'And the results?' },
+    { who: 'sriku', text: 'They tested with C4.5, Ripper and Naive Bayes, scoring by area under the ROC curve. A combination of over-sampling the minority class and under-sampling the majority class gave better performance in ROC space than only under-sampling the majority class, and better than varying the loss ratios in Ripper or the class priors in Naive Bayes.' },
+    { who: 'sundu', text: 'Anything I should double-check?' },
+    { who: 'sriku', text: 'My own advice, not the paper’s: on very imbalanced data, look at precision and recall as well as ROC, which is a story for Part P.' },
+  ]}
+/>
+
+<CaseStudy
+  title="SMOTE (Chawla, Bowyer, Hall and Kegelmeyer, 2002)"
+  stats={[
+    { value: '5', label: 'Nearest minority neighbours used in the authors’ implementation' },
+    { value: '3', label: 'Classifiers tested: C4.5, Ripper and Naive Bayes' },
+  ]}
+  winner="The abstract: “a combination of our method of over-sampling the minority (abnormal) class and under-sampling the majority (normal) class can achieve better classifier performance (in ROC space) than only under-sampling the majority class.”"
+  takeaway="Do not just copy the rare examples. Fill in new ones between them, and still guard against overfitting."
+  source={{
+    text: 'Chawla, Bowyer, Hall and Kegelmeyer, “SMOTE: Synthetic Minority Over-sampling Technique”, Journal of Artificial Intelligence Research 16, 2002. Free on arXiv.',
+    href: 'https://arxiv.org/abs/1106.1813',
+  }}
+/>
+
+**Real definition:** reusing the examples of a minority class in a class-imbalanced dataset in order to create a more balanced training set. Contrast with undersampling. [Google’s glossary: oversampling ↗](https://developers.google.com/machine-learning/glossary#oversampling)
+
+---
+
+## Chai-Stall Recap
+
+| Term | The chai-stall version | Plain meaning |
+| --- | --- | --- |
+| One-shot learning | See it once, recognize it again | Learn a class from a single example |
+| Optimizer | Same hill, smarter steps | An implementation of gradient descent, such as Adam |
+| Out-of-bag evaluation | A free test set inside every forest | Test each tree on examples it never saw |
+| Overfitting | A perfect score on the wrong thing | Matches the training data, fails on new data |
+| Oversampling | Make the rare class less rare | Reuse or create minority-class examples |
+
+---
+
+## Same Bench, Next Saturday
+
+<Convo
+  lines={[
+    { who: 'cherry', text: 'Fifteen weeks. How many letters are left?' },
+    { who: 'sriku', text: 'There are 11 more letters, from P to Z.' },
+    { who: 'sundu', text: 'P is a big one, isn’t it?' },
+    { who: 'sriku', text: 'P has 61 entries, the biggest section so far. I will bring a bigger flask.' },
+  ]}
+/>
+
+[← Part N: From N-Grams to Normalization](/writing/ml-glossary-n) · [Part P: From Perceptron to Prompt Tuning →](/writing/ml-glossary-p)
+
+*Definitions follow [Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary); overfitting is also on its [Fundamentals page](https://developers.google.com/machine-learning/glossary/fundamentals). The jokes are mine, the toy glyphs, valley, bootstrap, curves and scatter plot are cartoons, and Cherry and Sundu are very real.*
+
+<Reactions />
