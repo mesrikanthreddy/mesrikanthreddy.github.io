@@ -2184,6 +2184,108 @@ footer {
   .mfx .mfx-poster-card { padding: 30px 18px 24px; }
 }
 
+/* ── Python architecture figures (components/PyFigures.jsx) ───────────────────
+   Built on the existing `.meme.diagram` figure shell and the `m-*` classes; the
+   `.pyf` scope adds success / failure / warning colours that work in both themes. */
+.pyf {
+  --pf-ok: #177a43;
+  --pf-bad: #c23b3b;
+  --pf-warn: #b45309;
+}
+:root[data-theme='dark'] .pyf {
+  --pf-ok: #4cc38a;
+  --pf-bad: #f07178;
+  --pf-warn: #e5a14d;
+}
+.pyf .pf-box {
+  fill: var(--bg);
+  stroke: var(--text-dim);
+  stroke-width: 1.6;
+}
+.pyf .pf-box.acc { stroke: var(--accent); stroke-width: 2.2; }
+.pyf .pf-box.ok { stroke: var(--pf-ok); stroke-width: 2.2; }
+.pyf .pf-box.bad { stroke: var(--pf-bad); stroke-width: 2.2; }
+.pyf .pf-box.warn { stroke: var(--pf-warn); stroke-width: 2.2; }
+.pyf .pf-box.soft { fill: var(--bg-2); }
+.pyf .pf-tint-ok { fill: var(--pf-ok); opacity: 0.1; }
+.pyf .pf-tint-bad { fill: var(--pf-bad); opacity: 0.1; }
+.pyf .pf-tint-acc { fill: var(--accent); opacity: 0.1; }
+.pyf .pf-title {
+  fill: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+.pyf .pf-sub {
+  fill: var(--text-dim);
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+}
+.pyf .pf-code {
+  fill: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+}
+.pyf .pf-code.dim { fill: var(--text-dim); }
+.pyf .pf-num {
+  fill: var(--accent);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+.pyf .pf-ok-t { fill: var(--pf-ok); font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; }
+.pyf .pf-bad-t { fill: var(--pf-bad); font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; }
+.pyf .pf-warn-t { fill: var(--pf-warn); font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; }
+.pyf .pf-line { fill: none; stroke: var(--text-dim); stroke-width: 1.6; stroke-linecap: round; }
+.pyf .pf-line.acc { stroke: var(--accent); }
+.pyf .pf-line.ok { stroke: var(--pf-ok); }
+.pyf .pf-line.bad { stroke: var(--pf-bad); }
+.pyf .pf-line.dash { stroke-dasharray: 5 5; }
+.pyf .pf-grid { stroke: var(--border); stroke-width: 1; }
+.pyf .pf-bar-list { fill: var(--pf-warn); }
+.pyf .pf-bar-gen { fill: var(--accent); }
+.pyf .pf-bar-ok { fill: var(--pf-ok); }
+.pyf .pf-bar-bad { fill: var(--pf-bad); }
+.pyf .pf-bar-neutral { fill: var(--text-faint); }
+.pyf .pf-hl { opacity: 0; }
+.pyf .pf-token { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .pyf .pf-hl { animation: pf-hl 7.5s ease-in-out infinite; }
+  .pyf .pf-token { opacity: 1; offset-rotate: 0deg; animation: pf-move 4s ease-in-out infinite; }
+  .pyf .pf-token.slow { animation-duration: 6s; }
+  .pyf .pf-pause { animation: pf-pulse 2.4s ease-in-out infinite; }
+}
+@keyframes pf-hl {
+  0%, 100% { opacity: 0; }
+  6%, 18% { opacity: 0.22; }
+  28% { opacity: 0; }
+}
+@keyframes pf-move {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes pf-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.8; }
+}
+/* the explanatory callouts under each figure */
+.prose .pf-note {
+  margin: 20px 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-2);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.prose .pf-note > :first-child { margin-top: 0; }
+.prose .pf-note > :last-child { margin-bottom: 0; }
+.prose .pf-note strong { color: var(--text); }
+.prose .pf-note.bad { border-left-color: #c23b3b; }
+
 /* Series page (ML Glossary A to Z) */
 .post-type-block { display: table; margin: 18px 0 0; }
 .post-back-series { display: block; margin-top: 4px; }
