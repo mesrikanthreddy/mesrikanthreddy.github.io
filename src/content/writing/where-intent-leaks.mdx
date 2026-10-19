@@ -1,0 +1,150 @@
+export const meta = {
+  title: 'Where Intent Leaks',
+  subtitle: 'An audit of the bugs I fixed in my own AI-assisted code.',
+  type: 'Field Notes',
+  date: '2026-10-06',
+  excerpt:
+    'I read 165 fix commits across three of my own repositories. Only 15% were intent problems. The rest were things nothing checked until it was too late.',
+}
+
+My [yellow paper](/writing/syntax-is-solved) argued that the hard part of
+AI-assisted coding has moved from syntax to intent: knowing what to build, and
+proving it works. That was an argument built on other people's studies and
+forum comments. This is the check against my own code.
+
+The question: **when I fix a bug in a repository I build with AI assistance,
+what had actually gone wrong?**
+
+<div className="tldr">
+
+**TL;DR**
+
+- **Sample.** 165 commits whose message starts with "fix", from `synapse-console`,
+  `YTT-Global` and `kshield`, between 8 March and 15 September 2026.
+- **Result.** 36% were verification gaps, 31% were environment gaps, 15% were
+  spec gaps, 5% were ownership gaps, and 13% fit none of those.
+- **Surprise.** My own data does not support "intent is the main problem". It
+  says most leaks were things a check could have caught before merge.
+- **Caveat.** One reader, one person's repos, and commit messages are an
+  imperfect record. Treat this as field notes, not a study.
+
+</div>
+
+## Method
+
+I listed every non-merge commit whose message begins with "fix" in three
+repositories: `synapse-console` (87), `YTT-Global` (68) and `kshield` (10). A
+first pass with keyword rules was too loose to trust, so I read all 165 commit
+messages and assigned each to one category by hand, using what the message says
+went wrong:
+
+| Category | What went wrong | Example from the log |
+| --- | --- | --- |
+| **Spec gap** | The behavior was never stated, so the code did something plausible but wrong. | "stop inserting invalid 'client' role value" |
+| **Verification gap** | Intent was clear, but no check ran before merge. | "resolve all ESLint errors blocking CI build" |
+| **Environment gap** | The code was fine in dev and wrong on the real platform. | "upgrade React 18 → 19 to resolve Clerk 7 Workers runtime crash" |
+| **Ownership gap** | Something nobody owned any more was left behind. | "remove dead Zoho lead-creation call" |
+| **Other** | Design polish, content tweaks, or too vague to classify. | "capitalize Support Status label" |
+
+My repositories do not record which commits an AI wrote, and my own convention
+is to keep tool attribution out of commit messages. So I cannot split AI-written
+from hand-written fixes. What I can say is that these are repositories I build
+with AI assistance throughout, so the sample is a fair picture of that way of
+working.
+
+## The numbers
+
+| Category | Commits | Share |
+| --- | --- | --- |
+| Verification gap | 59 | 36% |
+| Environment gap | 51 | 31% |
+| Spec gap | 24 | 15% |
+| Other | 22 | 13% |
+| Ownership gap | 9 | 5% |
+
+I expected spec gaps to lead. They did not. Two thirds of my fixes were about
+checking: either nothing verified the change before it merged, or nothing
+verified it on the platform it would run on.
+
+## What the log shows
+
+**Late checks, not missing checks.** Fourteen commits are pure ESLint,
+TypeScript or build repairs ("resolve all ESLint errors on legal branch",
+"remove unused React imports causing TS build failure"). The checks existed. They
+ran in CI, after the push, and I paid for each failure with another commit.
+Running the same gate locally before pushing would have removed most of them.
+
+**One platform, sixteen commits.** In `synapse-console`, a run of 16
+consecutive fix commits is about one goal: getting a Next.js app to build and run
+on Cloudflare Workers. Config, runtime externals, a React upgrade, a route
+conflict that caused a 500. The intent was perfectly clear ("deploy to
+Workers"). What was missing was a check that ran the app on the real runtime
+before each change landed.
+
+**The same enum, three times.** `inquiry_purpose` needed fixing twice in
+`YTT-Global` (align the values with the database schema, then guard against
+invalid values). `synapse-console` needed a fix for an invalid `client` role
+value. The cause is the same: a set of allowed values defined in more than one
+place, with nothing making them agree. That is a spec gap, and the fix is a
+single source of truth, not more care.
+
+**A feature built, patched, deleted.** The contact route got a Zoho lead call,
+then a fix because Cloudflare kills fire-and-forget work, then another because
+token parameters belonged in the POST body. Later it was removed as dead code.
+Three commits of work on something that did not survive. Nobody decided it
+should die; it simply stopped mattering.
+
+**The small group that matters most.** Spec gaps are only 15% by count, but the
+two commits about tenant isolation ("block client-role users from editing and
+deleting other tenants' posts", "tenant isolation + client portal data fixes")
+are the only ones where one customer could reach another's data. A cosmetic fix
+and an access-control fix count the same in a tally. They do not cost the same.
+
+## What I'd change
+
+Each change maps to a row in the table above.
+
+1. **Run the CI gate before push.** Lint, types and build as a pre-push hook.
+   Targets the verification gaps.
+2. **Run on the target runtime in CI.** A preview deploy or a local Workers
+   run on every pull request, not only on release. Targets the environment gaps.
+3. **One source of truth for enums and roles.** Derive types from the database
+   schema so a value cannot exist in the app and not in the schema. Targets the
+   spec gaps that repeat.
+4. **Write the intent before generating the access-control code.** One
+   paragraph: who may read and write what. Even if spec gaps are only 15%, this
+   is where a miss is expensive.
+
+## Limits
+
+- **One coder, my own repos.** No second reader checked my categories, and a
+  few commits could reasonably go in two. I did not measure agreement.
+- **Fix commits only.** This sees bugs that were found and fixed. Bugs nobody
+  has noticed are invisible, and spec gaps are the likeliest to hide, because
+  wrong behavior that looks plausible does not trip a linter.
+- **Clusters, not independent events.** The 16 platform commits are one problem
+  counted 16 times. Counted as incidents, the picture would look different.
+- **No comparison.** I did not compare against code written without AI, so this
+  cannot say AI causes any of it. It describes where my fixes went.
+- **No intervention tested.** The yellow paper's loop (spec first, verify, own)
+  is not tested here. A proper next step is to take one feature and build it
+  twice, with and without a written spec, then compare.
+
+## What this changes in my view
+
+I still think intent is the expensive failure. I do not think it is the common
+one. In my own log, the common failures were cheap to catch and I caught them
+late. That is good news: it means the first improvement is plumbing, not
+philosophy. The spec work matters most in the few places where being wrong is
+costly, and those are worth finding before the code is written.
+
+## Reproduce it
+
+The method is simple enough to rerun on your own history:
+
+```
+git log --no-merges -i --grep='^fix' --format='%h|%ad|%s' --date=short
+```
+
+Read every line, assign one category each, and count. Keep your categories
+honest by re-reading a random dozen a day later.
