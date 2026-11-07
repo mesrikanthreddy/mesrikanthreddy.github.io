@@ -2367,3 +2367,111 @@ h2 {
     font-size: 16px;
   }
 }
+
+/* Focus areas: each icon link is its own box and routes to the matching ytt.global service page. */
+.focus-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+  max-width: 640px;
+}
+.focus-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text);
+  text-decoration: none;
+}
+.focus-link svg {
+  width: 26px;
+  height: 26px;
+  color: var(--btn);
+  flex-shrink: 0;
+}
+.focus-link:hover {
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+  color: var(--btn);
+}
+@media (max-width: 640px) {
+  .focus-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- COMPACT SPACING + ONE-LINE NAME ---------- */
+h1 {
+  max-width: none;
+  font-size: clamp(26px, 5.4vw, 60px);
+}
+@media (min-width: 560px) {
+  h1 {
+    white-space: nowrap;
+  }
+}
+.hero-content {
+  padding-top: 96px;
+  padding-bottom: 28px;
+}
+.eyebrow {
+  margin-bottom: 14px;
+}
+.focus-row {
+  margin-top: 14px;
+}
+.lede {
+  margin-top: 16px;
+}
+.status-row {
+  margin-top: 14px;
+  gap: 8px;
+}
+.scroll-cue {
+  display: none;
+}
+section {
+  padding: 36px 0;
+}
+.section-head {
+  margin-bottom: 18px;
+}
+.rule {
+  margin-top: 10px;
+}
+.clients-intro,
+.projects-intro {
+  margin-bottom: 18px;
+}
+.why-item {
+  padding: 16px 0;
+}
+.cap {
+  padding: 22px 28px;
+}
+.proj {
+  padding: 22px 24px;
+}
+.proj-top {
+  margin-bottom: 10px;
+}
+.proj-status {
+  margin-bottom: 10px;
+}
+.client {
+  padding-top: 14px;
+}
+.client-row {
+  row-gap: 8px;
+}
+.cta {
+  padding: 40px 0;
+}
