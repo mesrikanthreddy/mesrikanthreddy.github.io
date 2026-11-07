@@ -89,19 +89,11 @@ export default function Nav() {
         className={`navlinks${open ? ' open' : ''}`}
         onClick={onMenuClick}
       >
-        <a href="/#bring">Capabilities</a>
-        <a href="/#projects">Projects</a>
-        <a href="/#clients">Clients</a>
-        <a href="/#why">Why Me</a>
+        <a href="/#projects">Building</a>
+        <a href="/#bring">Depth</a>
+        <a href="/#clients">Experience</a>
+        <a href="/#why">How I Work</a>
         <Link to="/writing">Writing</Link>
-        <a
-          href="/mesrikanthreddy-resume.pdf"
-          target="_blank"
-          rel="noopener"
-          download="Bollampally-Srikanth-Reddy-Resume.pdf"
-        >
-          Resume
-        </a>
         <a
           href="https://github.com/mesrikanthreddy"
           target="_blank"

@@ -8,7 +8,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const SITE_URL = 'https://mesrikanthreddy.github.io'
+const SITE_URL = 'https://mesrikanthreddy.ytt.global'
 const SITE_NAME = 'Bollampally, Srikanth Reddy'
 const root = process.cwd()
 const contentDir = path.join(root, 'src/content/writing')

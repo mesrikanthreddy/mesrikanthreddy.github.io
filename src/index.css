@@ -1,31 +1,43 @@
 :root,
 :root[data-theme='light'] {
-  --bg: #ffffff;
-  --bg-2: #f6f6f7;
-  --bg-rgb: 255, 255, 255;
-  --surface: #fafafa;
-  --border: #e6e6e9;
-  --text: #16181d;
-  --text-dim: #52565e;
-  --text-faint: #8a8f98;
-  --accent: #2b5fd9;
-  --accent-rgb: 43, 95, 217;
+  --bg: #f7fafd;
+  --bg-2: #f0f9ff;
+  --bg-rgb: 247, 250, 253;
+  --surface: #ffffff;
+  --border: #d3e2f0;
+  --text: #262626;
+  --sky: #0c4a6e;
+  --btn: #075985;
+  --pill-bg: #eff6ff;
+  --pill-border: rgba(115, 168, 255, 0.5);
+  --pill-ink: #0c4a6e;
+  --hover-bg: #f0f9ff;
+  --text-dim: #4b5563;
+  --text-faint: #5f6b7a;
+  --accent: #2c3a7a;
+  --accent-rgb: 44, 58, 122;
   --accent-ink: #ffffff;
   color-scheme: light; /* keeps form controls, scrollbars and browser auto-dark from overriding the light default */
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #14161a;
-  --bg-2: #1b1e23;
-  --bg-rgb: 20, 22, 26;
-  --surface: #1b1e23;
-  --border: #2a2d33;
-  --text: #f1f2f4;
-  --text-dim: #a8acb3;
-  --text-faint: #71757d;
-  --accent: #6e97f7;
-  --accent-rgb: 110, 151, 247;
-  --accent-ink: #0d1117;
+  --bg: #070f1d;
+  --bg-2: #0d1a2e;
+  --bg-rgb: 7, 15, 29;
+  --surface: #12213b;
+  --border: #1a3055;
+  --text: #e0eaff;
+  --sky: #89c3f5;
+  --btn: #32ade0;
+  --pill-bg: #0f2444;
+  --pill-border: rgba(50, 173, 224, 0.25);
+  --pill-ink: #89c3f5;
+  --hover-bg: #0f2444;
+  --text-dim: #8fbbe0;
+  --text-faint: #6b9bc4;
+  --accent: #32ade0;
+  --accent-rgb: 50, 173, 224;
+  --accent-ink: #070f1d;
 }
 * {
   box-sizing: border-box;
@@ -67,7 +79,7 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 400;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
@@ -101,7 +113,7 @@ a {
   background: var(--accent);
   color: var(--accent-ink);
   padding: 10px 18px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 13px;
   z-index: 100;
   border-radius: 2px;
@@ -155,18 +167,14 @@ a {
   text-decoration: none;
 }
 .brand-title {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 13px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: var(--text-faint);
 }
 .brand-name {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 800;
   font-size: 20px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
   color: var(--accent);
 }
 .navlinks {
@@ -181,10 +189,8 @@ a {
 }
 .navlinks a {
   white-space: nowrap;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-dim);
   text-decoration: none;
   transition: color 0.25s ease;
@@ -347,7 +353,6 @@ html.nav-open {
 @media (max-width: 820px) {
   .brand-name {
     font-size: 16px;
-    letter-spacing: 0.18em;
   }
 }
 @media (max-width: 480px) {
@@ -356,11 +361,9 @@ html.nav-open {
   }
   .brand-title {
     font-size: 11px;
-    letter-spacing: 0.1em;
   }
   .brand-name {
     font-size: 14px;
-    letter-spacing: 0.08em;
   }
 }
 /* Touch devices: fingers need roughly 44px. */
@@ -397,10 +400,8 @@ html.nav-open {
   width: 100%;
 }
 .eyebrow {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
   color: var(--accent);
   display: flex;
   align-items: center;
@@ -414,7 +415,7 @@ html.nav-open {
   background: var(--accent);
 }
 h1 {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 700;
   font-size: clamp(34px, 6vw, 68px);
   letter-spacing: -0.01em;
@@ -430,7 +431,7 @@ h1 .surname {
   margin-top: 18px;
   font-size: clamp(15px, 2vw, 19px);
   color: var(--text-dim);
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.01em;
   max-width: 520px;
 }
@@ -443,7 +444,7 @@ h1 .surname {
   max-width: 560px;
   font-size: 16px;
   color: var(--text-dim);
-  font-weight: 300;
+  font-weight: 400;
 }
 .lede strong {
   color: var(--text);
@@ -460,9 +461,8 @@ h1 .surname {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12.5px;
-  letter-spacing: 0.04em;
   color: var(--text-dim);
   text-decoration: none;
   border: 1px solid var(--border);
@@ -491,10 +491,8 @@ h1 .surname {
 }
 .scroll-cue {
   margin-top: 44px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--text-faint);
   display: flex;
   align-items: center;
@@ -533,13 +531,12 @@ section {
   margin-bottom: 36px;
 }
 .section-num {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 13px;
   color: var(--accent);
-  letter-spacing: 0.05em;
 }
 h2 {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 700;
   font-size: clamp(24px, 3vw, 32px);
   color: var(--text);
@@ -580,7 +577,7 @@ h2 {
   background: var(--bg-2);
 }
 .cap-title {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 600;
   font-size: 16px;
   color: var(--text);
@@ -603,7 +600,7 @@ h2 {
   gap: 8px;
 }
 .tag {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   color: var(--text-dim);
   border: 1px solid var(--border);
@@ -618,7 +615,7 @@ h2 {
   font-size: 15px;
   margin-bottom: 34px;
   max-width: 480px;
-  font-weight: 300;
+  font-weight: 400;
 }
 .client-row {
   display: flex;
@@ -628,7 +625,7 @@ h2 {
   border-top: 1px solid var(--border);
 }
 .client {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 600;
   font-size: 17px;
   color: var(--text-dim);
@@ -664,7 +661,7 @@ h2 {
   border-bottom: 1px solid var(--border);
 }
 .why-mark {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   color: var(--accent);
   font-size: 13px;
   padding-top: 3px;
@@ -679,7 +676,7 @@ h2 {
 .why-text span {
   color: var(--text-dim);
   font-size: 14.5px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* ---------- PROJECTS ---------- */
@@ -688,7 +685,7 @@ h2 {
   font-size: 15px;
   margin-bottom: 34px;
   max-width: 520px;
-  font-weight: 300;
+  font-weight: 400;
 }
 .proj-grid {
   display: grid;
@@ -705,10 +702,13 @@ h2 {
   text-decoration: none;
   transition: background 0.25s ease;
 }
-.proj:hover {
+.proj:last-child:nth-child(3n + 1) {
+  grid-column: 1 / -1;
+}
+a.proj:hover {
   background: var(--bg-2);
 }
-.proj:hover .proj-arrow {
+a.proj:hover .proj-arrow {
   transform: translate(3px, -3px);
   color: var(--accent);
 }
@@ -719,7 +719,7 @@ h2 {
   margin-bottom: 16px;
 }
 .proj-title {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 600;
   font-size: 17px;
   color: var(--text);
@@ -732,10 +732,8 @@ h2 {
 }
 .proj-status {
   display: inline-block;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   padding: 4px 9px;
   border-radius: 4px;
   margin-bottom: 14px;
@@ -752,7 +750,7 @@ h2 {
 .proj-desc {
   color: var(--text-dim);
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   flex: 1;
 }
@@ -780,7 +778,7 @@ h2 {
   max-width: 460px;
   margin: 20px auto 40px;
   font-size: 15.5px;
-  font-weight: 300;
+  font-weight: 400;
 }
 .btn-row {
   display: flex;
@@ -789,10 +787,8 @@ h2 {
   flex-wrap: wrap;
 }
 .btn {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   padding: 16px 30px;
   border-radius: 4px;
   text-decoration: none;
@@ -831,9 +827,8 @@ footer {
 }
 .footer-text {
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11.5px;
-  letter-spacing: 0.08em;
 }
 .socials {
   display: flex;
@@ -841,10 +836,8 @@ footer {
   gap: 14px;
 }
 .socials-label {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: var(--text-faint);
 }
 .social-row {
@@ -949,7 +942,7 @@ footer {
   gap: 16px;
 }
 .post-title {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--text);
@@ -959,9 +952,8 @@ footer {
   align-items: center;
   gap: 8px;
   margin-top: 6px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.04em;
   color: var(--text-faint);
 }
 .post-meta-dot {
@@ -975,7 +967,7 @@ footer {
   margin-top: 10px;
   color: var(--text-dim);
   font-size: 14.5px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
   max-width: 640px;
 }
@@ -983,10 +975,8 @@ footer {
 .post-back {
   display: inline-block;
   margin-bottom: 28px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   color: var(--text-dim);
   text-decoration: none;
 }
@@ -1000,11 +990,9 @@ footer {
   border-radius: 999px;
   border: 1px solid var(--border);
   color: var(--text-dim);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   vertical-align: middle;
 }
 .post-type[data-type='Yellow Paper'] {
@@ -1029,11 +1017,9 @@ footer {
 .prose .tldr > p:first-child {
   margin: 0 0 4px;
   color: var(--accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 .prose .paper-note {
   margin: 28px 0;
@@ -1059,7 +1045,7 @@ footer {
   max-width: 680px;
   color: var(--text-dim);
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.75;
   padding-bottom: 100px;
 }
@@ -1069,7 +1055,7 @@ footer {
 .prose > p:first-of-type {
   font-size: 19px;
   color: var(--text);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.65;
 }
 .prose h2 {
@@ -1092,7 +1078,7 @@ footer {
   margin: 36px 0 12px;
   font-size: 18px;
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 600;
 }
 .prose li {
@@ -1123,7 +1109,7 @@ footer {
 }
 .prose ol li::marker {
   color: var(--accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 700;
   font-size: 0.9em;
 }
@@ -1137,7 +1123,7 @@ footer {
   font-weight: 600;
 }
 .prose code {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 0.9em;
   background: var(--bg-2);
   padding: 2px 6px;
@@ -1178,11 +1164,9 @@ footer {
 }
 .prose th {
   color: var(--text);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   border-bottom: 2px solid var(--accent);
 }
 /* Then → Now comparison table (wrap a two-column table in <div className="then-now">) */
@@ -1332,7 +1316,7 @@ footer {
 .prose .meme figcaption {
   margin-top: 10px;
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -1395,7 +1379,7 @@ footer {
 }
 .ch-lab {
   fill: var(--text-dim);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
 }
 .ch-gray {
@@ -1416,7 +1400,7 @@ footer {
 .prose .voice footer {
   padding: 0; /* reset the site-wide footer padding */
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11.5px;
 }
 .prose .voice footer a {
@@ -1433,11 +1417,9 @@ footer {
 .prose .method-details summary {
   cursor: pointer;
   color: var(--text);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .prose .method-details[open] summary {
   margin-bottom: 12px;
@@ -1450,7 +1432,7 @@ footer {
 .prose .chart-table summary {
   cursor: pointer;
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
 }
 .post-subtitle {
@@ -1458,7 +1440,7 @@ footer {
   max-width: 680px;
   color: var(--text-dim);
   font-size: 19px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.5;
 }
 .m-ink {
@@ -1479,12 +1461,12 @@ footer {
 }
 .m-text {
   fill: var(--text);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
 }
 .m-faint {
   fill: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
 }
 .m-flame {
@@ -1572,7 +1554,7 @@ footer {
 
 .prose sup a {
   text-decoration: none;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 0.75em;
   padding-left: 1px;
 }
@@ -1619,7 +1601,7 @@ footer {
 }
 .feature-title {
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: clamp(24px, 3.4vw, 34px);
   font-weight: 700;
   line-height: 1.2;
@@ -1628,14 +1610,14 @@ footer {
 .feature-sub {
   color: var(--text-dim);
   font-size: 17px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.5;
 }
 .feature-excerpt {
   max-width: 62ch;
   color: var(--text-dim);
   font-size: 15.5px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.7;
 }
 .feature-foot {
@@ -1654,10 +1636,8 @@ footer {
 }
 .feature-cta {
   color: var(--accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 .feature-post + .post-list {
   margin-top: 28px;
@@ -1668,10 +1648,8 @@ footer {
   min-height: 44px;
   margin-top: 24px;
   color: var(--accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   text-decoration: none;
 }
 @media (hover: hover) {
@@ -1736,7 +1714,7 @@ footer {
   border-top: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -1803,7 +1781,7 @@ footer {
   margin: 0;
   padding: 16px 20px;
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 17px;
   font-weight: 600;
   line-height: 1.35;
@@ -1844,7 +1822,7 @@ footer {
   padding: 4px 12px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 999px;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1875,7 +1853,7 @@ footer {
   border-radius: 999px;
   color: #ffd166;
   background: rgba(0, 0, 0, 0.35);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 15px;
   font-weight: 700;
 }
@@ -1893,7 +1871,7 @@ footer {
   padding: 6px 10px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.14);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
 }
 .mfx .mfx-poster-stats li::before {
@@ -1912,7 +1890,7 @@ footer {
   padding: 10px 14px;
   color: #e9edef;
   background: #1f2c34;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 15px;
   font-weight: 600;
 }
@@ -1939,7 +1917,7 @@ footer {
   border-radius: 10px 10px 10px 2px;
   color: #e9edef;
   background: #202c33;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 14.5px;
   font-weight: 400;
   line-height: 1.45;
@@ -2002,7 +1980,7 @@ footer {
   border-radius: 50%;
   color: #fff;
   background: #e8833a;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
 }
@@ -2033,7 +2011,7 @@ footer {
 }
 .mfx-convo .mfx-convo-name {
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2057,7 +2035,7 @@ footer {
   border-radius: 999px;
   color: var(--accent-ink);
   background: var(--accent);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2066,7 +2044,7 @@ footer {
 .mfx-case .mfx-case-title {
   margin: 0 0 16px;
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
@@ -2088,7 +2066,7 @@ footer {
 .mfx-case .mfx-case-stat dt {
   margin: 0;
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2097,7 +2075,7 @@ footer {
   margin: auto 0 0;
   padding-top: 4px;
   color: var(--text);
-  font-family: 'Sora', sans-serif;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 20px;
   font-weight: 700;
   line-height: 1.2;
@@ -2118,7 +2096,7 @@ footer {
   padding-top: 10px;
   border-top: 1px solid var(--border);
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -2132,7 +2110,7 @@ footer {
 .mfx-reactions .mfx-reactions-prompt {
   margin: 0 0 12px;
   color: var(--text-faint);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2162,7 +2140,7 @@ footer {
 }
 .mfx-reactions .mfx-reaction-count {
   color: var(--text-dim);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-size: 13px;
   font-weight: 700;
 }
@@ -2197,8 +2175,195 @@ footer {
   place-items: center;
   border-radius: 8px;
   border: 1px solid var(--border);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Rethink Sans', sans-serif;
   font-weight: 700;
   color: var(--accent);
 }
 .series-body { flex: 1; display: grid; gap: 4px; min-width: 0; }
+
+
+/* ---------- YTT GLOBAL TYPE + COMPONENT ALIGNMENT ----------
+   Mirrors ytt.global: Rethink Sans, sentence case, regular-weight body in
+   #4B5563, bold #262626 headings with an 800-weight Sky-900 accent word, 8px
+   radii, 16px nav links with a pale pill hover, 600-weight buttons. */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+.brand-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+.brand-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--sky);
+}
+.navlinks a {
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.navlinks a:hover {
+  background: var(--hover-bg);
+  color: var(--btn);
+}
+.navlinks .nav-cta {
+  background: var(--btn);
+  border: none;
+  color: var(--accent-ink);
+  font-weight: 600;
+  padding: 10px 20px;
+}
+.navlinks .nav-cta:hover {
+  background: var(--btn);
+  color: var(--accent-ink);
+  opacity: 0.9;
+}
+.eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pill-ink);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+}
+.eyebrow::before {
+  display: none;
+}
+h1 {
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 760px;
+  letter-spacing: 0;
+}
+h1 .surname {
+  color: var(--sky);
+  font-weight: 800;
+}
+h2 {
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+.role {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 400;
+  color: var(--text-dim);
+  max-width: 640px;
+}
+.role strong {
+  color: var(--sky);
+  font-weight: 800;
+}
+.lede,
+.clients-intro,
+.projects-intro {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+.lede {
+  max-width: 600px;
+}
+.lede strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.section-num {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--btn);
+}
+.rule {
+  background: var(--btn);
+}
+.current-role {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pill-ink);
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+  border-radius: 8px;
+}
+.current-role:hover,
+.current-role.is-static:hover {
+  border-color: var(--pill-border);
+  color: var(--pill-ink);
+}
+.scroll-cue {
+  font-size: 13px;
+}
+.tag,
+.proj-status {
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+}
+.tag {
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+  color: var(--pill-ink);
+}
+.proj-status.pre {
+  color: var(--pill-ink);
+  background: var(--pill-bg);
+  border-color: var(--pill-border);
+}
+.proj-title,
+.cap-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+.proj-desc,
+.why-text span {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.why-text strong {
+  font-size: 18px;
+}
+.client {
+  font-size: 18px;
+}
+.btn {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+.btn-primary {
+  background: var(--btn);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.btn-primary:hover {
+  transform: none;
+  box-shadow: none;
+  opacity: 0.9;
+}
+.btn-ghost {
+  border: 2px solid var(--btn);
+  color: var(--text);
+}
+.btn-ghost:hover {
+  background: var(--pill-bg);
+  border-color: var(--btn);
+  color: var(--text);
+}
+@media (max-width: 1239px) {
+  .navlinks a:not(.nav-cta) {
+    font-size: 16px;
+  }
+  .navlinks .nav-cta {
+    font-size: 16px;
+  }
+}

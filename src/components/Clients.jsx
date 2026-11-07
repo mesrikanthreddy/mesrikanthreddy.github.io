@@ -19,15 +19,15 @@ export default function Clients() {
     <section id="clients">
       <div className="wrap">
         <div className="section-head reveal" ref={headRef}>
-          <span className="section-num">02</span>
+          <span className="section-num">03</span>
           <div>
-            <h2>Who I've Worked With</h2>
+            <h2>Where I Earned It</h2>
             <div className="rule" />
           </div>
         </div>
         <p className="clients-intro reveal" ref={introRef}>
-          Trusted by enterprises and agencies across energy, aviation,
-          government, and telecom.
+          Enterprise and government engagements across energy, aviation,
+          and telecom, before I started building my own.
         </p>
         <div className="client-row reveal" ref={rowRef}>
           {CLIENTS.map((client) => (

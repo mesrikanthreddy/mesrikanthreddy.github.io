@@ -7,22 +7,20 @@ export default function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-content">
-        <div className="eyebrow">Full-Stack · DevSecOps · AI/ML</div>
+        <div className="eyebrow">Technical Founder · YTT Global</div>
         <h1>
           <span className="surname">Bollampally</span>, Srikanth Reddy
         </h1>
         <p className="role">
-          Full-Stack Developer · Full-Stack DevSecOps Leader ·{' '}
-          <strong>AI/ML Specialist</strong> ·{' '}
-          <strong>Forward Deployed Engineer</strong> ·{' '}
-          <strong>Agentic AI Developer</strong>
+          <strong>Technical Founder</strong> · Full-Stack · DevSecOps ·{' '}
+          <strong>AI/ML</strong> · <strong>Agentic AI</strong>
         </p>
         <p className="lede">
-          I help startups and enterprises transform ideas into intelligent
-          solutions — systems forged to last, fast, scalable, and built end
-          to end. <strong>Eleven years</strong> turning brittle legacy
-          pipelines into modern cloud infrastructure, and shipping machine
-          learning made for production, not demos.
+          I founded YTT Global to build products and ship them myself, from
+          the first schema to the production deploy. <strong>Twelve years</strong>{' '}
+          of enterprise cloud and machine learning work taught me what holds
+          up in production. Now I build for founders, and for my own
+          ventures.
         </p>
         <div className="status-row">
           <a
@@ -31,7 +29,7 @@ export default function Hero() {
             target="_blank"
             rel="noopener"
           >
-            <span className="dot" /> Principal Technical Consultant, YTT Global{' '}
+            <span className="dot" /> Founder, YTT Global{' '}
             <span className="arrow">↗</span>
           </a>
           <div className="current-role is-static">

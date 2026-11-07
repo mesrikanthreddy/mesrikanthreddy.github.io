@@ -27,9 +27,9 @@ export default function WhyMe() {
     <section id="why">
       <div className="wrap">
         <div className="section-head reveal" ref={headRef}>
-          <span className="section-num">03</span>
+          <span className="section-num">04</span>
           <div>
-            <h2>Why Work With Me</h2>
+            <h2>How I Work</h2>
             <div className="rule" />
           </div>
         </div>

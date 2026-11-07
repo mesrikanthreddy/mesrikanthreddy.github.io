@@ -1,5 +1,5 @@
 .tk-controls { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; margin: 28px 0 14px; }
-.tk-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-right: 8px; }
+.tk-label { font-family: 'Rethink Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-right: 8px; }
 .tk-modes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .tk-mode { padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text-dim); font: inherit; font-size: 13px; cursor: pointer; }
 .tk-mode[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -14,7 +14,7 @@
 .tk .wrap { max-width: min(1280px, 100%); }
 .tk-grid { display: grid; grid-template-columns: 92px repeat(6, minmax(0, 1fr)); gap: 6px; }
 .tk-row { display: contents; }
-.tk-corner { font-size: 10px; color: var(--text-faint); font-family: 'Space Mono', monospace; align-self: end; padding-bottom: 6px; }
+.tk-corner { font-size: 10px; color: var(--text-faint); font-family: 'Rethink Sans', sans-serif; align-self: end; padding-bottom: 6px; }
 .tk-colhead { display: grid; gap: 2px; padding: 0 4px 6px; border-bottom: 2px solid var(--border); }
 .tk-colhead strong { font-size: 14px; }
 .tk-colhead span { font-size: 11px; color: var(--text-faint); line-height: 1.3; }
@@ -26,7 +26,7 @@
 .tk-tile:hover, .tk-tile:focus-visible { transform: translateY(-2px); z-index: 5; outline: 2px solid var(--accent); outline-offset: 1px; }
 .tk-dim { opacity: 0.18; }
 .tk-sym { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
-.tk-n { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); }
+.tk-n { font-family: 'Rethink Sans', sans-serif; font-size: 10px; color: var(--text-dim); }
 .tk-tip { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); width: 210px; padding: 8px 10px; border-radius: 8px; background: var(--text); color: var(--bg); font-size: 12px; line-height: 1.4; text-align: left; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.12s; }
 .tk-tip strong { display: block; margin-bottom: 2px; }
 .tk-tile:hover .tk-tip, .tk-tile:focus-visible .tk-tip { opacity: 1; visibility: visible; }
@@ -41,9 +41,9 @@
 .tk-dhead h2 { font-size: 20px; line-height: 1.2; }
 .tk-dmeta { margin-top: 2px; font-size: 12px; color: var(--text-faint); }
 .tk-meaning { color: var(--text-dim); font-size: 15px; line-height: 1.5; }
-.tk-toy { margin-top: -6px; font-size: 11px; color: var(--text-faint); font-family: 'Space Mono', monospace; }
+.tk-toy { margin-top: -6px; font-size: 11px; color: var(--text-faint); font-family: 'Rethink Sans', sans-serif; }
 .tk-case { padding: 14px 16px; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--bg-2); display: grid; gap: 6px; }
-.tk-case-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.tk-case-label { font-family: 'Rethink Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
 .tk-case-head { font-weight: 600; line-height: 1.4; }
 .tk-case-detail { color: var(--text-dim); font-size: 14px; line-height: 1.55; }
 .tk-case a { color: var(--accent); font-size: 13px; word-break: break-word; }
@@ -75,7 +75,7 @@
   .tk-cell { display: block; border: 0; border-radius: 0; padding: 10px 14px 4px; min-height: 0; }
   .tk-cell + .tk-cell { border-top: 1px dashed var(--border); }
   .tk-empty { display: none; }
-  .tk-cell::before { content: attr(data-col) ' · ' attr(data-blurb); display: block; margin-bottom: 8px; font-size: 11px; color: var(--text-faint); font-family: 'Space Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+  .tk-cell::before { content: attr(data-col) ' · ' attr(data-blurb); display: block; margin-bottom: 8px; font-size: 11px; color: var(--text-faint); font-family: 'Rethink Sans', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
   .tk-cell .tk-tile { display: inline-grid; margin: 0 6px 8px 0; width: 64px; height: 64px; vertical-align: top; }
   .tk-sym { font-size: 20px; }
   .tk-controls { flex-direction: column; align-items: stretch; }

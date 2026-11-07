@@ -66,9 +66,9 @@ export default function Capabilities() {
     <section id="bring">
       <div className="wrap">
         <div className="section-head reveal" ref={headRef}>
-          <span className="section-num">01</span>
+          <span className="section-num">02</span>
           <div>
-            <h2>What I Bring</h2>
+            <h2>Technical Depth</h2>
             <div className="rule" />
           </div>
         </div>
