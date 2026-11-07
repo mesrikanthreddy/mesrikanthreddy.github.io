@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const SITE_URL = 'https://mesrikanthreddy.github.io'
+const SITE_URL = 'https://mesrikanthreddy.ytt.global'
 const contentDir = path.join(process.cwd(), 'src/content/writing')
 const sitemapOutPath = path.join(process.cwd(), 'public/sitemap.xml')
 const readingTimeOutPath = path.join(

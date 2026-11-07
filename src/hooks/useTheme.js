@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 const STORAGE_KEY = 'theme-v2'
 const THEMES = ['light', 'system', 'dark']
 const DEFAULT_THEME = 'light'
-const THEME_COLOR = { light: '#ffffff', dark: '#14161a' }
+const THEME_COLOR = { light: '#f7fafd', dark: '#070f1d' }
 
 // Storage can throw (private mode, blocked site data). Never let that break the app.
 function readStored() {

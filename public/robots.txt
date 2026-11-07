@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mesrikanthreddy.github.io/sitemap.xml
+Sitemap: https://mesrikanthreddy.ytt.global/sitemap.xml

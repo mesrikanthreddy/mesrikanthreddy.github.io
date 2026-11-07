@@ -24,8 +24,7 @@ export default function Footer() {
     <footer>
       <div className="wrap footer-inner">
         <p className="footer-text">
-          Bollampally, Srikanth Reddy — Built end to end, shipped to
-          production.
+          Bollampally, Srikanth Reddy. Technical Founder, YTT Global.
         </p>
         <div className="socials">
           <span className="socials-label">Socials</span>

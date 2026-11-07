@@ -1,5 +1,15 @@
 import { Link } from 'react-router-dom'
+import { RocketLaunch, Code, ShieldCheck, Brain, Robot } from '@phosphor-icons/react'
 import { posts } from '../content/writing'
+
+// Each focus area routes to the matching service page on ytt.global.
+const FOCUS = [
+  { Icon: RocketLaunch, label: 'Technical Founder', href: 'https://ytt.global/about' },
+  { Icon: Code, label: 'Full-Stack', href: 'https://ytt.global/services/custom-software-development' },
+  { Icon: ShieldCheck, label: 'DevSecOps', href: 'https://ytt.global/services/devops-cloud-infrastructure#cloud-security' },
+  { Icon: Brain, label: 'AI/ML', href: 'https://ytt.global/services/machine-learning-development' },
+  { Icon: Robot, label: 'Agentic AI', href: 'https://ytt.global/services/machine-learning-development#agentic-workflows' },
+]
 
 export default function Hero() {
   const latest = posts.find((post) => post.meta.type)
@@ -7,22 +17,23 @@ export default function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-content">
-        <div className="eyebrow">Full-Stack · DevSecOps · AI/ML</div>
+        <div className="eyebrow">Technical Founder · YTT Global</div>
         <h1>
           <span className="surname">Bollampally</span>, Srikanth Reddy
         </h1>
-        <p className="role">
-          Full-Stack Developer · Full-Stack DevSecOps Leader ·{' '}
-          <strong>AI/ML Specialist</strong> ·{' '}
-          <strong>Forward Deployed Engineer</strong> ·{' '}
-          <strong>Agentic AI Developer</strong>
-        </p>
+        <nav className="focus-row" aria-label="Focus areas">
+          {FOCUS.map(({ Icon, label, href }) => (
+            <a className="focus-link" href={href} target="_blank" rel="noopener" key={label}>
+              <Icon size={26} weight="duotone" aria-hidden="true" />
+              {label}
+            </a>
+          ))}
+        </nav>
         <p className="lede">
-          I help startups and enterprises transform ideas into intelligent
-          solutions — systems forged to last, fast, scalable, and built end
-          to end. <strong>Eleven years</strong> turning brittle legacy
-          pipelines into modern cloud infrastructure, and shipping machine
-          learning made for production, not demos.
+          I run YTT Global with a small, senior team on a mission to build
+          private SaaS, agentic AI, and every service listed on ytt.global.
+          Bring us your requirements and <strong>we deliver the product
+          together</strong>, from first schema to production deploy.
         </p>
         <div className="status-row">
           <a
@@ -31,7 +42,7 @@ export default function Hero() {
             target="_blank"
             rel="noopener"
           >
-            <span className="dot" /> Principal Technical Consultant, YTT Global{' '}
+            <span className="dot" /> Founder, YTT Global{' '}
             <span className="arrow">↗</span>
           </a>
           <div className="current-role is-static">
