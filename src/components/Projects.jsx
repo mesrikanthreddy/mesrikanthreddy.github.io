@@ -6,84 +6,84 @@ const PROJECTS = [
     href: 'https://synapse.ytt.global',
     status: 'pre',
     statusLabel: 'Pre-Production',
-    desc: 'A pilot product helping SMBs, startups, and community leaders go to market. Content, leads, messaging, and site publishing in one console.',
+    desc: 'One console for content, leads, messaging, and site publishing.',
   },
   {
     title: 'Vidya',
     status: 'pre',
     statusLabel: 'Pre-Production',
-    desc: 'A multi-tenant school management platform for Indian K-12 schools. WhatsApp-first parent communication, English and Telugu, with AI-drafted circulars and alerts. Priced per student per month.',
+    desc: 'School management and parent messaging for Indian schools.',
   },
   {
     title: 'Project-TEC',
     href: 'https://ytt.global/project-tec',
     status: 'pre',
     statusLabel: 'Pre-Production',
-    desc: 'An ed-tech initiative that launches students into real technical careers through live projects and open-source contributions, mentored by industry practitioners instead of scripted tutorials.',
+    desc: 'Students learn through live projects with industry mentors.',
   },
   {
     title: 'HU-INT',
     href: 'https://ytt.global/huint',
     status: 'pre',
     statusLabel: 'Pre-Production',
-    desc: 'A containerized delivery platform for screened technical practitioners, deployed on-shore, near-shore, and off-shore to give clients precise control over engagement budget.',
+    desc: 'Screened technical practitioners, delivered on-shore, near-shore, or off-shore.',
   },
   {
     title: 'kShield',
     href: 'https://ytt-global.github.io/kshield/',
     status: 'live',
     statusLabel: 'Live',
-    desc: 'A security-focused tooling project built under the YTT Global banner.',
+    desc: 'A security tool that scans code before it is committed.',
   },
   {
     title: 'Axon',
     status: 'pre',
     statusLabel: 'Early Build',
-    desc: 'A CRM for SMBs and solo operators. Postgres for core records, a graph database for relationship paths, and an AI service for lead scoring.',
+    desc: 'A CRM for small businesses and solo operators.',
   },
   {
     title: 'Vahk',
     status: 'pre',
     statusLabel: 'In Development',
-    desc: 'A real-time voice agent built piece by piece from the ground up, aimed at taking calls and notes for small businesses.',
+    desc: 'A voice agent that answers calls and takes notes.',
   },
   {
     title: 'DataFuse',
     status: 'pre',
     statusLabel: 'In Development',
-    desc: 'An open-source analytics platform. A manifest-driven Python ingestion engine feeds a browser-native OLAP layer running DuckDB WASM.',
+    desc: 'An open-source platform for ingesting and analyzing data.',
   },
   {
     title: 'YTT Payments',
     status: 'pre',
     statusLabel: 'In Development',
-    desc: 'One payments backbone for every YTT product. Products call a versioned API instead of each embedding their own Stripe or Razorpay integration.',
+    desc: 'One payments service shared by all YTT products.',
   },
   {
     title: 'Jodhpur Sweets',
     status: 'pre',
     statusLabel: 'Pre-Production',
-    desc: 'A quick-commerce app for Indian sweets. Flutter front end, FastAPI and Postgres back end, real-time inventory, and UPI payments through Razorpay.',
+    desc: 'A quick-commerce app for ordering Indian sweets.',
   },
   {
     title: 'QGA Cancer Therapeutics',
     href: 'https://ytt-global.github.io/qga-cancer-therapeutics/',
     status: 'pre',
     statusLabel: 'Research POC',
-    desc: 'A research proof-of-concept applying a quantum genetic algorithm (NVIDIA CUDA-Q) to multi-drug cancer therapy selection, scoring candidate combinations for efficacy, synergy, and toxicity against a mock dataset.',
+    desc: 'Research on picking cancer drug combinations with quantum computing.',
   },
   {
     title: 'IDP',
     href: 'https://github.com/mesrikanthreddy/Search-AI',
     status: 'pre',
     statusLabel: 'MVP',
-    desc: 'A document intelligence engine with a hand-written TF-IDF and cosine-similarity ranking algorithm. No LLMs or external AI APIs in the search path, verified against scikit-learn for correctness.',
+    desc: 'Search across uploaded documents, with no AI services involved.',
   },
   {
     title: 'Cross-Border Patient Portal',
     status: 'pre',
     statusLabel: 'In Design',
-    desc: 'A patient portal for a stealth healthcare startup, built for care that crosses borders. Designed around HIPAA (US), GDPR (EU), and DPDP (India) requirements, with an end-to-end encrypted document docket, consent captured per country, and separate patient, coordinator, and admin logins.',
+    desc: 'A secure patient portal for a stealth healthcare startup, in design with HIPAA, GDPR, and DPDP in mind.',
   },
 ]
 
@@ -103,8 +103,7 @@ export default function Projects() {
           </div>
         </div>
         <p className="projects-intro reveal" ref={introRef}>
-          Everything we are building at YTT Global, from products in market to
-          research proofs of concept. Each one is labeled with its real stage.
+          What we are building, and where each one stands.
         </p>
         <div className="proj-grid reveal" ref={gridRef}>
           {PROJECTS.map((p) => {
