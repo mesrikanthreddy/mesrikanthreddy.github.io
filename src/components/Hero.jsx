@@ -30,10 +30,10 @@ export default function Hero() {
           ))}
         </nav>
         <p className="lede">
-          I run YTT Global with a small, senior team on a mission to build
-          private SaaS, agentic AI, and every service listed on ytt.global.
-          Bring us your requirements and <strong>we deliver the product
-          together</strong>, from first schema to production deploy.
+          I founded YTT Global, a small senior team that builds private SaaS,
+          agentic AI, and the full range of services listed on ytt.global.
+          Share your requirements and we will build the product with you,{' '}
+          <strong>from first schema to production deployment</strong>.
         </p>
         <div className="status-row">
           <a

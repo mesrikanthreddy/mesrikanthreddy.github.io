@@ -2475,3 +2475,45 @@ section {
 .cta {
   padding: 40px 0;
 }
+
+/* Projects as a plain text list: name, stage, one line. No boxes. */
+.proj-list {
+  list-style: none;
+  max-width: 720px;
+}
+.proj-list li {
+  padding: 10px 0;
+}
+.proj-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+.proj-line a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--text-faint);
+  text-underline-offset: 4px;
+}
+.proj-line a:hover {
+  color: var(--btn);
+  text-decoration-color: var(--btn);
+}
+.proj-stage {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+.proj-stage.live {
+  color: #2f9e52;
+}
+.proj-text {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
