@@ -105,37 +105,25 @@ export default function Projects() {
         <p className="projects-intro reveal" ref={introRef}>
           What we are building, and where each one stands.
         </p>
-        <div className="proj-grid reveal" ref={gridRef}>
-          {PROJECTS.map((p) => {
-            const body = (
-              <>
-                <div className="proj-top">
-                  <span className="proj-title">{p.title}</span>
-                  {p.href && <span className="proj-arrow">↗</span>}
-                </div>
-                <span className={`proj-status ${p.status}`}>
+        <ul className="proj-list reveal" ref={gridRef}>
+          {PROJECTS.map((p) => (
+            <li key={p.title}>
+              <p className="proj-line">
+                {p.href ? (
+                  <a href={p.href} target="_blank" rel="noopener">
+                    {p.title}
+                  </a>
+                ) : (
+                  <span>{p.title}</span>
+                )}
+                <span className={`proj-stage ${p.status}`}>
                   {p.statusLabel}
                 </span>
-                <p className="proj-desc">{p.desc}</p>
-              </>
-            )
-            return p.href ? (
-              <a
-                className="proj"
-                href={p.href}
-                target="_blank"
-                rel="noopener"
-                key={p.title}
-              >
-                {body}
-              </a>
-            ) : (
-              <div className="proj" key={p.title}>
-                {body}
-              </div>
-            )
-          })}
-        </div>
+              </p>
+              <p className="proj-text">{p.desc}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
