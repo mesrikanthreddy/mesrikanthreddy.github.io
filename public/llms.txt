@@ -23,7 +23,7 @@
 ## Links
 
 - Writing: https://mesrikanthreddy.ytt.global/writing
-- Hard Truth, "Code Came Back as Context": https://mesrikanthreddy.ytt.global/writing/code-came-back-as-context
+- Blue Paper, "Code Came Back as Context": https://mesrikanthreddy.ytt.global/writing/code-came-back-as-context
 - Yellow Paper, "Syntax Is Solved. Intent Isn't.": https://mesrikanthreddy.ytt.global/writing/syntax-is-solved
 - GitHub: https://github.com/mesrikanthreddy
 - LinkedIn: https://www.linkedin.com/in/bsrikanth-reddy/
